@@ -1,0 +1,473 @@
+Structured song list
+=====================
+Count: 467
+
+TITLE                                                         ARTIST                                    GENRE
+------------------------------------------------------------------------------------------------------------------------
+2002                                                          Anne-Marie                                Pop
+Very Nice                                                     SEVENTEEN                                 K-pop
+Touch                                                         KATSEYE                                   K-pop
+Pinky Up                                                      KATSEYE                                   K-pop
+Mean Girls                                                    KATSEYE                                   K-pop
+Tonight I Might                                               KATSEYE                                   K-pop
+My Way                                                        KATSEYE                                   K-pop
+Debut                                                         KATSEYE                                   K-pop
+FaSHioN                                                       CORTIS                                    K-pop
+MOONLIGHT SUNRISE                                             TWICE                                     K-pop
+Hypnotic                                                      VIVIZ                                     K-pop
+Jumping Machine (跳楼机)                                         LBI                                       Mandopop
+Always                                                        GFRIEND                                   K-pop
+Love, Older You                                               ILLIT                                     K-pop
+Truly Love                                                    GFRIEND                                   K-pop
+Secret Diary                                                  GFRIEND                                   K-pop
+La La Love Me                                                 VIVIZ                                     K-pop
+Hard to Say                                                   Karencici                                 Mandopop
+Hype Boy                                                      NewJeans                                  K-pop
+Supernatural                                                  NewJeans                                  K-pop
+ETA                                                           NewJeans                                  K-pop
+Shhh!                                                         VIVIZ                                     K-pop
+FEARLESS (2023 Ver.)                                          LE SSERAFIM                               K-pop
+HOT                                                           LE SSERAFIM                               K-pop
+Eve, Psyche & The Bluebeard's Wife                            LE SSERAFIM                               K-pop
+Off The Record                                                IVE                                       K-pop
+I AM                                                          IVE                                       K-pop
+Pink Pony Club                                                Chappell Roan                             Pop
+MY BAG                                                        i-dle                                     K-pop
+Crossroads (교차로)                                              GFRIEND                                   K-pop
+Reply                                                         Yuju                                      K-pop
+Wheel of the Year                                             GFRIEND                                   K-pop
+Season of Memories                                            GFRIEND                                   K-pop
+DDU-DU DDU-DU                                                 BLACKPINK                                 K-pop
+SET ME FREE                                                   TWICE                                     K-pop
+LA DI DA                                                      EVERGLOW                                  K-pop
+Bambambam                                                     Yerin                                     Mandopop
+Remember                                                      Apink                                     K-pop
+Power Up                                                      Red Velvet                                K-pop
+After LIKE                                                    IVE                                       K-pop
+As If It's Your Last                                          BLACKPINK                                 K-pop
+How You Like That                                             BLACKPINK                                 K-pop
+Psycho                                                        Red Velvet                                K-pop
+TOMBOY                                                        i-dle                                     K-pop
+Love Love Love                                                VIVIZ                                     K-pop
+Love & Tears                                                  VIVIZ                                     K-pop
+BOP BOP!                                                      VIVIZ                                     K-pop
+Love You Like                                                 VIVIZ                                     K-pop
+有一種悲傷                                                         A-Lin                                     Mandopop
+You Don't Belong to Me (From "More Than Blue")                Eric Chou                                 Soundtrack
+STYLE                                                         Hearts2Hearts                             K-pop
+Time for the Moon Night                                       GFRIEND                                   K-pop
+Summer Rain                                                   GFRIEND                                   K-pop
+Irreplaceable                                                 Beyoncé                                   R&B
+Twilight                                                      JJ Lin                                    Mandopop
+陪你走过                                                          Rex                                       Mandopop
+巅峰之上                                                          Mao Bu Yi                                 Mandopop
+来自尘埃的光                                                        蔡维泽                                       Mandopop
+最了不起的你                                                        Duan Ao Juan                              Mandopop
+荣耀的战场                                                         R1SE                                      K-pop
+Love Whisper                                                  GFRIEND                                   K-pop
+빌려온 고양이 (Billyeoon Goyangi / Do the Dance)                    ILLIT                                     K-pop
+秋日上映                                                          Sasablue                                  Mandopop
+一点点喜欢                                                         Sasablue                                  Mandopop
+梁山伯与茱丽叶 (心动版)                                                 LBI & Sasablue                            Mandopop
+Like Sunday, Like Rain                                        Sasablue                                  Mandopop
+Love Frequency                                                Sasablue                                  Mandopop
+Talking to the Moon                                           Bruno Mars                                Pop
+Versace on the Floor                                          Bruno Mars                                Pop
+Locked Out of Heaven                                          Bruno Mars                                Pop
+LILAC                                                         IU                                        Mandopop
+ME+YOU                                                        TWICE                                     K-pop
+MORE                                                          K/DA                                      K-pop
+Jellyous                                                      ILLIT                                     K-pop
+Lucky Girl Syndrome                                           ILLIT                                     K-pop
+Not Cute Anymore                                              ILLIT                                     K-pop
+Gee                                                           Girls' Generation                         K-pop
+ONE SPARK                                                     TWICE                                     K-pop
+Count on Me                                                   Bruno Mars                                Pop
+Just the Way You Are                                          Bruno Mars                                Pop
+Die With A Smile                                              Lady Gaga, Bruno Mars                     Pop
+Me Gustas Tu                                                  GFRIEND                                   K-pop
+RedRed                                                        CORTIS                                    K-pop
+FOCUS                                                         Hearts2Hearts                             K-pop
+Magnetic                                                      ILLIT                                     K-pop
+Rude!                                                         Hearts2Hearts                             K-pop
+Say My Name                                                   GFRIEND                                   K-pop
+Luv Star                                                      GFRIEND                                   K-pop
+Someday                                                       GFRIEND                                   K-pop
+Trust                                                         GFRIEND                                   K-pop
+Glass Bead                                                    GFRIEND                                   K-pop
+I DO                                                          i-dle                                     K-pop
+Memoria                                                       GFRIEND                                   K-pop
+Hold My Hand                                                  IU                                        Mandopop
+Blueming                                                      IU                                        Mandopop
+Rough                                                         GFRIEND                                   K-pop
+Rainbow                                                       GFRIEND                                   K-pop
+Navillera                                                     GFRIEND                                   K-pop
+Kitsch                                                        IVE                                       K-pop
+POP/STARS                                                     K/DA                                      K-pop
+I Feel Good                                                   BOYNEXTDOOR                               K-pop
+MAGIC                                                         NAYEON                                    K-pop
+Love Scenario                                                 iKON                                      K-pop
+Jump                                                          BLACKPINK                                 K-pop
+Hwaa (화)                                                      i-dle                                     K-pop
+Knock Knock                                                   TWICE                                     K-pop
+Adrenaline                                                    ATEEZ                                     K-pop
+Monster                                                       EXO                                       K-pop
+I'll See You There Tomorrow                                   TOMORROW X TOGETHER                       K-pop
+Jump                                                          P1Harmony                                 K-pop
+S-Class                                                       Stray Kids                                K-pop
+Heavy Serenade                                                NMIXX                                     K-pop
+FIRST                                                         EVERGLOW                                  K-pop
+MAGO                                                          GFRIEND                                   K-pop
+Back to Life                                                  &TEAM                                     K-pop
+My First Love Song                                            KickFlip                                  K-pop
+We Are Young                                                  Fun.                                      Pop rock
+夜に駆ける (Racing Into the Night / Into the Night)                YOASOBI                                   J-pop
+Happy Birthday To You                                         NAYEON                                    K-pop
+Here With Me                                                  Marshmello                                EDM
+Opalite                                                       Taylor Swift                              Pop
+The Feels                                                     TWICE                                     K-pop
+One Voice                                                     Rokudenashi                               J-pop
+Treasure                                                      Bruno Mars                                Pop
+Maniac                                                        VIVIZ                                     K-pop
+NoNoNo                                                        Apink                                     K-pop
+Russian Roulette                                              Red Velvet                                K-pop
+Dance The Night Away                                          TWICE                                     K-pop
+Teenage Dream                                                 Katy Perry                                Pop
+LOOK AT ME                                                    TWICE                                     K-pop
+Upside Down                                                   Jack Johnson                              Folk pop
+Style                                                         Taylor Swift                              Pop
+The One That Got Away                                         Katy Perry                                Pop
+Steal My Girl                                                 One Direction                             Pop
+HOT TO GO!                                                    Chappell Roan                             Pop
+Cities                                                        Throttle                                  EDM
+Japan                                                         Throttle                                  EDM
+50 Ways to Say Goodbye                                        Train                                     Pop rock
+MORE & MORE                                                   TWICE                                     K-pop
+Celebrity                                                     IU                                        Mandopop
+SCIENTIST                                                     TWICE                                     K-pop
+If It's Love                                                  Train                                     Pop rock
+I GOT YOU                                                     TWICE                                     K-pop
+Save Me, San Francisco                                        Train                                     Pop rock
+Over My Head (Cable Car)                                      The Fray                                  Pop rock
+The Best Thing I Ever Did                                     TWICE                                     K-pop
+24/7                                                          TWICE                                     K-pop
+Chained to the Rhythm                                         Katy Perry                                Pop
+LIKEY                                                         TWICE                                     K-pop
+YES or YES                                                    TWICE                                     K-pop
+目及皆是你                                                         Little blue vest                          Mandopop
+Candy Pop                                                     TWICE                                     K-pop
+Memories                                                      大槻真希 (Ootsuki Maki)                       J-pop
+Let Me Be With You                                            沙总啊                                       Soundtrack
+愿得一人心 (电视剧《最美的时光》)                                            李行亮                                       Soundtrack
+Not Even Being Benched                                        沙总啊                                       Soundtrack
+Let's Just Be Friends                                         杨振宇                                       Soundtrack
+Always by Your Side                                           Rae Xie                                   Soundtrack
+Things That I Want To Tell You                                沙总啊                                       Soundtrack
+Vanilla Salt                                                  堀江由衣 (Yui Horie)                          J-pop
+前前前世 (Zenzenzense)                                            RADWIMPS                                  J-pop
+strawberry moon                                               IU                                        Mandopop
+I CAN'T STOP ME                                               TWICE                                     K-pop
+Paparazzi                                                     Lady Gaga                                 Pop
+飞鸟和蝉                                                          任然                                        Mandopop
+世界这么大还是遇见你                                                    Echo                                      Mandopop
+Heart Shaker                                                  TWICE                                     K-pop
+What is Love?                                                 TWICE                                     K-pop
+What Makes You Beautiful                                      One Direction                             Pop
+一千年以后                                                         JJ Lin                                    Mandopop
+美人鱼                                                           JJ Lin                                    Mandopop
+是你                                                            Miya                                      Mandopop
+Red Scarf ("Till We Meet Again" Movie Theme Song)             WeiBird                                   Mandopop
+Fairy Tale (童话)                                               Michael Wong                              Mandopop
+Mr. Brightside                                                The Killers                               Rock
+Take A Bow                                                    Rihanna                                   Pop
+22 (Taylor's Version)                                         Taylor Swift                              Pop
+Hey, Soul Sister                                              Train                                     Pop rock
+You Belong With Me (Taylor's Version)                         Taylor Swift                              Pop
+Gnarly                                                        KATSEYE                                   K-pop
+FANCY                                                         TWICE                                     K-pop
+Paper Rings                                                   Taylor Swift                              Pop
+Give Me Everything                                            Pitbull, Ne-Yo, AFROJACK                  Dance-pop
+War                                                           keshi                                     R&B
+青花瓷                                                           周杰倫                                       Mandopop
+I Will Never Get Loved - Cola Version                         赵寒                                        Mandopop
+The Separation Was Too Sudden (Ep3 ending theme)              侯俊杰                                       Soundtrack
+荣耀的战场 (Glory Battlefield) — ending theme                      R1SE                                      K-pop
+Let me be with you / Be with you                              沙总啊                                       Mandopop
+Do I Matter To Me                                             赵寒                                        Mandopop
+Shadow Assassins                                              王舜禾                                       Mandopop
+Not Even Being 'Benched' - Memories - Girls Version           沙总啊                                       Mandopop
+Not Even Being 'Benched' - Boys Version                       杨振宇                                       Mandopop
+Dingdang's Face - Season1 Extra Episode4 Version              赵寒                                        Mandopop
+我想和你一起去海边（动画《刺客伍六七》片尾曲）                                       蜡笔小璐 / 斯斯与帆                               Soundtrack
+无论你多怪异我还是会喜欢你（《刺客伍六七》动画推广版片尾曲）                                Zhou Zi Yan                               Soundtrack
+Seven                                                         发条月亮                                      Mandopop
+I Want To Go To The Beach With You                            斯斯与帆                                      Mandopop
+I Will Never Get Loved                                        (S4 OST artist; OCR also showed 牛奶咖啡 on some rows)Mandopop
+Careless Whisper                                              George Michael                            Pop
+Love Someone                                                  Lukas Graham                              Pop
+Home                                                          Phillip Phillips                          Pop
+Me Without You                                                Havelin                                   Pop
+Shut Up and Dance                                             WALK THE MOON                             Indie pop
+Saturday                                                      Twenty One Pilots                         Indie pop
+Memories                                                      Maroon 5                                  Pop
+I Ain't Worried                                               OneRepublic                               Pop rock
+Demons                                                        Imagine Dragons                           Pop rock
+STAY (with Justin Bieber)                                     The Kid LAROI, Justin Bieber              Pop
+Fireflies                                                     Owl City                                  Synth-pop
+Best Day Of My Life                                           American Authors                          Indie pop
+Have You Ever Seen The Rain                                   Creedence Clearwater Revival              Rock
+Sunroof                                                       Nicky Youre, dazy                         Pop
+On Top Of The World                                           Imagine Dragons                           Pop rock
+Run                                                           OneRepublic                               Pop rock
+Something Just Like This                                      The Chainsmokers, Coldplay                EDM
+Take On Me                                                    a-ha                                      Synth-pop
+Drive By                                                      Train                                     Pop rock
+Secrets                                                       OneRepublic                               Pop rock
+Maps                                                          Maroon 5                                  Pop
+The Nights                                                    Avicii                                    EDM
+I Lived                                                       OneRepublic                               Pop rock
+Hall of Fame (feat. will.i.am)                                The Script, will.i.am                     Pop
+Don't Stop Me Now - Remastered 2011                           Queen                                     Rock
+Hooked On A Feeling                                           Blue Swede, Björn Skifs                   Pop
+One Call Away                                                 Charlie Puth                              Pop
+Sunshine                                                      OneRepublic                               Pop rock
+Treat You Better                                              Shawn Mendes                              Pop
+Ain't No Mountain High Enough                                 Marvin Gaye, Tammi Terrell                Soul
+Viva La Vida                                                  Coldplay                                  Pop rock
+The Lazy Song                                                 Bruno Mars                                Pop
+I'm Yours                                                     Jason Mraz                                Pop
+Marry You                                                     Bruno Mars                                Pop
+Glory Battlefield (荣耀战场) (Ending theme song)                  R1SE                                      K-pop
+我多喜欢你，你会知道 (网剧《致我们单纯的小美好》推广曲)                                 Wang Jun Qi                               Mandopop
+有点甜                                                           汪苏泷, BY2                                  Mandopop
+Castle on the Hill                                            Ed Sheeran                                Pop
+I Think I Like You                                            The Band CAMINO                           Indie pop
+Once in a Lifetime                                            Landon Austin                             Pop
+Payphone                                                      Maroon 5, Wiz Khalifa                     Pop
+You're Welcome                                                Dwayne Johnson, Disney                    Soundtrack
+Chasing Cars                                                  Snow Patrol                               Indie rock
+Nice Guys                                                     Chester See, Kevjumba, Ryan Higa          Comedy
+Hostiles on the Hill                                          Bad Lip Reading                           Comedy
+Last Time I Say Sorry                                         Kane Brown, John Legend                   Pop
+All of Me                                                     John Legend                               R&B
+We Built This City                                            Ninja Sex Party                           Rock
+I'm Still Standing                                            Elton John                                Pop rock
+Let It Be - Remastered 2009                                   The Beatles                               Rock
+Danger Zone (From "Top Gun" Original Soundtrack)              Kenny Loggins                             Soundtrack
+Die For You                                                   VALORANT, Grabbitz                        EDM
+Cold Heart - PNAU Remix                                       Elton John, Dua Lipa, PNAU                Dance-pop
+Shivers                                                       Ed Sheeran                                Pop
+Take Me Home, Country Roads - Original Version                John Denver                               Country
+Free Fallin'                                                  Tom Petty                                 Rock
+Rocket Man (I Think It's Going To Be A Long, Long Time)       Elton John                                Pop rock
+American Pie                                                  Don McLean                                Folk rock
+安静的稻草人                                                        Daven Wu                                  Mandopop
+我会等 (女版)                                                      梧彤Vickie                                  Mandopop
+只是太爱你                                                         丁芙妮                                       Mandopop
+嚣张                                                            en                                        Mandopop
+1022-比爾的歌 (青春版)（原唱：Bomb 比爾）『我說這樣的情景也很好，至少還夠我一個人胡鬧。』【動態歌詞 | Pinyin Lyrics】【PENGUIN MUSIC】不是花火呀                                     Mandopop
+像晴天像雨天（电视剧《难哄》心动曲）                                            汪苏泷                                       Soundtrack
+背對背擁抱                                                         JJ Lin                                    Mandopop
+总会有人                                                          吕口口                                       Mandopop
+說散就散                                                          JC 陳詠桐                                    Mandopop
+大城小愛 - Big City Small Love                                    Leehom Wang                               Mandopop
+没有如果「如果我说 爱我没有如果 错过就过 你是不是会难过」【動態歌詞/PinyinLyrics】♪            勝嶼                                        Mandopop
+我只能离开                                                         颜人中                                       Mandopop
+恋爱画板                                                          锦零                                        Mandopop
+Galaxy and Stars                                              Yihuik苡慧                                  Mandopop
+晚风告白                                                          星野                                        Mandopop
+晚风告白 (男版)                                                     小包Zerinn                                  Mandopop
+哪里都是你                                                         队长                                        Mandopop
+童話                                                            光良                                        Mandopop
+雨夜溺亡的蝴蝶                                                       菲菲公主(陆绮菲)                                 Mandopop
+明明（深爱着你）                                                      丁肆Dicey                                   Mandopop
+折起的遗憾 - Folded Memory                                         LBI                                       Mandopop
+爱错                                                            en                                        Mandopop
+下一秒                                                           張碧晨                                       Mandopop
+CHILLAX                                                       TWICE                                     K-pop
+万有引力                                                          汪苏泷                                       Mandopop
+那些你很冒險的夢                                                      JJ Lin                                    Mandopop
+最后一页                                                          Sasablue                                  Mandopop
+給我ㄧ首歌的時間                                                      周杰倫                                       Mandopop
+門沒鎖（原唱：品冠）『天都黑了你都沒來過沒來坐，戲都完了眼都沒眨過沒哭過。』【動態歌詞/Vietsub/Pinyin Lyrics】我是土豆                                      Mandopop
+愛錯 - Wrong Love                                               Leehom Wang                               Mandopop
+我懷念的 - What I Miss                                            Sun Yanzi                                 Mandopop
+有些                                                            颜人中                                       Mandopop
+从前说                                                           小阿七                                       Mandopop
+You Belong With Me (Taylor’s Version)                         Taylor Swift                              Pop
+苦茶 (心动版)                                                      Yihuik苡慧, Aioz                            Mandopop
+说爱你                                                           刘至佳                                       Mandopop
+黄昏                                                            吕口口                                       Mandopop
+唯一 - Only One                                                 G.E.M.                                    Mandopop
+《零距离的思念》变速0.8（感情说不清她越道越不明白 让盲目的爱变习惯延续浪漫）                      Tiny7                                     Mandopop
+愛你                                                            王心凌                                       Mandopop
+或许 - Maybe                                                    LBI                                       Mandopop
+跳楼机                                                           en                                        Mandopop
+Safe and Sound                                                Capital Cities                            Indie pop
+Strategy                                                      TWICE                                     K-pop
+小星星                                                           汪苏泷                                       Mandopop
+小酒窩                                                           林俊傑 & 蔡卓妍                                 Mandopop
+再见只是陌生人                                                       庄心妍                                       Mandopop
+夜曲                                                            周杰倫                                       Mandopop
+可不可以 (抖音热歌)                                                   张紫豪                                       Mandopop
+最后一页                                                          姚晓棠                                       Mandopop
+情非得已 (温柔版)                                                    赵乃吉                                       Mandopop
+万有引力                                                          F*yy                                      Mandopop
+五十年以后 (原唱: 海来阿木)『我希望五十年以后，你还能在我左右。』【動態歌詞】                     小阿七                                       Mandopop
+Love, Maybe                                                   MeloMance                                 K-pop
+You Xie                                                       Yihuik苡慧                                  Mandopop
+指紋                                                            杜宣達                                       Mandopop
+分开不会痛                                                         罗森涛                                       Mandopop
+終於了解自由 - Freedom                                              Eric Chou                                 Mandopop
+摯友「若愛一個人 切忌愛得太深」【動態歌詞】♪                                       WiFi歪歪                                    Mandopop
+肯定                                                            RE-D, 是二哈ya & Masta                       Mandopop
+拥过你的风                                                         LBI利比                                     Mandopop
+妥协                                                            en                                        Mandopop
+爱错                                                            于冬然                                       Mandopop
+耿 (《最好的我们》电影毕业季主题曲)                                           汪苏泷                                       Soundtrack
+江南                                                            JJ Lin                                    Mandopop
+We Are Never Ever Getting Back Together                       Taylor Swift                              Pop
+稻香                                                            周杰倫                                       Mandopop
+在加納共和國離婚                                                      菲道尔 & DIOR 大穎                             Mandopop
+你一定要幸福                                                        虎二                                        Mandopop
+猜不透 (說唱版)「如果忽遠忽近的灑脫 是你要的自由 那我寧願回到一個人生活」【動態歌詞/PinyinLyrics】♪   盧盧快閉嘴 / 劉思达LOFTHESTAR                     Mandopop
+給我一個理由忘記                                                      A-Lin                                     Mandopop
+赤脚的人 (仲夏毕业歌会主题曲)                                              JUN                                       Soundtrack
+梁山伯与茱丽叶 (抖音热恋版)                                               yihuik苡慧 & 小包Zerinn                       Mandopop
+不得不愛                                                          潘瑋柏 & 弦子                                  Mandopop
+我的爱没前奏 (吉他改编版)                                                罗森涛                                       Mandopop
+以後別做朋友 - Yi Hou Bie Zuo Peng You                              Eric Chou                                 Mandopop
+有何不可 歌詞                                                       封茗囧菌                                      Mandopop
+侧脸                                                            于果                                        Mandopop
+静悄悄                                                           大泫                                        Mandopop
+间距                                                            en                                        Mandopop
+愛我還是他「你愛我還是他 是不是真的他有比我好」【動態歌詞】♪                               LBI 利比                                    Mandopop
+我想念                                                           汪苏泷                                       Mandopop
+因你而在                                                          JJ Lin                                    Mandopop
+告白氣球                                                          周杰倫                                       Mandopop
+痴心絕對                                                          李聖傑                                       Mandopop
+惡作劇                                                           王藍茵                                       Mandopop
+Both of us) - 郭顶 (Guo Ding)                                   [ENGSUB/PINYIN] 我们俩 (Wo Men Lia           Mandopop
+第57次取消发送                                                      菲菲公主                                      Mandopop
+若月亮没来（若是月亮还没来）                                                王宇宙Leto & 乔浚丞                             Mandopop
+小幸運(我的少女時代電影主題曲)                                              田馥甄                                       Soundtrack
+这是你期盼的长大吗                                                     ZQS                                       Mandopop
+小孩                                                            罗森涛                                       Mandopop
+Party In The U.S.A.                                           Miley Cyrus                               Pop
+字字句句                                                          卢卢快闭嘴                                     Mandopop
+就是爱你                                                          Yihuik苡慧                                  Mandopop
+美人魚                                                           JJ Lin                                    Mandopop
+妥协                                                            WiFi歪歪                                    Mandopop
+Ice Paper(마음이 고인 물처럼 차분해-Ice Paper) 가사 해석                     心如止水                                      K-pop
+郭顶                                                            《我们俩》                                     Mandopop
+消散對白(女版)「可你眼中深情的對白 如煙花短暫 新鮮感終歸不是愛」【動態歌詞】♪                     Sasablue                                  Mandopop
+我的爱没前奏                                                        苏星婕                                       Mandopop
+消散对白                                                          丁禹兮                                       Mandopop
+我会等                                                           承桓                                        Mandopop
+All Too Well (Taylor's Version)                               Taylor Swift                              Pop
+淋一场雨                                                          LBI利比(时柏尘)                                Mandopop
+雨下的瞬間                                                         李夢尹                                       Mandopop
+豆漿油條                                                          JJ Lin                                    Mandopop
+跳楼机 (神兔小P Remix) 「Baby 我们的感情好像跳楼机，让我突然地升空又急速落地。 」             神兔小P                                      Mandopop
+千千万万                                                          YuZi                                      Mandopop
+只想把你偷偷藏好(《偷偷藏不住》电视剧主题曲/片头曲)                                   汪苏泷, 赵露思                                  Soundtrack
+如果的事                                                          火鸡                                        Mandopop
+爱怎么了                                                          陈村长                                       Mandopop
+好不容易 (《華燈初上》片尾曲)                                              告五人                                       Soundtrack
+擱淺                                                            周杰倫                                       Mandopop
+专属天使                                                          Yihuik苡慧                                  Mandopop
+你不會懂                                                          Joysaaaa                                  Mandopop
+記得                                                            JJ Lin                                    Mandopop
+我期待的不是雪 (而是有你的冬天)                                             张妙格                                       Mandopop
+梁山伯与茱丽叶 (心动版)                                                 LBI利比(时柏尘) & Sasablue                     Mandopop
+少年                                                            梦然                                        Mandopop
+一场雨而已                                                         袁小葳                                       Mandopop
+有点想你                                                          Aioz & 董唧唧                                Mandopop
+愛人錯過                                                          告五人                                       Mandopop
+假装没变过                                                         颜人中                                       Mandopop
+多想在平庸的生活擁抱你                                                   隔壁老樊                                      Mandopop
+普通朋友 - Regular friends                                        David Tao                                 Mandopop
+越来越不懂                                                         cici_                                     Mandopop
+一千年以後                                                         JJ Lin                                    Mandopop
+风铃                                                            蒋孜怡                                       Mandopop
+不如                                                            秦海清                                       Mandopop
+新的心跳                                                          G.E.M.                                    Mandopop
+平凡已是不凡                                                        ZQS                                       Mandopop
+猜不透                                                           AIOZ & 刘思达                                Mandopop
+不要慌太阳下山有月光                                                    GooGoo                                    Mandopop
+體面（《前任3 再見前任》電影插曲）                                            于文文                                       Soundtrack
+微微一笑很傾城                                                       楊洋                                        Mandopop
+喜歡你                                                           斑恩Ben                                     Mandopop
+洛杉矶                                                           LBI利比                                     Mandopop
+有点甜 (《萌三国》网游主题曲|《微微一笑很倾城》电视剧插曲)                               汪苏泷, BY2                                  Soundtrack
+念旧                                                            夏婉安                                       Mandopop
+一笑倾城 (《微微一笑很倾城》电视剧片头曲)                                        汪苏泷                                       Soundtrack
+我走后 (发行版)                                                     小咪                                        Mandopop
+白月光与朱砂痣                                                       胖虎                                        Mandopop
+是你                                                            梦然                                        Mandopop
+零距离的思念                                                        TINY7                                     Mandopop
+我有喜欢的人了(《偷偷藏不住》电视剧片尾曲)                                        赵露思                                       Soundtrack
+【伍六七之玄武國篇】片尾曲————陪在你左右                                        張瑜珊                                       Soundtrack
+心跳的证明                                                         不是花火呀                                     Mandopop
+坏人设                                                           LBI利比                                     Mandopop
+小時候的我們 - When We Were Young                                   Eric Chou                                 Mandopop
+左肩 (你把右手放在我左肩)                                                Lil Yo                                    Mandopop
+过客                                                            阿涵                                        Mandopop
+追光者(電視劇《夏至未至》插曲)                                              Yoyo Sham                                 Soundtrack
+心中的日月『你是心中的日月 落在这里，旅程的前后多余 只为遇到你。』【4K | 动态歌词MV】               王睿卓                                       Mandopop
+为情所伤                                                          庄心妍                                       Mandopop
+一个人想着一个人 (说唱版)                                                艾比利                                       Mandopop
+寧願糾纏『寧願我 糊塗著 掙扎着 和你痛個透徹，也不願 理智的 聽說你 後來和誰快樂，原諒我要的太多 不肯只做旁觀者。』【動態歌詞MV】羊羊                                        Mandopop
+唯一 (三立/台視戲劇【戀愛是科學】插曲)                                         告五人                                       Soundtrack
+Wei Yi                                                        Leehom Wang                               Mandopop
+寂寞号登机口                                                        文俊辉                                       Mandopop
+Love Story                                                    Taylor Swift                              Pop
+Fearless (Taylor’s Version)                                   Taylor Swift                              Pop
+Radio Ga Ga                                                   Queen                                     Rock
+五十年以后                                                         小阿七                                       Mandopop
+小幸運                                                           田馥甄                                       Mandopop
+我走后 - 发行版                                                     小咪                                        Mandopop
+我想念 - Live                                                    Silence Wang, 王赫野                         Mandopop
+追光者 (電視劇《夏至未至》插曲)                                             Yoyo Sham                                 Soundtrack
+眼中有泪心中有你                                                      洋澜一                                       Mandopop
+为情所伤                                                          Ada Zhuang                                Mandopop
+七情六慾                                                          E-Jun Lee                                 Mandopop
+说爱你 - Live                                                    刘至佳                                       Mandopop
+小時候的我們                                                        Eric Chou                                 Mandopop
+哎呦喂                                                           yangyang                                  Mandopop
+給我一首歌的時間                                                      周杰倫                                       Mandopop
+银河与星斗                                                         Yihuik苡慧                                  Mandopop
+或许                                                            LBI利比                                     Mandopop
+左肩                                                            Lil Yo                                    Mandopop
+都不懂                                                           Yihuik苡慧                                  Mandopop
+忘了吧                                                           陈村长                                       Mandopop
+無情畫(伴奏)                                                       王唯旖                                       Mandopop
+飞花不是花                                                         王唯旖                                       Mandopop
+舍得（可是爱已成两刃的利剑）                                                王唯旖                                       Mandopop
+多想成为她                                                         王唯旖                                       Mandopop
+无情画（愿为你放下万千的荣华）                                               王唯旖                                       Mandopop
+雲煙                                                            王唯旖                                       Mandopop
+我不许你自由                                                        王唯旖                                       Mandopop
+二十岁三十岁                                                        王唯旖, Sasablue                             Mandopop
+無情畫                                                           王唯旖                                       Mandopop
+无情画（有人说你菀菀类卿）                                                 王唯旖, Dj狗峰Remix                            Mandopop
+天空沒有悲傷                                                        王唯旖                                       Mandopop
+夏日进度条                                                         Sasablue                                  Mandopop
+放 - 温柔版                                                       Sasablue                                  Mandopop
+总会有人                                                          向思思                                       Mandopop
+如果可以 - 電影"月老"主題曲                                              WeiBird                                   Soundtrack
+一笑倾城（《微微一笑很倾城》电视剧片头曲）                                         汪苏泷                                       Soundtrack
+苦茶 - 心动版                                                      Yihuik苡慧, Aioz                            Mandopop
+苦茶 （心动版）                                                      Yihuik苡慧                                  Mandopop
+情非得已 - 温柔版                                                    赵乃吉                                       Mandopop
+我会等 - 女版                                                      梧彤Vickie                                  Mandopop
+没有如果 - 如果我说                                                   安子须                                       Mandopop
+夏色17號-比爾的歌                                                    Bomb比爾, 不是花火呀                             Mandopop
+我要                                                            林小珂                                       Mandopop
+99次我爱他                                                        Sasablue                                  Mandopop
+Tiny Dancer                                                   Elton John                                Pop rock
+我多喜歡你,你會知道(網劇<致我們單純的小美好>推廣曲)                                  Wang Jun Qi                               Mandopop
+Pompeii                                                       Bastille                                  Indie pop
+Story of My Life                                              One Direction                             Pop
+Entertain Me                                                  Ylona Garcia                              Pop
+Things that I want to tell you - Scissor Seven 3Rd Year Anniversary Song沙总啊                                       Soundtrack

@@ -1,0 +1,2337 @@
+[
+  {
+    "title": "2002",
+    "artist": "Anne-Marie",
+    "genre": "Pop"
+  },
+  {
+    "title": "Very Nice",
+    "artist": "SEVENTEEN",
+    "genre": "K-pop"
+  },
+  {
+    "title": "Touch",
+    "artist": "KATSEYE",
+    "genre": "K-pop"
+  },
+  {
+    "title": "Pinky Up",
+    "artist": "KATSEYE",
+    "genre": "K-pop"
+  },
+  {
+    "title": "Mean Girls",
+    "artist": "KATSEYE",
+    "genre": "K-pop"
+  },
+  {
+    "title": "Tonight I Might",
+    "artist": "KATSEYE",
+    "genre": "K-pop"
+  },
+  {
+    "title": "My Way",
+    "artist": "KATSEYE",
+    "genre": "K-pop"
+  },
+  {
+    "title": "Debut",
+    "artist": "KATSEYE",
+    "genre": "K-pop"
+  },
+  {
+    "title": "FaSHioN",
+    "artist": "CORTIS",
+    "genre": "K-pop"
+  },
+  {
+    "title": "MOONLIGHT SUNRISE",
+    "artist": "TWICE",
+    "genre": "K-pop"
+  },
+  {
+    "title": "Hypnotic",
+    "artist": "VIVIZ",
+    "genre": "K-pop"
+  },
+  {
+    "title": "Jumping Machine (跳楼机)",
+    "artist": "LBI",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "Always",
+    "artist": "GFRIEND",
+    "genre": "K-pop"
+  },
+  {
+    "title": "Love, Older You",
+    "artist": "ILLIT",
+    "genre": "K-pop"
+  },
+  {
+    "title": "Truly Love",
+    "artist": "GFRIEND",
+    "genre": "K-pop"
+  },
+  {
+    "title": "Secret Diary",
+    "artist": "GFRIEND",
+    "genre": "K-pop"
+  },
+  {
+    "title": "La La Love Me",
+    "artist": "VIVIZ",
+    "genre": "K-pop"
+  },
+  {
+    "title": "Hard to Say",
+    "artist": "Karencici",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "Hype Boy",
+    "artist": "NewJeans",
+    "genre": "K-pop"
+  },
+  {
+    "title": "Supernatural",
+    "artist": "NewJeans",
+    "genre": "K-pop"
+  },
+  {
+    "title": "ETA",
+    "artist": "NewJeans",
+    "genre": "K-pop"
+  },
+  {
+    "title": "Shhh!",
+    "artist": "VIVIZ",
+    "genre": "K-pop"
+  },
+  {
+    "title": "FEARLESS (2023 Ver.)",
+    "artist": "LE SSERAFIM",
+    "genre": "K-pop"
+  },
+  {
+    "title": "HOT",
+    "artist": "LE SSERAFIM",
+    "genre": "K-pop"
+  },
+  {
+    "title": "Eve, Psyche & The Bluebeard's Wife",
+    "artist": "LE SSERAFIM",
+    "genre": "K-pop"
+  },
+  {
+    "title": "Off The Record",
+    "artist": "IVE",
+    "genre": "K-pop"
+  },
+  {
+    "title": "I AM",
+    "artist": "IVE",
+    "genre": "K-pop"
+  },
+  {
+    "title": "Pink Pony Club",
+    "artist": "Chappell Roan",
+    "genre": "Pop"
+  },
+  {
+    "title": "MY BAG",
+    "artist": "i-dle",
+    "genre": "K-pop"
+  },
+  {
+    "title": "Crossroads (교차로)",
+    "artist": "GFRIEND",
+    "genre": "K-pop"
+  },
+  {
+    "title": "Reply",
+    "artist": "Yuju",
+    "genre": "K-pop"
+  },
+  {
+    "title": "Wheel of the Year",
+    "artist": "GFRIEND",
+    "genre": "K-pop"
+  },
+  {
+    "title": "Season of Memories",
+    "artist": "GFRIEND",
+    "genre": "K-pop"
+  },
+  {
+    "title": "DDU-DU DDU-DU",
+    "artist": "BLACKPINK",
+    "genre": "K-pop"
+  },
+  {
+    "title": "SET ME FREE",
+    "artist": "TWICE",
+    "genre": "K-pop"
+  },
+  {
+    "title": "LA DI DA",
+    "artist": "EVERGLOW",
+    "genre": "K-pop"
+  },
+  {
+    "title": "Bambambam",
+    "artist": "Yerin",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "Remember",
+    "artist": "Apink",
+    "genre": "K-pop"
+  },
+  {
+    "title": "Power Up",
+    "artist": "Red Velvet",
+    "genre": "K-pop"
+  },
+  {
+    "title": "After LIKE",
+    "artist": "IVE",
+    "genre": "K-pop"
+  },
+  {
+    "title": "As If It's Your Last",
+    "artist": "BLACKPINK",
+    "genre": "K-pop"
+  },
+  {
+    "title": "How You Like That",
+    "artist": "BLACKPINK",
+    "genre": "K-pop"
+  },
+  {
+    "title": "Psycho",
+    "artist": "Red Velvet",
+    "genre": "K-pop"
+  },
+  {
+    "title": "TOMBOY",
+    "artist": "i-dle",
+    "genre": "K-pop"
+  },
+  {
+    "title": "Love Love Love",
+    "artist": "VIVIZ",
+    "genre": "K-pop"
+  },
+  {
+    "title": "Love & Tears",
+    "artist": "VIVIZ",
+    "genre": "K-pop"
+  },
+  {
+    "title": "BOP BOP!",
+    "artist": "VIVIZ",
+    "genre": "K-pop"
+  },
+  {
+    "title": "Love You Like",
+    "artist": "VIVIZ",
+    "genre": "K-pop"
+  },
+  {
+    "title": "有一種悲傷",
+    "artist": "A-Lin",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "You Don't Belong to Me (From \"More Than Blue\")",
+    "artist": "Eric Chou",
+    "genre": "Soundtrack"
+  },
+  {
+    "title": "STYLE",
+    "artist": "Hearts2Hearts",
+    "genre": "K-pop"
+  },
+  {
+    "title": "Time for the Moon Night",
+    "artist": "GFRIEND",
+    "genre": "K-pop"
+  },
+  {
+    "title": "Summer Rain",
+    "artist": "GFRIEND",
+    "genre": "K-pop"
+  },
+  {
+    "title": "Irreplaceable",
+    "artist": "Beyoncé",
+    "genre": "R&B"
+  },
+  {
+    "title": "Twilight",
+    "artist": "JJ Lin",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "陪你走过",
+    "artist": "Rex",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "巅峰之上",
+    "artist": "Mao Bu Yi",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "来自尘埃的光",
+    "artist": "蔡维泽",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "最了不起的你",
+    "artist": "Duan Ao Juan",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "荣耀的战场",
+    "artist": "R1SE",
+    "genre": "K-pop"
+  },
+  {
+    "title": "Love Whisper",
+    "artist": "GFRIEND",
+    "genre": "K-pop"
+  },
+  {
+    "title": "빌려온 고양이 (Billyeoon Goyangi / Do the Dance)",
+    "artist": "ILLIT",
+    "genre": "K-pop"
+  },
+  {
+    "title": "秋日上映",
+    "artist": "Sasablue",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "一点点喜欢",
+    "artist": "Sasablue",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "梁山伯与茱丽叶 (心动版)",
+    "artist": "LBI & Sasablue",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "Like Sunday, Like Rain",
+    "artist": "Sasablue",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "Love Frequency",
+    "artist": "Sasablue",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "Talking to the Moon",
+    "artist": "Bruno Mars",
+    "genre": "Pop"
+  },
+  {
+    "title": "Versace on the Floor",
+    "artist": "Bruno Mars",
+    "genre": "Pop"
+  },
+  {
+    "title": "Locked Out of Heaven",
+    "artist": "Bruno Mars",
+    "genre": "Pop"
+  },
+  {
+    "title": "LILAC",
+    "artist": "IU",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "ME+YOU",
+    "artist": "TWICE",
+    "genre": "K-pop"
+  },
+  {
+    "title": "MORE",
+    "artist": "K/DA",
+    "genre": "K-pop"
+  },
+  {
+    "title": "Jellyous",
+    "artist": "ILLIT",
+    "genre": "K-pop"
+  },
+  {
+    "title": "Lucky Girl Syndrome",
+    "artist": "ILLIT",
+    "genre": "K-pop"
+  },
+  {
+    "title": "Not Cute Anymore",
+    "artist": "ILLIT",
+    "genre": "K-pop"
+  },
+  {
+    "title": "Gee",
+    "artist": "Girls' Generation",
+    "genre": "K-pop"
+  },
+  {
+    "title": "ONE SPARK",
+    "artist": "TWICE",
+    "genre": "K-pop"
+  },
+  {
+    "title": "Count on Me",
+    "artist": "Bruno Mars",
+    "genre": "Pop"
+  },
+  {
+    "title": "Just the Way You Are",
+    "artist": "Bruno Mars",
+    "genre": "Pop"
+  },
+  {
+    "title": "Die With A Smile",
+    "artist": "Lady Gaga, Bruno Mars",
+    "genre": "Pop"
+  },
+  {
+    "title": "Me Gustas Tu",
+    "artist": "GFRIEND",
+    "genre": "K-pop"
+  },
+  {
+    "title": "RedRed",
+    "artist": "CORTIS",
+    "genre": "K-pop"
+  },
+  {
+    "title": "FOCUS",
+    "artist": "Hearts2Hearts",
+    "genre": "K-pop"
+  },
+  {
+    "title": "Magnetic",
+    "artist": "ILLIT",
+    "genre": "K-pop"
+  },
+  {
+    "title": "Rude!",
+    "artist": "Hearts2Hearts",
+    "genre": "K-pop"
+  },
+  {
+    "title": "Say My Name",
+    "artist": "GFRIEND",
+    "genre": "K-pop"
+  },
+  {
+    "title": "Luv Star",
+    "artist": "GFRIEND",
+    "genre": "K-pop"
+  },
+  {
+    "title": "Someday",
+    "artist": "GFRIEND",
+    "genre": "K-pop"
+  },
+  {
+    "title": "Trust",
+    "artist": "GFRIEND",
+    "genre": "K-pop"
+  },
+  {
+    "title": "Glass Bead",
+    "artist": "GFRIEND",
+    "genre": "K-pop"
+  },
+  {
+    "title": "I DO",
+    "artist": "i-dle",
+    "genre": "K-pop"
+  },
+  {
+    "title": "Memoria",
+    "artist": "GFRIEND",
+    "genre": "K-pop"
+  },
+  {
+    "title": "Hold My Hand",
+    "artist": "IU",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "Blueming",
+    "artist": "IU",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "Rough",
+    "artist": "GFRIEND",
+    "genre": "K-pop"
+  },
+  {
+    "title": "Rainbow",
+    "artist": "GFRIEND",
+    "genre": "K-pop"
+  },
+  {
+    "title": "Navillera",
+    "artist": "GFRIEND",
+    "genre": "K-pop"
+  },
+  {
+    "title": "Kitsch",
+    "artist": "IVE",
+    "genre": "K-pop"
+  },
+  {
+    "title": "POP/STARS",
+    "artist": "K/DA",
+    "genre": "K-pop"
+  },
+  {
+    "title": "I Feel Good",
+    "artist": "BOYNEXTDOOR",
+    "genre": "K-pop"
+  },
+  {
+    "title": "MAGIC",
+    "artist": "NAYEON",
+    "genre": "K-pop"
+  },
+  {
+    "title": "Love Scenario",
+    "artist": "iKON",
+    "genre": "K-pop"
+  },
+  {
+    "title": "Jump",
+    "artist": "BLACKPINK",
+    "genre": "K-pop"
+  },
+  {
+    "title": "Hwaa (화)",
+    "artist": "i-dle",
+    "genre": "K-pop"
+  },
+  {
+    "title": "Knock Knock",
+    "artist": "TWICE",
+    "genre": "K-pop"
+  },
+  {
+    "title": "Adrenaline",
+    "artist": "ATEEZ",
+    "genre": "K-pop"
+  },
+  {
+    "title": "Monster",
+    "artist": "EXO",
+    "genre": "K-pop"
+  },
+  {
+    "title": "I'll See You There Tomorrow",
+    "artist": "TOMORROW X TOGETHER",
+    "genre": "K-pop"
+  },
+  {
+    "title": "Jump",
+    "artist": "P1Harmony",
+    "genre": "K-pop"
+  },
+  {
+    "title": "S-Class",
+    "artist": "Stray Kids",
+    "genre": "K-pop"
+  },
+  {
+    "title": "Heavy Serenade",
+    "artist": "NMIXX",
+    "genre": "K-pop"
+  },
+  {
+    "title": "FIRST",
+    "artist": "EVERGLOW",
+    "genre": "K-pop"
+  },
+  {
+    "title": "MAGO",
+    "artist": "GFRIEND",
+    "genre": "K-pop"
+  },
+  {
+    "title": "Back to Life",
+    "artist": "&TEAM",
+    "genre": "K-pop"
+  },
+  {
+    "title": "My First Love Song",
+    "artist": "KickFlip",
+    "genre": "K-pop"
+  },
+  {
+    "title": "We Are Young",
+    "artist": "Fun.",
+    "genre": "Pop rock"
+  },
+  {
+    "title": "夜に駆ける (Racing Into the Night / Into the Night)",
+    "artist": "YOASOBI",
+    "genre": "J-pop"
+  },
+  {
+    "title": "Happy Birthday To You",
+    "artist": "NAYEON",
+    "genre": "K-pop"
+  },
+  {
+    "title": "Here With Me",
+    "artist": "Marshmello",
+    "genre": "EDM"
+  },
+  {
+    "title": "Opalite",
+    "artist": "Taylor Swift",
+    "genre": "Pop"
+  },
+  {
+    "title": "The Feels",
+    "artist": "TWICE",
+    "genre": "K-pop"
+  },
+  {
+    "title": "One Voice",
+    "artist": "Rokudenashi",
+    "genre": "J-pop"
+  },
+  {
+    "title": "Treasure",
+    "artist": "Bruno Mars",
+    "genre": "Pop"
+  },
+  {
+    "title": "Maniac",
+    "artist": "VIVIZ",
+    "genre": "K-pop"
+  },
+  {
+    "title": "NoNoNo",
+    "artist": "Apink",
+    "genre": "K-pop"
+  },
+  {
+    "title": "Russian Roulette",
+    "artist": "Red Velvet",
+    "genre": "K-pop"
+  },
+  {
+    "title": "Dance The Night Away",
+    "artist": "TWICE",
+    "genre": "K-pop"
+  },
+  {
+    "title": "Teenage Dream",
+    "artist": "Katy Perry",
+    "genre": "Pop"
+  },
+  {
+    "title": "LOOK AT ME",
+    "artist": "TWICE",
+    "genre": "K-pop"
+  },
+  {
+    "title": "Upside Down",
+    "artist": "Jack Johnson",
+    "genre": "Folk pop"
+  },
+  {
+    "title": "Style",
+    "artist": "Taylor Swift",
+    "genre": "Pop"
+  },
+  {
+    "title": "The One That Got Away",
+    "artist": "Katy Perry",
+    "genre": "Pop"
+  },
+  {
+    "title": "Steal My Girl",
+    "artist": "One Direction",
+    "genre": "Pop"
+  },
+  {
+    "title": "HOT TO GO!",
+    "artist": "Chappell Roan",
+    "genre": "Pop"
+  },
+  {
+    "title": "Cities",
+    "artist": "Throttle",
+    "genre": "EDM"
+  },
+  {
+    "title": "Japan",
+    "artist": "Throttle",
+    "genre": "EDM"
+  },
+  {
+    "title": "50 Ways to Say Goodbye",
+    "artist": "Train",
+    "genre": "Pop rock"
+  },
+  {
+    "title": "MORE & MORE",
+    "artist": "TWICE",
+    "genre": "K-pop"
+  },
+  {
+    "title": "Celebrity",
+    "artist": "IU",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "SCIENTIST",
+    "artist": "TWICE",
+    "genre": "K-pop"
+  },
+  {
+    "title": "If It's Love",
+    "artist": "Train",
+    "genre": "Pop rock"
+  },
+  {
+    "title": "I GOT YOU",
+    "artist": "TWICE",
+    "genre": "K-pop"
+  },
+  {
+    "title": "Save Me, San Francisco",
+    "artist": "Train",
+    "genre": "Pop rock"
+  },
+  {
+    "title": "Over My Head (Cable Car)",
+    "artist": "The Fray",
+    "genre": "Pop rock"
+  },
+  {
+    "title": "The Best Thing I Ever Did",
+    "artist": "TWICE",
+    "genre": "K-pop"
+  },
+  {
+    "title": "24/7",
+    "artist": "TWICE",
+    "genre": "K-pop"
+  },
+  {
+    "title": "Chained to the Rhythm",
+    "artist": "Katy Perry",
+    "genre": "Pop"
+  },
+  {
+    "title": "LIKEY",
+    "artist": "TWICE",
+    "genre": "K-pop"
+  },
+  {
+    "title": "YES or YES",
+    "artist": "TWICE",
+    "genre": "K-pop"
+  },
+  {
+    "title": "目及皆是你",
+    "artist": "Little blue vest",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "Candy Pop",
+    "artist": "TWICE",
+    "genre": "K-pop"
+  },
+  {
+    "title": "Memories",
+    "artist": "大槻真希 (Ootsuki Maki)",
+    "genre": "J-pop"
+  },
+  {
+    "title": "Let Me Be With You",
+    "artist": "沙总啊",
+    "genre": "Soundtrack"
+  },
+  {
+    "title": "愿得一人心 (电视剧《最美的时光》)",
+    "artist": "李行亮",
+    "genre": "Soundtrack"
+  },
+  {
+    "title": "Not Even Being Benched",
+    "artist": "沙总啊",
+    "genre": "Soundtrack"
+  },
+  {
+    "title": "Let's Just Be Friends",
+    "artist": "杨振宇",
+    "genre": "Soundtrack"
+  },
+  {
+    "title": "Always by Your Side",
+    "artist": "Rae Xie",
+    "genre": "Soundtrack"
+  },
+  {
+    "title": "Things That I Want To Tell You",
+    "artist": "沙总啊",
+    "genre": "Soundtrack"
+  },
+  {
+    "title": "Vanilla Salt",
+    "artist": "堀江由衣 (Yui Horie)",
+    "genre": "J-pop"
+  },
+  {
+    "title": "前前前世 (Zenzenzense)",
+    "artist": "RADWIMPS",
+    "genre": "J-pop"
+  },
+  {
+    "title": "strawberry moon",
+    "artist": "IU",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "I CAN'T STOP ME",
+    "artist": "TWICE",
+    "genre": "K-pop"
+  },
+  {
+    "title": "Paparazzi",
+    "artist": "Lady Gaga",
+    "genre": "Pop"
+  },
+  {
+    "title": "飞鸟和蝉",
+    "artist": "任然",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "世界这么大还是遇见你",
+    "artist": "Echo",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "Heart Shaker",
+    "artist": "TWICE",
+    "genre": "K-pop"
+  },
+  {
+    "title": "What is Love?",
+    "artist": "TWICE",
+    "genre": "K-pop"
+  },
+  {
+    "title": "What Makes You Beautiful",
+    "artist": "One Direction",
+    "genre": "Pop"
+  },
+  {
+    "title": "一千年以后",
+    "artist": "JJ Lin",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "美人鱼",
+    "artist": "JJ Lin",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "是你",
+    "artist": "Miya",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "Red Scarf (\"Till We Meet Again\" Movie Theme Song)",
+    "artist": "WeiBird",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "Fairy Tale (童话)",
+    "artist": "Michael Wong",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "Mr. Brightside",
+    "artist": "The Killers",
+    "genre": "Rock"
+  },
+  {
+    "title": "Take A Bow",
+    "artist": "Rihanna",
+    "genre": "Pop"
+  },
+  {
+    "title": "22 (Taylor's Version)",
+    "artist": "Taylor Swift",
+    "genre": "Pop"
+  },
+  {
+    "title": "Hey, Soul Sister",
+    "artist": "Train",
+    "genre": "Pop rock"
+  },
+  {
+    "title": "You Belong With Me (Taylor's Version)",
+    "artist": "Taylor Swift",
+    "genre": "Pop"
+  },
+  {
+    "title": "Gnarly",
+    "artist": "KATSEYE",
+    "genre": "K-pop"
+  },
+  {
+    "title": "FANCY",
+    "artist": "TWICE",
+    "genre": "K-pop"
+  },
+  {
+    "title": "Paper Rings",
+    "artist": "Taylor Swift",
+    "genre": "Pop"
+  },
+  {
+    "title": "Give Me Everything",
+    "artist": "Pitbull, Ne-Yo, AFROJACK",
+    "genre": "Dance-pop"
+  },
+  {
+    "title": "War",
+    "artist": "keshi",
+    "genre": "R&B"
+  },
+  {
+    "title": "青花瓷",
+    "artist": "周杰倫",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "I Will Never Get Loved - Cola Version",
+    "artist": "赵寒",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "The Separation Was Too Sudden (Ep3 ending theme)",
+    "artist": "侯俊杰",
+    "genre": "Soundtrack"
+  },
+  {
+    "title": "荣耀的战场 (Glory Battlefield) — ending theme",
+    "artist": "R1SE",
+    "genre": "K-pop"
+  },
+  {
+    "title": "Let me be with you / Be with you",
+    "artist": "沙总啊",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "Do I Matter To Me",
+    "artist": "赵寒",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "Shadow Assassins",
+    "artist": "王舜禾",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "Not Even Being 'Benched' - Memories - Girls Version",
+    "artist": "沙总啊",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "Not Even Being 'Benched' - Boys Version",
+    "artist": "杨振宇",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "Dingdang's Face - Season1 Extra Episode4 Version",
+    "artist": "赵寒",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "我想和你一起去海边（动画《刺客伍六七》片尾曲）",
+    "artist": "蜡笔小璐 / 斯斯与帆",
+    "genre": "Soundtrack"
+  },
+  {
+    "title": "无论你多怪异我还是会喜欢你（《刺客伍六七》动画推广版片尾曲）",
+    "artist": "Zhou Zi Yan",
+    "genre": "Soundtrack"
+  },
+  {
+    "title": "Seven",
+    "artist": "发条月亮",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "I Want To Go To The Beach With You",
+    "artist": "斯斯与帆",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "I Will Never Get Loved",
+    "artist": "(S4 OST artist; OCR also showed 牛奶咖啡 on some rows)",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "Careless Whisper",
+    "artist": "George Michael",
+    "genre": "Pop"
+  },
+  {
+    "title": "Love Someone",
+    "artist": "Lukas Graham",
+    "genre": "Pop"
+  },
+  {
+    "title": "Home",
+    "artist": "Phillip Phillips",
+    "genre": "Pop"
+  },
+  {
+    "title": "Me Without You",
+    "artist": "Havelin",
+    "genre": "Pop"
+  },
+  {
+    "title": "Shut Up and Dance",
+    "artist": "WALK THE MOON",
+    "genre": "Indie pop"
+  },
+  {
+    "title": "Saturday",
+    "artist": "Twenty One Pilots",
+    "genre": "Indie pop"
+  },
+  {
+    "title": "Memories",
+    "artist": "Maroon 5",
+    "genre": "Pop"
+  },
+  {
+    "title": "I Ain't Worried",
+    "artist": "OneRepublic",
+    "genre": "Pop rock"
+  },
+  {
+    "title": "Demons",
+    "artist": "Imagine Dragons",
+    "genre": "Pop rock"
+  },
+  {
+    "title": "STAY (with Justin Bieber)",
+    "artist": "The Kid LAROI, Justin Bieber",
+    "genre": "Pop"
+  },
+  {
+    "title": "Fireflies",
+    "artist": "Owl City",
+    "genre": "Synth-pop"
+  },
+  {
+    "title": "Best Day Of My Life",
+    "artist": "American Authors",
+    "genre": "Indie pop"
+  },
+  {
+    "title": "Have You Ever Seen The Rain",
+    "artist": "Creedence Clearwater Revival",
+    "genre": "Rock"
+  },
+  {
+    "title": "Sunroof",
+    "artist": "Nicky Youre, dazy",
+    "genre": "Pop"
+  },
+  {
+    "title": "On Top Of The World",
+    "artist": "Imagine Dragons",
+    "genre": "Pop rock"
+  },
+  {
+    "title": "Run",
+    "artist": "OneRepublic",
+    "genre": "Pop rock"
+  },
+  {
+    "title": "Something Just Like This",
+    "artist": "The Chainsmokers, Coldplay",
+    "genre": "EDM"
+  },
+  {
+    "title": "Take On Me",
+    "artist": "a-ha",
+    "genre": "Synth-pop"
+  },
+  {
+    "title": "Drive By",
+    "artist": "Train",
+    "genre": "Pop rock"
+  },
+  {
+    "title": "Secrets",
+    "artist": "OneRepublic",
+    "genre": "Pop rock"
+  },
+  {
+    "title": "Maps",
+    "artist": "Maroon 5",
+    "genre": "Pop"
+  },
+  {
+    "title": "The Nights",
+    "artist": "Avicii",
+    "genre": "EDM"
+  },
+  {
+    "title": "I Lived",
+    "artist": "OneRepublic",
+    "genre": "Pop rock"
+  },
+  {
+    "title": "Hall of Fame (feat. will.i.am)",
+    "artist": "The Script, will.i.am",
+    "genre": "Pop"
+  },
+  {
+    "title": "Don't Stop Me Now - Remastered 2011",
+    "artist": "Queen",
+    "genre": "Rock"
+  },
+  {
+    "title": "Hooked On A Feeling",
+    "artist": "Blue Swede, Björn Skifs",
+    "genre": "Pop"
+  },
+  {
+    "title": "One Call Away",
+    "artist": "Charlie Puth",
+    "genre": "Pop"
+  },
+  {
+    "title": "Sunshine",
+    "artist": "OneRepublic",
+    "genre": "Pop rock"
+  },
+  {
+    "title": "Treat You Better",
+    "artist": "Shawn Mendes",
+    "genre": "Pop"
+  },
+  {
+    "title": "Ain't No Mountain High Enough",
+    "artist": "Marvin Gaye, Tammi Terrell",
+    "genre": "Soul"
+  },
+  {
+    "title": "Viva La Vida",
+    "artist": "Coldplay",
+    "genre": "Pop rock"
+  },
+  {
+    "title": "The Lazy Song",
+    "artist": "Bruno Mars",
+    "genre": "Pop"
+  },
+  {
+    "title": "I'm Yours",
+    "artist": "Jason Mraz",
+    "genre": "Pop"
+  },
+  {
+    "title": "Marry You",
+    "artist": "Bruno Mars",
+    "genre": "Pop"
+  },
+  {
+    "title": "Glory Battlefield (荣耀战场) (Ending theme song)",
+    "artist": "R1SE",
+    "genre": "K-pop"
+  },
+  {
+    "title": "我多喜欢你，你会知道 (网剧《致我们单纯的小美好》推广曲)",
+    "artist": "Wang Jun Qi",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "有点甜",
+    "artist": "汪苏泷, BY2",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "Castle on the Hill",
+    "artist": "Ed Sheeran",
+    "genre": "Pop"
+  },
+  {
+    "title": "I Think I Like You",
+    "artist": "The Band CAMINO",
+    "genre": "Indie pop"
+  },
+  {
+    "title": "Once in a Lifetime",
+    "artist": "Landon Austin",
+    "genre": "Pop"
+  },
+  {
+    "title": "Payphone",
+    "artist": "Maroon 5, Wiz Khalifa",
+    "genre": "Pop"
+  },
+  {
+    "title": "You're Welcome",
+    "artist": "Dwayne Johnson, Disney",
+    "genre": "Soundtrack"
+  },
+  {
+    "title": "Chasing Cars",
+    "artist": "Snow Patrol",
+    "genre": "Indie rock"
+  },
+  {
+    "title": "Nice Guys",
+    "artist": "Chester See, Kevjumba, Ryan Higa",
+    "genre": "Comedy"
+  },
+  {
+    "title": "Hostiles on the Hill",
+    "artist": "Bad Lip Reading",
+    "genre": "Comedy"
+  },
+  {
+    "title": "Last Time I Say Sorry",
+    "artist": "Kane Brown, John Legend",
+    "genre": "Pop"
+  },
+  {
+    "title": "All of Me",
+    "artist": "John Legend",
+    "genre": "R&B"
+  },
+  {
+    "title": "We Built This City",
+    "artist": "Ninja Sex Party",
+    "genre": "Rock"
+  },
+  {
+    "title": "I'm Still Standing",
+    "artist": "Elton John",
+    "genre": "Pop rock"
+  },
+  {
+    "title": "Let It Be - Remastered 2009",
+    "artist": "The Beatles",
+    "genre": "Rock"
+  },
+  {
+    "title": "Danger Zone (From \"Top Gun\" Original Soundtrack)",
+    "artist": "Kenny Loggins",
+    "genre": "Soundtrack"
+  },
+  {
+    "title": "Die For You",
+    "artist": "VALORANT, Grabbitz",
+    "genre": "EDM"
+  },
+  {
+    "title": "Cold Heart - PNAU Remix",
+    "artist": "Elton John, Dua Lipa, PNAU",
+    "genre": "Dance-pop"
+  },
+  {
+    "title": "Shivers",
+    "artist": "Ed Sheeran",
+    "genre": "Pop"
+  },
+  {
+    "title": "Take Me Home, Country Roads - Original Version",
+    "artist": "John Denver",
+    "genre": "Country"
+  },
+  {
+    "title": "Free Fallin'",
+    "artist": "Tom Petty",
+    "genre": "Rock"
+  },
+  {
+    "title": "Rocket Man (I Think It's Going To Be A Long, Long Time)",
+    "artist": "Elton John",
+    "genre": "Pop rock"
+  },
+  {
+    "title": "American Pie",
+    "artist": "Don McLean",
+    "genre": "Folk rock"
+  },
+  {
+    "title": "安静的稻草人",
+    "artist": "Daven Wu",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "我会等 (女版)",
+    "artist": "梧彤Vickie",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "只是太爱你",
+    "artist": "丁芙妮",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "嚣张",
+    "artist": "en",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "1022-比爾的歌 (青春版)（原唱：Bomb 比爾）『我說這樣的情景也很好，至少還夠我一個人胡鬧。』【動態歌詞 | Pinyin Lyrics】【PENGUIN MUSIC】",
+    "artist": "不是花火呀",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "像晴天像雨天（电视剧《难哄》心动曲）",
+    "artist": "汪苏泷",
+    "genre": "Soundtrack"
+  },
+  {
+    "title": "背對背擁抱",
+    "artist": "JJ Lin",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "总会有人",
+    "artist": "吕口口",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "說散就散",
+    "artist": "JC 陳詠桐",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "大城小愛 - Big City Small Love",
+    "artist": "Leehom Wang",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "没有如果「如果我说 爱我没有如果 错过就过 你是不是会难过」【動態歌詞/PinyinLyrics】♪",
+    "artist": "勝嶼",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "我只能离开",
+    "artist": "颜人中",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "恋爱画板",
+    "artist": "锦零",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "Galaxy and Stars",
+    "artist": "Yihuik苡慧",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "晚风告白",
+    "artist": "星野",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "晚风告白 (男版)",
+    "artist": "小包Zerinn",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "哪里都是你",
+    "artist": "队长",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "童話",
+    "artist": "光良",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "雨夜溺亡的蝴蝶",
+    "artist": "菲菲公主(陆绮菲)",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "明明（深爱着你）",
+    "artist": "丁肆Dicey",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "折起的遗憾 - Folded Memory",
+    "artist": "LBI",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "爱错",
+    "artist": "en",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "下一秒",
+    "artist": "張碧晨",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "CHILLAX",
+    "artist": "TWICE",
+    "genre": "K-pop"
+  },
+  {
+    "title": "万有引力",
+    "artist": "汪苏泷",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "那些你很冒險的夢",
+    "artist": "JJ Lin",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "最后一页",
+    "artist": "Sasablue",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "給我ㄧ首歌的時間",
+    "artist": "周杰倫",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "門沒鎖（原唱：品冠）『天都黑了你都沒來過沒來坐，戲都完了眼都沒眨過沒哭過。』【動態歌詞/Vietsub/Pinyin Lyrics】",
+    "artist": "我是土豆",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "愛錯 - Wrong Love",
+    "artist": "Leehom Wang",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "我懷念的 - What I Miss",
+    "artist": "Sun Yanzi",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "有些",
+    "artist": "颜人中",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "从前说",
+    "artist": "小阿七",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "You Belong With Me (Taylor’s Version)",
+    "artist": "Taylor Swift",
+    "genre": "Pop"
+  },
+  {
+    "title": "苦茶 (心动版)",
+    "artist": "Yihuik苡慧, Aioz",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "说爱你",
+    "artist": "刘至佳",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "黄昏",
+    "artist": "吕口口",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "唯一 - Only One",
+    "artist": "G.E.M.",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "《零距离的思念》变速0.8（感情说不清她越道越不明白 让盲目的爱变习惯延续浪漫）",
+    "artist": "Tiny7",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "愛你",
+    "artist": "王心凌",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "或许 - Maybe",
+    "artist": "LBI",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "跳楼机",
+    "artist": "en",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "Safe and Sound",
+    "artist": "Capital Cities",
+    "genre": "Indie pop"
+  },
+  {
+    "title": "Strategy",
+    "artist": "TWICE",
+    "genre": "K-pop"
+  },
+  {
+    "title": "小星星",
+    "artist": "汪苏泷",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "小酒窩",
+    "artist": "林俊傑 & 蔡卓妍",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "再见只是陌生人",
+    "artist": "庄心妍",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "夜曲",
+    "artist": "周杰倫",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "可不可以 (抖音热歌)",
+    "artist": "张紫豪",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "最后一页",
+    "artist": "姚晓棠",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "情非得已 (温柔版)",
+    "artist": "赵乃吉",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "万有引力",
+    "artist": "F*yy",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "五十年以后 (原唱: 海来阿木)『我希望五十年以后，你还能在我左右。』【動態歌詞】",
+    "artist": "小阿七",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "Love, Maybe",
+    "artist": "MeloMance",
+    "genre": "K-pop"
+  },
+  {
+    "title": "You Xie",
+    "artist": "Yihuik苡慧",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "指紋",
+    "artist": "杜宣達",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "分开不会痛",
+    "artist": "罗森涛",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "終於了解自由 - Freedom",
+    "artist": "Eric Chou",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "摯友「若愛一個人 切忌愛得太深」【動態歌詞】♪",
+    "artist": "WiFi歪歪",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "肯定",
+    "artist": "RE-D, 是二哈ya & Masta",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "拥过你的风",
+    "artist": "LBI利比",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "妥协",
+    "artist": "en",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "爱错",
+    "artist": "于冬然",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "耿 (《最好的我们》电影毕业季主题曲)",
+    "artist": "汪苏泷",
+    "genre": "Soundtrack"
+  },
+  {
+    "title": "江南",
+    "artist": "JJ Lin",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "We Are Never Ever Getting Back Together",
+    "artist": "Taylor Swift",
+    "genre": "Pop"
+  },
+  {
+    "title": "稻香",
+    "artist": "周杰倫",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "在加納共和國離婚",
+    "artist": "菲道尔 & DIOR 大穎",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "你一定要幸福",
+    "artist": "虎二",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "猜不透 (說唱版)「如果忽遠忽近的灑脫 是你要的自由 那我寧願回到一個人生活」【動態歌詞/PinyinLyrics】♪",
+    "artist": "盧盧快閉嘴 / 劉思达LOFTHESTAR",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "給我一個理由忘記",
+    "artist": "A-Lin",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "赤脚的人 (仲夏毕业歌会主题曲)",
+    "artist": "JUN",
+    "genre": "Soundtrack"
+  },
+  {
+    "title": "梁山伯与茱丽叶 (抖音热恋版)",
+    "artist": "yihuik苡慧 & 小包Zerinn",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "不得不愛",
+    "artist": "潘瑋柏 & 弦子",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "我的爱没前奏 (吉他改编版)",
+    "artist": "罗森涛",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "以後別做朋友 - Yi Hou Bie Zuo Peng You",
+    "artist": "Eric Chou",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "有何不可 歌詞",
+    "artist": "封茗囧菌",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "侧脸",
+    "artist": "于果",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "静悄悄",
+    "artist": "大泫",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "间距",
+    "artist": "en",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "愛我還是他「你愛我還是他 是不是真的他有比我好」【動態歌詞】♪",
+    "artist": "LBI 利比",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "我想念",
+    "artist": "汪苏泷",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "因你而在",
+    "artist": "JJ Lin",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "告白氣球",
+    "artist": "周杰倫",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "痴心絕對",
+    "artist": "李聖傑",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "惡作劇",
+    "artist": "王藍茵",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "Both of us) - 郭顶 (Guo Ding)",
+    "artist": "[ENGSUB/PINYIN] 我们俩 (Wo Men Lia",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "第57次取消发送",
+    "artist": "菲菲公主",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "若月亮没来（若是月亮还没来）",
+    "artist": "王宇宙Leto & 乔浚丞",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "小幸運(我的少女時代電影主題曲)",
+    "artist": "田馥甄",
+    "genre": "Soundtrack"
+  },
+  {
+    "title": "这是你期盼的长大吗",
+    "artist": "ZQS",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "小孩",
+    "artist": "罗森涛",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "Party In The U.S.A.",
+    "artist": "Miley Cyrus",
+    "genre": "Pop"
+  },
+  {
+    "title": "字字句句",
+    "artist": "卢卢快闭嘴",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "就是爱你",
+    "artist": "Yihuik苡慧",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "美人魚",
+    "artist": "JJ Lin",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "妥协",
+    "artist": "WiFi歪歪",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "Ice Paper(마음이 고인 물처럼 차분해-Ice Paper) 가사 해석",
+    "artist": "心如止水",
+    "genre": "K-pop"
+  },
+  {
+    "title": "郭顶",
+    "artist": "《我们俩》",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "消散對白(女版)「可你眼中深情的對白 如煙花短暫 新鮮感終歸不是愛」【動態歌詞】♪",
+    "artist": "Sasablue",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "我的爱没前奏",
+    "artist": "苏星婕",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "消散对白",
+    "artist": "丁禹兮",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "我会等",
+    "artist": "承桓",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "All Too Well (Taylor's Version)",
+    "artist": "Taylor Swift",
+    "genre": "Pop"
+  },
+  {
+    "title": "淋一场雨",
+    "artist": "LBI利比(时柏尘)",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "雨下的瞬間",
+    "artist": "李夢尹",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "豆漿油條",
+    "artist": "JJ Lin",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "跳楼机 (神兔小P Remix) 「Baby 我们的感情好像跳楼机，让我突然地升空又急速落地。 」",
+    "artist": "神兔小P",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "千千万万",
+    "artist": "YuZi",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "只想把你偷偷藏好(《偷偷藏不住》电视剧主题曲/片头曲)",
+    "artist": "汪苏泷, 赵露思",
+    "genre": "Soundtrack"
+  },
+  {
+    "title": "如果的事",
+    "artist": "火鸡",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "爱怎么了",
+    "artist": "陈村长",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "好不容易 (《華燈初上》片尾曲)",
+    "artist": "告五人",
+    "genre": "Soundtrack"
+  },
+  {
+    "title": "擱淺",
+    "artist": "周杰倫",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "专属天使",
+    "artist": "Yihuik苡慧",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "你不會懂",
+    "artist": "Joysaaaa",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "記得",
+    "artist": "JJ Lin",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "我期待的不是雪 (而是有你的冬天)",
+    "artist": "张妙格",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "梁山伯与茱丽叶 (心动版)",
+    "artist": "LBI利比(时柏尘) & Sasablue",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "少年",
+    "artist": "梦然",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "一场雨而已",
+    "artist": "袁小葳",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "有点想你",
+    "artist": "Aioz & 董唧唧",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "愛人錯過",
+    "artist": "告五人",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "假装没变过",
+    "artist": "颜人中",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "多想在平庸的生活擁抱你",
+    "artist": "隔壁老樊",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "普通朋友 - Regular friends",
+    "artist": "David Tao",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "越来越不懂",
+    "artist": "cici_",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "一千年以後",
+    "artist": "JJ Lin",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "风铃",
+    "artist": "蒋孜怡",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "不如",
+    "artist": "秦海清",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "新的心跳",
+    "artist": "G.E.M.",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "平凡已是不凡",
+    "artist": "ZQS",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "猜不透",
+    "artist": "AIOZ & 刘思达",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "不要慌太阳下山有月光",
+    "artist": "GooGoo",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "體面（《前任3 再見前任》電影插曲）",
+    "artist": "于文文",
+    "genre": "Soundtrack"
+  },
+  {
+    "title": "微微一笑很傾城",
+    "artist": "楊洋",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "喜歡你",
+    "artist": "斑恩Ben",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "洛杉矶",
+    "artist": "LBI利比",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "有点甜 (《萌三国》网游主题曲|《微微一笑很倾城》电视剧插曲)",
+    "artist": "汪苏泷, BY2",
+    "genre": "Soundtrack"
+  },
+  {
+    "title": "念旧",
+    "artist": "夏婉安",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "一笑倾城 (《微微一笑很倾城》电视剧片头曲)",
+    "artist": "汪苏泷",
+    "genre": "Soundtrack"
+  },
+  {
+    "title": "我走后 (发行版)",
+    "artist": "小咪",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "白月光与朱砂痣",
+    "artist": "胖虎",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "是你",
+    "artist": "梦然",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "零距离的思念",
+    "artist": "TINY7",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "我有喜欢的人了(《偷偷藏不住》电视剧片尾曲)",
+    "artist": "赵露思",
+    "genre": "Soundtrack"
+  },
+  {
+    "title": "【伍六七之玄武國篇】片尾曲————陪在你左右",
+    "artist": "張瑜珊",
+    "genre": "Soundtrack"
+  },
+  {
+    "title": "心跳的证明",
+    "artist": "不是花火呀",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "坏人设",
+    "artist": "LBI利比",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "小時候的我們 - When We Were Young",
+    "artist": "Eric Chou",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "左肩 (你把右手放在我左肩)",
+    "artist": "Lil Yo",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "过客",
+    "artist": "阿涵",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "追光者(電視劇《夏至未至》插曲)",
+    "artist": "Yoyo Sham",
+    "genre": "Soundtrack"
+  },
+  {
+    "title": "心中的日月『你是心中的日月 落在这里，旅程的前后多余 只为遇到你。』【4K | 动态歌词MV】",
+    "artist": "王睿卓",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "为情所伤",
+    "artist": "庄心妍",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "一个人想着一个人 (说唱版)",
+    "artist": "艾比利",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "寧願糾纏『寧願我 糊塗著 掙扎着 和你痛個透徹，也不願 理智的 聽說你 後來和誰快樂，原諒我要的太多 不肯只做旁觀者。』【動態歌詞MV】",
+    "artist": "羊羊",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "唯一 (三立/台視戲劇【戀愛是科學】插曲)",
+    "artist": "告五人",
+    "genre": "Soundtrack"
+  },
+  {
+    "title": "Wei Yi",
+    "artist": "Leehom Wang",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "寂寞号登机口",
+    "artist": "文俊辉",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "Love Story",
+    "artist": "Taylor Swift",
+    "genre": "Pop"
+  },
+  {
+    "title": "Fearless (Taylor’s Version)",
+    "artist": "Taylor Swift",
+    "genre": "Pop"
+  },
+  {
+    "title": "Radio Ga Ga",
+    "artist": "Queen",
+    "genre": "Rock"
+  },
+  {
+    "title": "五十年以后",
+    "artist": "小阿七",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "小幸運",
+    "artist": "田馥甄",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "我走后 - 发行版",
+    "artist": "小咪",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "我想念 - Live",
+    "artist": "Silence Wang, 王赫野",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "追光者 (電視劇《夏至未至》插曲)",
+    "artist": "Yoyo Sham",
+    "genre": "Soundtrack"
+  },
+  {
+    "title": "眼中有泪心中有你",
+    "artist": "洋澜一",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "为情所伤",
+    "artist": "Ada Zhuang",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "七情六慾",
+    "artist": "E-Jun Lee",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "说爱你 - Live",
+    "artist": "刘至佳",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "小時候的我們",
+    "artist": "Eric Chou",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "哎呦喂",
+    "artist": "yangyang",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "給我一首歌的時間",
+    "artist": "周杰倫",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "银河与星斗",
+    "artist": "Yihuik苡慧",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "或许",
+    "artist": "LBI利比",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "左肩",
+    "artist": "Lil Yo",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "都不懂",
+    "artist": "Yihuik苡慧",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "忘了吧",
+    "artist": "陈村长",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "無情畫(伴奏)",
+    "artist": "王唯旖",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "飞花不是花",
+    "artist": "王唯旖",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "舍得（可是爱已成两刃的利剑）",
+    "artist": "王唯旖",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "多想成为她",
+    "artist": "王唯旖",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "无情画（愿为你放下万千的荣华）",
+    "artist": "王唯旖",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "雲煙",
+    "artist": "王唯旖",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "我不许你自由",
+    "artist": "王唯旖",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "二十岁三十岁",
+    "artist": "王唯旖, Sasablue",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "無情畫",
+    "artist": "王唯旖",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "无情画（有人说你菀菀类卿）",
+    "artist": "王唯旖, Dj狗峰Remix",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "天空沒有悲傷",
+    "artist": "王唯旖",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "夏日进度条",
+    "artist": "Sasablue",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "放 - 温柔版",
+    "artist": "Sasablue",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "总会有人",
+    "artist": "向思思",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "如果可以 - 電影\"月老\"主題曲",
+    "artist": "WeiBird",
+    "genre": "Soundtrack"
+  },
+  {
+    "title": "一笑倾城（《微微一笑很倾城》电视剧片头曲）",
+    "artist": "汪苏泷",
+    "genre": "Soundtrack"
+  },
+  {
+    "title": "苦茶 - 心动版",
+    "artist": "Yihuik苡慧, Aioz",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "苦茶 （心动版）",
+    "artist": "Yihuik苡慧",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "情非得已 - 温柔版",
+    "artist": "赵乃吉",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "我会等 - 女版",
+    "artist": "梧彤Vickie",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "没有如果 - 如果我说",
+    "artist": "安子须",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "夏色17號-比爾的歌",
+    "artist": "Bomb比爾, 不是花火呀",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "我要",
+    "artist": "林小珂",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "99次我爱他",
+    "artist": "Sasablue",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "Tiny Dancer",
+    "artist": "Elton John",
+    "genre": "Pop rock"
+  },
+  {
+    "title": "我多喜歡你,你會知道(網劇<致我們單純的小美好>推廣曲)",
+    "artist": "Wang Jun Qi",
+    "genre": "Mandopop"
+  },
+  {
+    "title": "Pompeii",
+    "artist": "Bastille",
+    "genre": "Indie pop"
+  },
+  {
+    "title": "Story of My Life",
+    "artist": "One Direction",
+    "genre": "Pop"
+  },
+  {
+    "title": "Entertain Me",
+    "artist": "Ylona Garcia",
+    "genre": "Pop"
+  },
+  {
+    "title": "Things that I want to tell you - Scissor Seven 3Rd Year Anniversary Song",
+    "artist": "沙总啊",
+    "genre": "Soundtrack"
+  }
+]
