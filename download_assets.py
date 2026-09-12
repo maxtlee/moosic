@@ -55,6 +55,21 @@ app.run(host="127.0.0.1", port=port, threaded=True, use_reloader=False)
 """
 
 
+def parse_indexes(spec: str) -> list[int]:
+    """Parse '1,3-5,12' into a sorted list of 1-based indexes."""
+    indexes: set[int] = set()
+    for part in spec.split(","):
+        part = part.strip()
+        if not part:
+            continue
+        if "-" in part:
+            start, end = (int(x) for x in part.split("-", 1))
+            indexes.update(range(start, end + 1))
+        else:
+            indexes.add(int(part))
+    return sorted(indexes)
+
+
 def try_port() -> int:
     """Return a currently free TCP port."""
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
@@ -156,6 +171,9 @@ def main() -> int:
                         help="1-based index of the first song to download")
     parser.add_argument("--limit", type=int, default=0,
                         help="Maximum number of songs to download (0 = all)")
+    parser.add_argument("--only", type=str, default=None,
+                        help="Comma-separated 1-based indexes to download, e.g. '3,7-9' "
+                             "(overrides --start/--limit)")
     parser.add_argument("--delay", type=float, default=0.0,
                         help="Seconds to sleep between songs")
     parser.add_argument("--verbose", action="store_true", help="Show server log output")
@@ -189,12 +207,19 @@ def main() -> int:
         log.info("yt-audio-api server ready at %s", base)
         log.info("Downloading into %s", args.assets)
 
-        selected = songs[max(0, args.start - 1):]
-        if args.limit:
-            selected = selected[:args.limit]
+        if args.only:
+            entries = []
+            for idx in parse_indexes(args.only):
+                if 1 <= idx <= len(songs):
+                    entries.append((idx, songs[idx - 1]))
+        else:
+            tail = list(enumerate(songs[max(0, args.start - 1):],
+                                  start=max(1, args.start)))
+            entries = tail[:args.limit] if args.limit else tail
+        selected = [song for _, song in entries]
 
         ok = skip = fail = 0
-        for i, song in enumerate(selected, start=max(1, args.start)):
+        for i, song in entries:
             title, artist = song.get("title", ""), song.get("artist", "")
             label = f"{artist} - {title}" if artist else title
             destination = args.assets / f"{i:04d} - {sanitize(artist)} - {sanitize(title)}.mp3"
