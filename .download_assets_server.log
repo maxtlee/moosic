@@ -1,0 +1,8 @@
+ * Serving Flask app 'main'
+ * Debug mode: off
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:60575
+[33mPress CTRL+C to quit[0m
+127.0.0.1 - - [12/Sep/2026 01:01:25] "[31m[1mGET / HTTP/1.1[0m" 400 -
+[download]   0.0% of    2.90MiB at  Unknown B/s ETA Unknown[download]   0.1% of    2.90MiB at  Unknown B/s ETA Unknown[download]   0.2% of    2.90MiB at  Unknown B/s ETA Unknown[download]   0.5% of    2.90MiB at  Unknown B/s ETA Unknown[download]   1.0% of    2.90MiB at   13.02MiB/s ETA 00:00  [download]   2.1% of    2.90MiB at   13.88MiB/s ETA 00:00[download]   4.3% of    2.90MiB at   21.56MiB/s ETA 00:00[download]   8.6% of    2.90MiB at   29.96MiB/s ETA 00:00[download]  17.2% of    2.90MiB at   44.67MiB/s ETA 00:00[download]  34.5% of    2.90MiB at   47.22MiB/s ETA 00:00[download]  69.0% of    2.90MiB at   77.97MiB/s ETA 00:00[download] 100.0% of    2.90MiB at   34.91MiB/s ETA 00:00[download] 100% of    2.90MiB in 00:00:00 at 25.18MiB/s                                                         127.0.0.1 - - [12/Sep/2026 01:01:28] "GET /?url=https://www.youtube.com/watch?v%3Ds3CjsNjiKyc HTTP/1.1" 200 -
+127.0.0.1 - - [12/Sep/2026 01:01:28] "GET /download?token=k1K7MYxZEzHSELggJF2WehuwnDA HTTP/1.1" 200 -
