@@ -1,6 +1,8 @@
 [submodule "yt-audio-api"]
 	path = yt-audio-api
 	url = git@github.com:maxtlee/yt-audio-api.git
+	branch = main
 [submodule "moosic-public"]
 	path = moosic-public
 	url = git@github.com:maxtlee/moosic-public.git
+	branch = main
