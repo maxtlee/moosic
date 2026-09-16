@@ -3,3 +3,6 @@
 clementine-player
 .venv/
 assets/
+
+# Runtime log
+.download_assets_server.log
