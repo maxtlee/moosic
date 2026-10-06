@@ -6,7 +6,7 @@
   <meta name="color-scheme" content="dark">
   <title>Moosic</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>%F0%9F%8E%B5</text></svg>">
-  <link rel="stylesheet" href="static/style.css?v=20261006e">
+  <link rel="stylesheet" href="static/style.css?v=20261006f">
 </head>
 <body>
   <div class="layout">
@@ -46,6 +46,7 @@
           Sort
           <select id="sort">
             <option value="default">Playlist order</option>
+            <option value="rating">My rating</option>
             <option value="title">Title</option>
             <option value="artist">Artist</option>
             <option value="genre">Genre</option>
@@ -81,6 +82,7 @@
             <span class="col-idx">#</span>
             <span class="col-title">Title</span>
             <span class="col-genre">Genre</span>
+            <span class="col-rating">Rating</span>
             <span class="col-act"></span>
             <span class="col-time">⏱</span>
           </div>
@@ -135,6 +137,7 @@
           <span id="now-artist" class="muted">Pick a track to begin</span>
         </div>
         <button id="fav" class="icon-btn fav" title="Add to favorites" hidden>♡</button>
+        <span id="now-rating" class="now-rating"></span>
         <a id="now-link" class="icon-btn youtube" href="#" target="_blank" rel="noopener"
            title="Open source on YouTube" hidden>↗</a>
       </div>
@@ -164,6 +167,6 @@
   <div id="modal-root" class="modal-root" hidden></div>
   <div id="toasts" class="toasts"></div>
   <audio id="audio" preload="metadata"></audio>
-  <script src="static/app.js?v=20261006e"></script>
+  <script src="static/app.js?v=20261006f"></script>
 </body>
 </html>

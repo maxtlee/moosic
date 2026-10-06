@@ -7,8 +7,9 @@ cloned at `~/Projects/Music` and selected with `MOOSIC_DATA`.
 ```
 ~/Projects/Music/            (maxtlee/music — data only)
   master.json                canonical list; stable id + asset path + duration
+  ratings.json               custom ordering: song id -> rating (0..1)
   playlists/<slug>.json      playlists referencing master ids
-  assets/ -> /mnt/archive-new/moosic/library   (gitignored, mp3s on the HDD)
+  assets/ -> /mnt/archive-new/moosic/library   (gitignored, mp3s + covers on the HDD)
 ```
 
 ## Components
@@ -42,6 +43,10 @@ python3 watch_downloads.py --execute       # keep it in sync while running
 
 `assets/` is gitignored in the data repo; only `master.json` and `playlists/`
 are versioned. Unreferenced files are moved (never deleted) to `assets/_trash/`.
+
+On this machine the 04:00 nightly runner (`~/Projects/tools/nightly/`) runs
+`download_assets.py --execute --commit` automatically (skipped when the archive
+HDD is unmounted).
 
 ## Web player
 

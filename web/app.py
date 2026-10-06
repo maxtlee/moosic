@@ -234,10 +234,14 @@ class AddSongInput(BaseModel):
     youtube_title: str = Field(default="", max_length=300)
 
 
+class RatingInput(BaseModel):
+    rating: float | None = None  # 0..1, or null to clear
+
+
 # --------------------------------------------------------------------------- #
 # helpers
 # --------------------------------------------------------------------------- #
-def slim(song: dict) -> dict:
+def slim(song: dict, ratings: dict | None = None) -> dict:
     cf = ml.cover_file(song)
     return {
         "id": song.get("id", ""),
@@ -248,6 +252,7 @@ def slim(song: dict) -> dict:
         "youtube_url": song.get("youtube_url", ""),
         "has_asset": ml.asset_file(song).is_file(),
         "has_cover": bool(cf and cf.is_file()),
+        "rating": (ratings or {}).get(song.get("id")),
     }
 
 
@@ -286,7 +291,9 @@ def health() -> dict:
 @app.get("/api/library")
 def get_library() -> dict:
     songs = ml.load_master().get("songs", [])
-    return {"count": len(songs), "genres": genres_of(songs), "songs": [slim(s) for s in songs]}
+    ratings = ml.load_ratings()
+    return {"count": len(songs), "genres": genres_of(songs),
+            "songs": [slim(s, ratings) for s in songs]}
 
 
 @app.get("/api/playlists")
@@ -312,10 +319,11 @@ def get_playlist(slug: str) -> dict:
     if pl is None:
         raise HTTPException(status_code=404, detail="playlist not found")
     master = ml.load_master()
+    ratings = ml.load_ratings()
     songs = []
     for sid in pl.get("songs", []):
         song = ml.song_by_id(master, sid)
-        songs.append(slim(song) if song else {"id": sid, "missing": True})
+        songs.append(slim(song, ratings) if song else {"id": sid, "missing": True})
     pl["songs"] = songs
     return pl
 
@@ -433,7 +441,7 @@ def create_song(body: SongInput, request: Request) -> dict:
         songs.append(song)
         master["songs"] = songs
         ml.save_master(master)
-    return slim(song)
+    return slim(song, ml.load_ratings())
 
 
 @app.patch("/api/songs/{sid}")
@@ -466,7 +474,7 @@ def update_song(sid: str, body: SongPatch, request: Request) -> dict:
                     ml.save_playlist(pl_slug, pl)
             song["id"] = new_id
         ml.save_master(master)
-    return slim(song)
+    return slim(song, ml.load_ratings())
 
 
 @app.delete("/api/songs/{sid}")
@@ -479,12 +487,33 @@ def remove_song(sid: str, request: Request) -> dict:
         if len(master["songs"]) == before:
             raise HTTPException(status_code=404, detail="song not found")
         ml.save_master(master)
+        ratings = ml.load_ratings()
+        if sid in ratings:
+            ratings.pop(sid)
+            ml.save_ratings(ratings)
         for pl in ml.list_playlists():
             if sid in pl.get("songs", []):
                 pl_slug = pl.pop("slug")
                 pl["songs"] = [x for x in pl["songs"] if x != sid]
                 ml.save_playlist(pl_slug, pl)
     return {"deleted": sid}
+
+
+@app.put("/api/ratings/{sid}")
+def set_rating(sid: str, body: RatingInput, request: Request) -> dict:
+    enforce_write(request)
+    if body.rating is not None and not (0.0 <= body.rating <= 1.0):
+        raise HTTPException(status_code=400, detail="rating must be between 0 and 1")
+    with ml.flock():
+        if body.rating is not None and ml.song_by_id(ml.load_master(), sid) is None:
+            raise HTTPException(status_code=404, detail="song not found")
+        ratings = ml.load_ratings()
+        if body.rating is None:
+            ratings.pop(sid, None)
+        else:
+            ratings[sid] = round(body.rating, 3)
+        ml.save_ratings(ratings)
+    return {"id": sid, "rating": ratings.get(sid)}
 
 
 @app.post("/api/commit")

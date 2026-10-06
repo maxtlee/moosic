@@ -27,6 +27,7 @@ from pathlib import Path
 
 DATA_DIR = Path(os.environ.get("MOOSIC_DATA", Path.home() / "Projects" / "Music")).expanduser()
 MASTER = DATA_DIR / "master.json"
+RATINGS = DATA_DIR / "ratings.json"
 PLAYLISTS_DIR = DATA_DIR / "playlists"
 ASSETS_DIR = DATA_DIR / "assets"
 COVERS_DIR = ASSETS_DIR / "_covers"
@@ -136,6 +137,35 @@ def save_master(master: dict) -> None:
 
 def song_by_id(master: dict, sid: str) -> dict | None:
     return next((s for s in master.get("songs", []) if s.get("id") == sid), None)
+
+
+# --------------------------------------------------------------------------- #
+# ratings (custom ordering; 0..1 today, designed to grow to multiple raters)
+# --------------------------------------------------------------------------- #
+def load_ratings() -> dict[str, float]:
+    if not RATINGS.is_file():
+        return {}
+    try:
+        data = json.loads(RATINGS.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}
+    # current shape: {"version":1,"ratings":{id: value}}
+    raw = data.get("ratings") if isinstance(data, dict) and "ratings" in data else data
+    if not isinstance(raw, dict):
+        return {}
+    out: dict[str, float] = {}
+    for sid, value in raw.items():
+        if isinstance(value, (int, float)):
+            out[sid] = float(value)
+    return out
+
+
+def save_ratings(ratings: dict[str, float]) -> None:
+    _write_json(RATINGS, {
+        "version": 1,
+        "updated": now_iso(),
+        "ratings": {sid: round(float(v), 3) for sid, v in sorted(ratings.items())},
+    })
 
 
 def asset_file(song: dict) -> Path:

@@ -56,7 +56,8 @@ Writes (public, rate-limited)
 - `POST /api/songs` · `PATCH /api/songs/{song_id}` · `DELETE /api/songs/{song_id}`
   - retagging moves the audio file immediately so playback keeps working
   - changing a YouTube URL regenerates the id and rewrites playlist references
-  - deleting a song also strips it from every playlist
+  - deleting a song also strips it from every playlist and drops its rating
+- `PUT /api/ratings/{song_id}` → set/clear a rating (`{"rating": 0.8}` or `{"rating": null}`)
 - `POST /api/commit` → `git add -A && git commit && git push` the data repo
 
 Admin (public, rate-limited)
@@ -126,6 +127,22 @@ python3 fetch_covers.py --execute --force   # re-fetch everything
 `download_assets.py` — and therefore the admin **Refresh assets** button and the
 add-and-download flow — also backfills missing covers. A missing cover degrades
 to a deterministic gradient tile.
+
+## Ratings & custom sort
+
+Every song can carry a rating from **0 to 1**, stored in `ratings.json` in the
+data repo — kept separate from `master.json` so it can grow into a multi-rater
+model ("how much I like it" vs "how much a friend likes it") later.
+
+- The UI shows a 5-star control (0.2 steps) in **every track row** and in the
+  **player bar**, so you can rate while listening or from any list. Clicking the
+  active star clears the rating.
+- **Sort → My rating** orders songs highest-first in every view (including
+  playlists); unrated count as 0 and ties keep their existing order.
+- `GET /api/library` and playlist responses include each song's `rating`.
+
+The API accepts any float 0..1, so a finer control (slider, numeric) can be
+added with no data-model change.
 
 ## Safety model (public writes)
 

@@ -77,6 +77,59 @@ function paintArtInto(el, song) {
   }
 }
 
+function starWidget(song, small) {
+  const el = document.createElement("span");
+  el.className = "stars" + (small ? " sm" : "");
+  el.dataset.rid = song.id;
+  el._build = () => {
+    el.replaceChildren();
+    const val = Number(state.ratings[song.id]) || 0;
+    for (let i = 1; i <= 5; i++) {
+      const on = val >= i / 5 - 1e-9;
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "star" + (on ? " on" : "");
+      b.textContent = "★";
+      b.title = on ? `${Math.round(i * 20)}% — click to clear` : `Rate ${Math.round(i * 20)}%`;
+      b.onclick = (e) => { e.stopPropagation(); setRating(song.id, on ? 0 : i / 5); };
+      el.appendChild(b);
+    }
+  };
+  el._build();
+  return el;
+}
+
+function refreshRatingWidgets(id) {
+  document.querySelectorAll('.stars[data-rid="' + CSS.escape(id) + '"]')
+    .forEach((el) => { if (el._build) el._build(); });
+}
+
+function rebuildPlayerRating() {
+  const box = $("#now-rating");
+  if (!box) return;
+  box.replaceChildren();
+  if (!state.currentId) return;
+  const song = songById(state.currentId);
+  if (song && !song.missing) box.appendChild(starWidget(song, false));
+}
+
+async function setRating(id, value) {
+  const prev = state.ratings[id];
+  state.ratings[id] = value;
+  refreshRatingWidgets(id);
+  if (state.currentId === id) rebuildPlayerRating();
+  try {
+    await api("/api/ratings/" + encodeURIComponent(id), { method: "PUT", body: { rating: value } });
+    refreshStatus();
+    if (state.sort === "rating") apply();
+  } catch (e) {
+    if (prev === undefined) delete state.ratings[id]; else state.ratings[id] = prev;
+    refreshRatingWidgets(id);
+    if (state.currentId === id) rebuildPlayerRating();
+    toast(e.message, true);
+  }
+}
+
 function renderHeroArt(songs) {
   const el = $("#hero-art");
   const picks = songs.slice(0, 4);
@@ -332,15 +385,15 @@ function apply() {
   if (q) {
     rows = rows.filter((s) => `${s.title} ${s.artist} ${s.genre}`.toLowerCase().includes(q));
   }
-  if (state.viewType !== "playlist") {
-    const sorters = {
-      title: (a, b) => a.title.localeCompare(b.title),
-      artist: (a, b) => a.artist.localeCompare(b.artist) || a.title.localeCompare(b.title),
-      genre: (a, b) => a.genre.localeCompare(b.genre) || a.artist.localeCompare(b.artist),
-      duration: (a, b) => (a.duration || 0) - (b.duration || 0),
-    };
-    if (sorters[state.sort]) rows = rows.sort(sorters[state.sort]);
-  }
+  const sorters = {
+    rating: (a, b) => (state.ratings[b.id] || 0) - (state.ratings[a.id] || 0),
+    title: (a, b) => a.title.localeCompare(b.title),
+    artist: (a, b) => a.artist.localeCompare(b.artist) || a.title.localeCompare(b.title),
+    genre: (a, b) => a.genre.localeCompare(b.genre) || a.artist.localeCompare(b.artist),
+    duration: (a, b) => (a.duration || 0) - (b.duration || 0),
+  };
+  // "default" keeps playlist order; every other sort applies in every view.
+  if (state.sort !== "default" && sorters[state.sort]) rows = rows.sort(sorters[state.sort]);
   state.filtered = rows;
   renderRows();
   renderHero();
@@ -416,6 +469,10 @@ function renderRows() {
     genre.className = "genre";
     genre.textContent = s.genre || "";
 
+    const rating = document.createElement("span");
+    rating.className = "rating";
+    if (!s.missing) rating.appendChild(starWidget(s, true));
+
     const acts = document.createElement("span");
     acts.className = "acts";
     if (state.viewType === "playlist") {
@@ -436,7 +493,7 @@ function renderRows() {
     time.className = "time";
     time.textContent = s.duration ? fmtTime(s.duration) : "–";
 
-    row.append(idx, title, genre, acts, time);
+    row.append(idx, title, genre, rating, acts, time);
     const activate = (e) => {
       if (e.target.closest("button")) return;
       play(s.id);
@@ -460,6 +517,7 @@ function play(id) {
   $("#now-title").textContent = song.title;
   $("#now-artist").textContent = song.artist + (song.genre ? " · " + song.genre : "");
   paintArtInto($("#now-art"), song);
+  rebuildPlayerRating();
   const link = $("#now-link");
   if (song.youtube_url) { link.href = song.youtube_url; link.hidden = false; } else link.hidden = true;
   const fav = $("#fav");
@@ -845,6 +903,10 @@ async function reloadLibrary() {
   state.master = data.songs;
   state.index = new Map(data.songs.map((s) => [s.id, s]));
   state.genres = data.genres || {};
+  state.ratings = {};
+  for (const s of data.songs) {
+    if (s.rating !== null && s.rating !== undefined) state.ratings[s.id] = s.rating;
+  }
   apply();
 }
 
