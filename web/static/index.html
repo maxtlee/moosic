@@ -6,7 +6,7 @@
   <meta name="color-scheme" content="dark">
   <title>Moosic</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>%F0%9F%8E%B5</text></svg>">
-  <link rel="stylesheet" href="static/style.css?v=20261006f">
+  <link rel="stylesheet" href="static/style.css?v=20261006g">
 </head>
 <body>
   <div class="layout">
@@ -37,13 +37,14 @@
 
     <main class="main" id="main">
       <header class="topbar">
+        <button id="menu-btn" class="menu-btn" aria-label="Open menu">☰</button>
         <div class="search-wrap">
           <span class="search-icon">⌕</span>
           <input id="search" type="search" placeholder="Search songs, artists, genres…"
                  autocomplete="off" spellcheck="false">
         </div>
         <label class="sort">
-          Sort
+          <span class="sort-label">Sort</span>
           <select id="sort">
             <option value="default">Playlist order</option>
             <option value="rating">My rating</option>
@@ -130,43 +131,85 @@
     </main>
 
     <footer class="player" id="player">
-      <div class="now">
-        <div class="now-art" id="now-art">♪</div>
+      <div class="now" id="now-open">
+        <div class="now-art js-now-art" id="now-art">♪</div>
         <div class="now-text">
-          <strong id="now-title">Nothing playing</strong>
-          <span id="now-artist" class="muted">Pick a track to begin</span>
+          <strong class="js-now-title" id="now-title">Nothing playing</strong>
+          <span class="js-now-artist muted" id="now-artist">Pick a track to begin</span>
         </div>
-        <button id="fav" class="icon-btn fav" title="Add to favorites" hidden>♡</button>
-        <span id="now-rating" class="now-rating"></span>
-        <a id="now-link" class="icon-btn youtube" href="#" target="_blank" rel="noopener"
-           title="Open source on YouTube" hidden>↗</a>
+        <button class="icon-btn fav js-fav" id="fav" title="Add to favorites" hidden>♡</button>
+        <span class="now-rating js-now-rating" id="now-rating"></span>
+        <a class="icon-btn youtube js-now-link" id="now-link" href="#" target="_blank"
+           rel="noopener" title="Open source on YouTube" hidden>↗</a>
+        <button id="expand" class="icon-btn expand" title="Now playing" aria-label="Open now playing">⌃</button>
       </div>
 
       <div class="controls">
         <div class="buttons">
-          <button id="shuffle" class="icon-btn" title="Shuffle">⤨</button>
-          <button id="prev" class="icon-btn" title="Previous">⏮</button>
-          <button id="play" class="icon-btn play" title="Play / pause">▶</button>
-          <button id="next" class="icon-btn" title="Next">⏭</button>
-          <button id="repeat" class="icon-btn" title="Repeat">↻</button>
+          <button id="shuffle" class="icon-btn js-shuffle" title="Shuffle">⤨</button>
+          <button id="prev" class="icon-btn js-prev" title="Previous">⏮</button>
+          <button id="play" class="icon-btn play js-play" title="Play / pause">▶</button>
+          <button id="next" class="icon-btn js-next" title="Next">⏭</button>
+          <button id="repeat" class="icon-btn js-repeat" title="Repeat">↻</button>
         </div>
         <div class="progress">
-          <span id="cur-time" class="time">0:00</span>
-          <input id="seek" type="range" min="0" max="1000" value="0" step="1" aria-label="Seek">
-          <span id="end-time" class="time">0:00</span>
+          <span id="cur-time" class="time js-cur">0:00</span>
+          <input id="seek" class="js-seek" type="range" min="0" max="1000" value="0" step="1" aria-label="Seek">
+          <span id="end-time" class="time js-end">0:00</span>
         </div>
       </div>
 
       <div class="volume">
-        <span class="icon-btn" id="vol-icon" title="Mute">🔊</span>
-        <input id="volume" type="range" min="0" max="100" value="90" step="1" aria-label="Volume">
+        <span class="icon-btn js-vol-icon" id="vol-icon" title="Mute">🔊</span>
+        <input id="volume" class="js-vol" type="range" min="0" max="100" value="90" step="1" aria-label="Volume">
       </div>
     </footer>
+  </div>
+
+  <div id="drawer-overlay" class="drawer-overlay" hidden></div>
+
+  <section id="now-sheet" class="now-sheet" hidden aria-label="Now playing">
+    <header class="ns-head">
+      <button id="ns-close" class="icon-btn" title="Collapse" aria-label="Collapse">⌄</button>
+      <span class="ns-title">Now playing</span>
+      <span class="ns-spacer"></span>
+    </header>
+    <div class="ns-art js-now-art">♪</div>
+    <div class="ns-info">
+      <strong class="js-now-title">Nothing playing</strong>
+      <span class="js-now-artist muted">Pick a track to begin</span>
+    </div>
+    <div class="ns-rating js-now-rating"></div>
+    <div class="ns-seek">
+      <span class="time js-cur">0:00</span>
+      <input class="js-seek" type="range" min="0" max="1000" value="0" step="1" aria-label="Seek">
+      <span class="time js-end">0:00</span>
+    </div>
+    <div class="ns-controls">
+      <button class="icon-btn js-shuffle" title="Shuffle">⤨</button>
+      <button class="icon-btn js-prev" title="Previous">⏮</button>
+      <button class="icon-btn play js-play" title="Play / pause">▶</button>
+      <button class="icon-btn js-next" title="Next">⏭</button>
+      <button class="icon-btn js-repeat" title="Repeat">↻</button>
+    </div>
+    <div class="ns-bottom">
+      <button class="icon-btn js-fav" title="Favorite" hidden>♡</button>
+      <a class="icon-btn js-now-link" href="#" target="_blank" rel="noopener" title="Open source on YouTube" hidden>↗</a>
+      <span class="ns-vol">
+        <span class="icon-btn js-vol-icon" title="Mute">🔊</span>
+        <input class="js-vol" type="range" min="0" max="100" value="90" step="1" aria-label="Volume">
+      </span>
+    </div>
+  </section>
+
+  <div id="sheet-root" class="sheet-root" hidden>
+    <div class="sheet-backdrop" id="sheet-backdrop"></div>
+    <div class="sheet" id="sheet-panel"></div>
   </div>
 
   <div id="modal-root" class="modal-root" hidden></div>
   <div id="toasts" class="toasts"></div>
   <audio id="audio" preload="metadata"></audio>
-  <script src="static/app.js?v=20261006f"></script>
+  <script src="static/app.js?v=20261006g"></script>
 </body>
 </html>

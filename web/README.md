@@ -144,6 +144,21 @@ model ("how much I like it" vs "how much a friend likes it") later.
 The API accepts any float 0..1, so a finer control (slider, numeric) can be
 added with no data-model change.
 
+## Mobile
+
+The layout adapts at ≤820px:
+
+- The sidebar becomes a **slide-in drawer** (hamburger in the top bar) with all
+  nav, playlists and genres, plus an overlay that closes on tap.
+- A compact top bar: hamburger, search, Commit; the Sort select wraps to a
+  second row, and the manual "＋ Song" button is dropped (Admin covers adds).
+- Track rows become **cover + title/artist + rating + a ⋮ kebab**; the kebab
+  opens a **bottom action sheet** (Play / Add to playlist / Edit / Delete, or
+  move/remove inside a playlist) since hover-only controls don't work on touch.
+- The player collapses to a compact bar (cover, title, prev/play/next); tapping
+  it (or the ⌃ chevron) opens a **full-screen Now Playing sheet** with large art,
+  seek, transport, 5-star rating, favorite and volume.
+
 ## Safety model (public writes)
 
 The site is **unauthenticated by design** — anyone can create/edit/delete
