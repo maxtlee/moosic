@@ -1,0 +1,5 @@
+{
+  "rewrites": [
+    { "source": "/(.*)", "destination": "https://agentmaxxer.tail6ca935.ts.net/music/$1" }
+  ]
+}

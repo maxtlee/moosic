@@ -14,11 +14,13 @@ from pathlib import Path
 from opencc import OpenCC
 from ytmusicapi import YTMusic
 
+import musiclib as ml
+
 _TO_SIMP = OpenCC("t2s")
 
 ROOT = Path(__file__).resolve().parent
-DEFAULT_JSON = ROOT / "music_to_extract" / "songs.json"
-DEFAULT_HTML = ROOT / "playlist.html"
+DEFAULT_JSON = ml.MASTER
+DEFAULT_HTML = None
 
 LYRIC_RE = re.compile(
     r"lyric|lyrics|가사|歌詞|歌词|動態歌詞|动态歌词|pinyin\s*lyrics|colour coded|color coded",
@@ -404,6 +406,23 @@ def atomic_write_json(path: Path, data) -> None:
     tmp.replace(path)
 
 
+def load_songs(path: Path) -> tuple[list[dict], dict | None]:
+    """Load either a bare list or a master object; return (songs, wrapper)."""
+    data = json.loads(path.read_text(encoding="utf-8"))
+    if isinstance(data, dict) and "songs" in data:
+        return data["songs"], data
+    return data, None
+
+
+def save_songs(path: Path, songs: list[dict], wrapper: dict | None) -> None:
+    if wrapper is not None:
+        wrapper["songs"] = songs
+        wrapper["updated"] = ml.now_iso()
+        atomic_write_json(path, wrapper)
+    else:
+        atomic_write_json(path, songs)
+
+
 def write_html(songs: list[dict], path: Path) -> None:
     rows = []
     for i, song in enumerate(songs):
@@ -509,7 +528,7 @@ def main() -> int:
     parser.add_argument("--save-every", type=int, default=1)
     args = parser.parse_args()
 
-    songs = json.loads(args.json.read_text(encoding="utf-8"))
+    songs, wrapper = load_songs(args.json)
     yt = YTMusic()
 
     todo = []
@@ -544,18 +563,21 @@ def main() -> int:
             f"         {choice['youtube_url']}  ({choice['youtube_title'][:70]})"
         )
         if n % args.save_every == 0:
-            atomic_write_json(args.json, songs)
-            write_html(songs, args.html)
+            save_songs(args.json, songs, wrapper)
+            if args.html:
+                write_html(songs, args.html)
 
-    atomic_write_json(args.json, songs)
-    write_html(songs, args.html)
+    save_songs(args.json, songs, wrapper)
+    if args.html:
+        write_html(songs, args.html)
     kinds = {}
     for song in songs:
         k = song.get("youtube_kind") or "unlinked"
         kinds[k] = kinds.get(k, 0) + 1
     print(f"\nDone. linked={linked} missed={failed} kinds={kinds}")
     print(f"Wrote {args.json}")
-    print(f"Wrote {args.html}")
+    if args.html:
+        print(f"Wrote {args.html}")
     return 0 if failed == 0 else 1
 
 

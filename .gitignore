@@ -2,7 +2,12 @@
 .prompts
 clementine-player
 .venv/
+assets
 assets/
 
 # Runtime log
 .download_assets_server.log
+
+# Python
+__pycache__/
+*.pyc

@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>Moosic</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>%F0%9F%8E%B5</text></svg>">
+  <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand"><span class="brand-mark">♪</span> Moosic</div>
+
+      <nav class="nav">
+        <button class="nav-item is-active" data-view="all"><span>🏠</span> All songs</button>
+        <button class="nav-item" data-view="favorites"><span>♥</span> Favorites</button>
+      </nav>
+
+      <div class="side-block">
+        <div class="side-head">
+          <h3>Playlists</h3>
+          <button id="new-playlist" class="mini-btn" title="New playlist">＋</button>
+        </div>
+        <ul id="playlist-list" class="playlist-list"></ul>
+      </div>
+
+      <div class="side-block">
+        <h3>Genres</h3>
+        <ul id="genre-list" class="genre-list"></ul>
+      </div>
+
+      <div class="side-foot" id="side-foot">—</div>
+    </aside>
+
+    <main class="main" id="main">
+      <header class="topbar">
+        <div class="search-wrap">
+          <span class="search-icon">⌕</span>
+          <input id="search" type="search" placeholder="Search songs, artists, genres…"
+                 autocomplete="off" spellcheck="false">
+        </div>
+        <label class="sort">
+          Sort
+          <select id="sort">
+            <option value="default">Playlist order</option>
+            <option value="title">Title</option>
+            <option value="artist">Artist</option>
+            <option value="genre">Genre</option>
+            <option value="duration">Duration</option>
+          </select>
+        </label>
+        <button id="add-song" class="btn" title="Add a song to the master list">＋ Song</button>
+        <button id="commit" class="btn btn-commit" title="Commit & push changes">
+          <span id="commit-label">Commit</span>
+        </button>
+      </header>
+
+      <section class="hero" id="hero">
+        <div class="hero-art" id="hero-art">♪</div>
+        <div class="hero-copy">
+          <p class="eyebrow">Your library</p>
+          <h1 id="hero-title">All songs</h1>
+          <p class="hero-meta" id="hero-meta">—</p>
+        </div>
+        <div class="hero-actions" id="hero-actions"></div>
+      </section>
+
+      <section class="content">
+        <div class="section-head">
+          <h2 id="view-title">All songs</h2>
+          <span class="muted" id="view-count"></span>
+          <span class="muted" id="dirty-badge" hidden></span>
+        </div>
+
+        <div class="tracklist" id="tracklist">
+          <div class="tracklist-head">
+            <span class="col-idx">#</span>
+            <span class="col-title">Title</span>
+            <span class="col-genre">Genre</span>
+            <span class="col-act"></span>
+            <span class="col-time">⏱</span>
+          </div>
+          <div id="track-rows"></div>
+        </div>
+        <p class="empty" id="empty" hidden>No songs match your search.</p>
+      </section>
+    </main>
+
+    <footer class="player" id="player">
+      <div class="now">
+        <div class="now-art" id="now-art">♪</div>
+        <div class="now-text">
+          <strong id="now-title">Nothing playing</strong>
+          <span id="now-artist" class="muted">Pick a track to begin</span>
+        </div>
+        <button id="fav" class="icon-btn fav" title="Add to favorites" hidden>♡</button>
+        <a id="now-link" class="icon-btn youtube" href="#" target="_blank" rel="noopener"
+           title="Open source on YouTube" hidden>↗</a>
+      </div>
+
+      <div class="controls">
+        <div class="buttons">
+          <button id="shuffle" class="icon-btn" title="Shuffle">⤨</button>
+          <button id="prev" class="icon-btn" title="Previous">⏮</button>
+          <button id="play" class="icon-btn play" title="Play / pause">▶</button>
+          <button id="next" class="icon-btn" title="Next">⏭</button>
+          <button id="repeat" class="icon-btn" title="Repeat">↻</button>
+        </div>
+        <div class="progress">
+          <span id="cur-time" class="time">0:00</span>
+          <input id="seek" type="range" min="0" max="1000" value="0" step="1" aria-label="Seek">
+          <span id="end-time" class="time">0:00</span>
+        </div>
+      </div>
+
+      <div class="volume">
+        <span class="icon-btn" id="vol-icon" title="Mute">🔊</span>
+        <input id="volume" type="range" min="0" max="100" value="90" step="1" aria-label="Volume">
+      </div>
+    </footer>
+  </div>
+
+  <div id="modal-root" class="modal-root" hidden></div>
+  <div id="toasts" class="toasts"></div>
+  <audio id="audio" preload="metadata"></audio>
+  <script src="static/app.js"></script>
+</body>
+</html>
