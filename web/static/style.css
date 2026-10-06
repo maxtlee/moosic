@@ -316,3 +316,43 @@ input[type="range"]::-moz-range-thumb {
   .hero-actions { margin-left: 0; }
   .topbar .sort { display: none; }
 }
+
+/* ---------------- admin panel ---------------- */
+.admin { padding: 26px; max-width: 940px; }
+.admin-head h1 { margin: 6px 0 8px; font-size: 34px; letter-spacing: -0.02em; }
+.quota { margin: 20px 0 28px; }
+.quota-bar { height: 8px; background: var(--panel-2); border-radius: 999px; overflow: hidden; margin-bottom: 7px; }
+#quota-fill { display: block; height: 100%; width: 0; background: var(--accent); transition: width .3s ease; }
+#quota-fill.low { background: #e6b84d; }
+#quota-fill.out { background: #ff6b6b; }
+.admin-block { margin-bottom: 34px; }
+.admin-block h2 { font-size: 18px; margin: 0 0 10px; }
+.admin-search { display: flex; gap: 10px; max-width: 640px; }
+.admin-search input {
+  flex: 1; padding: 11px 14px; background: var(--panel-2);
+  border: 1px solid var(--line); border-radius: 8px; outline: none;
+}
+.admin-search input:focus { border-color: #4b4b55; background: #22232a; }
+.search-results { margin-top: 16px; display: flex; flex-direction: column; gap: 8px; }
+.result {
+  display: flex; align-items: center; gap: 12px; padding: 10px 12px;
+  background: var(--card); border: 1px solid var(--line); border-radius: 10px;
+}
+.result.best { border-color: var(--accent); }
+.result .r-main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.result .r-title { font-weight: 550; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.result .r-sub { color: var(--muted); font-size: 12.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.badge {
+  font-size: 11px; padding: 2px 8px; border-radius: 999px;
+  background: var(--panel-2); color: var(--muted); border: 1px solid var(--line); white-space: nowrap;
+}
+.badge.best { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.result .r-score { color: var(--muted); font-size: 12px; width: 44px; text-align: right; }
+.result .btn { padding: 7px 11px; }
+.admin-log {
+  margin-top: 14px; max-height: 260px; overflow: auto;
+  background: #0f0f12; border: 1px solid var(--line); border-radius: 8px;
+  padding: 12px; font-size: 12px; white-space: pre-wrap; color: var(--muted);
+}
+.busy { opacity: .55; pointer-events: none; }
+code { background: var(--panel-2); padding: 1px 5px; border-radius: 5px; font-size: 0.9em; }

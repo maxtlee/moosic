@@ -19,7 +19,8 @@ cloned at `~/Projects/Music` and selected with `MOOSIC_DATA`.
 | `download_assets.py` | **asset refresher** (yt-dlp via yt-audio-api): reconciles `assets/` with `master.json` — downloads missing, renames retagged files, prunes orphans to `_trash/`, writes `asset`/`duration` back |
 | `watch_downloads.py` | watches `master.json` and runs the refresher on change |
 | `link_youtube.py` | resolves missing YouTube URLs in `master.json` using YTMusic |
-| `web/` | FastAPI + vanilla-JS player with playlist/master CRUD and a rate-limited commit button |
+| `search_youtube.py` | ranked YouTube Music search (reuses `link_youtube` scoring); powers the web admin panel |
+| `web/` | FastAPI + vanilla-JS player with playlist/master CRUD, admin search/add/download/refresh, and a rate-limited commit button |
 | `yt-audio-api/` | submodule providing the local MP3 conversion server |
 | `moosic-public/` | public child submodule |
 
@@ -46,8 +47,9 @@ are versioned. Unreferenced files are moved (never deleted) to `assets/_trash/`.
 See [`web/README.md`](web/README.md). Public at
 `https://music.maxwe.me` (Vercel rewrite → Tailscale Funnel `/music`), serving
 from a local `moosic.service` on `127.0.0.1:8740`. Playlists and the master list
-can be edited from the UI; the **Commit** button commits and pushes the data
-repo (rate-limited, 1/60s).
+can be edited from the UI; an **Admin** panel searches YouTube Music and adds +
+downloads songs on the spot; the **Commit** button commits and pushes the data
+repo (rate-limited, 1/60s). Downloads are capped at 20 songs / 30 min.
 
 ## Storage: SSD vs HDD
 

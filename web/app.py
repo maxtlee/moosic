@@ -31,9 +31,12 @@ Environment
 
 from __future__ import annotations
 
+import json
 import os
 import shutil
+import subprocess
 import sys
+import tempfile
 import threading
 import time
 from collections import defaultdict, deque
@@ -51,7 +54,12 @@ import musiclib as ml  # noqa: E402
 ROOT_PATH = os.environ.get("MOOSIC_ROOT_PATH", "").rstrip("/")
 WRITE_RPM = int(os.environ.get("MOOSIC_WRITE_RPM", "40"))
 COMMIT_INTERVAL = float(os.environ.get("MOOSIC_COMMIT_INTERVAL", "60"))
+DOWNLOAD_LIMIT = int(os.environ.get("MOOSIC_DOWNLOAD_LIMIT", "20"))
+DOWNLOAD_WINDOW = float(os.environ.get("MOOSIC_DOWNLOAD_WINDOW", "1800"))
+SEARCH_RPM = int(os.environ.get("MOOSIC_SEARCH_RPM", "20"))
 STATIC = ROOT / "static"
+TOOL_DIR = ROOT.parent
+TOOL_PYTHON = Path(os.environ.get("MOOSIC_TOOL_PYTHON", str(TOOL_DIR / ".venv" / "bin" / "python")))
 
 MAX_PLAYLISTS = 500
 MAX_PLAYLIST_SONGS = 2000
@@ -108,6 +116,83 @@ def commit_cooldown() -> float:
 
 
 # --------------------------------------------------------------------------- #
+# download quota (20 songs / 30 min by default) and tool subprocesses
+# --------------------------------------------------------------------------- #
+class DownloadQuota:
+    def __init__(self, limit: int, window: float):
+        self.limit, self.window = limit, window
+        self.times: deque = deque()
+        self.lock = threading.Lock()
+
+    def _prune(self) -> None:
+        now = time.monotonic()
+        while self.times and now - self.times[0] > self.window:
+            self.times.popleft()
+
+    def remaining(self) -> int:
+        with self.lock:
+            self._prune()
+            return max(0, self.limit - len(self.times))
+
+    def reset_in(self) -> float:
+        with self.lock:
+            self._prune()
+            if len(self.times) < self.limit:
+                return 0.0
+            return max(0.0, self.window - (time.monotonic() - self.times[0]))
+
+    def record(self, n: int) -> None:
+        if n <= 0:
+            return
+        now = time.monotonic()
+        with self.lock:
+            self._prune()
+            self.times.extend([now] * n)
+
+
+download_quota = DownloadQuota(DOWNLOAD_LIMIT, DOWNLOAD_WINDOW)
+download_limiter = SlidingWindow(WRITE_RPM, 60.0)
+search_limiter = SlidingWindow(SEARCH_RPM, 60.0)
+_download_lock = threading.Lock()
+_search_lock = threading.Lock()
+
+
+def run_tool(args: list[str], timeout: int) -> subprocess.CompletedProcess:
+    env = {**os.environ, "MOOSIC_DATA": str(ml.DATA_DIR)}
+    env.setdefault("HOME", "/home/max")
+    return subprocess.run(
+        [str(TOOL_PYTHON), *args], capture_output=True, text=True,
+        env=env, timeout=timeout, cwd=str(TOOL_DIR),
+    )
+
+
+def quota_state() -> dict:
+    rem = download_quota.remaining()
+    return {
+        "limit": DOWNLOAD_LIMIT,
+        "window": DOWNLOAD_WINDOW,
+        "used": DOWNLOAD_LIMIT - rem,
+        "remaining": rem,
+        "reset_in": round(download_quota.reset_in(), 1),
+    }
+
+
+def _download_and_summarize(extra: list[str], timeout: int) -> tuple[dict, str]:
+    """Run download_assets.py --execute and return (summary, log tail)."""
+    with tempfile.NamedTemporaryFile("r", suffix=".json", delete=False) as fh:
+        summary_path = fh.name
+    cmd = [str(TOOL_DIR / "download_assets.py"), "--execute", "--summary-json", summary_path, *extra]
+    proc = run_tool(cmd, timeout=timeout)
+    try:
+        summary = json.loads(Path(summary_path).read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        summary = {"downloaded": 0, "failed": 0, "attempted": 0, "detail": (proc.stdout + proc.stderr)[-500:]}
+    finally:
+        Path(summary_path).unlink(missing_ok=True)
+    return summary, (proc.stdout + proc.stderr)[-800:]
+
+
+# --------------------------------------------------------------------------- #
 # models
 # --------------------------------------------------------------------------- #
 class PlaylistCreate(BaseModel):
@@ -138,6 +223,15 @@ class SongPatch(BaseModel):
 
 class CommitInput(BaseModel):
     message: str = Field(default="", max_length=ml.MAX_MESSAGE)
+
+
+class AddSongInput(BaseModel):
+    title: str = Field(min_length=1, max_length=300)
+    artist: str = Field(default="", max_length=300)
+    genre: str = Field(default="Unsorted", max_length=60)
+    youtube_url: str = Field(min_length=8, max_length=500)
+    youtube_kind: str = Field(default="", max_length=40)
+    youtube_title: str = Field(default="", max_length=300)
 
 
 # --------------------------------------------------------------------------- #
@@ -388,6 +482,103 @@ def commit(body: CommitInput, request: Request) -> JSONResponse:
     with ml.flock():
         result = ml.commit_push(message, push=True)
     return JSONResponse({**result, "message": message, "status": ml.git_status()})
+
+
+# --------------------------------------------------------------------------- #
+# admin: search YouTube Music, add + download, refresh assets
+# --------------------------------------------------------------------------- #
+@app.get("/api/admin/quota")
+def admin_quota() -> dict:
+    return quota_state()
+
+
+@app.get("/api/search")
+def search_youtube(q: str, request: Request, limit: int = 8) -> dict:
+    wait = search_limiter.check(client_ip(request))
+    if wait > 0:
+        raise HTTPException(status_code=429, detail=f"search slow down; retry in {wait:.0f}s",
+                            headers={"Retry-After": str(int(wait) + 1)})
+    q = (q or "").strip()[:200]
+    if not q:
+        raise HTTPException(status_code=400, detail="empty query")
+    limit = max(1, min(int(limit), 15))
+    if not _search_lock.acquire(blocking=False):
+        raise HTTPException(status_code=409, detail="a search is already running")
+    try:
+        try:
+            proc = run_tool([str(TOOL_DIR / "search_youtube.py"),
+                             "--query", q, "--limit", str(limit)], timeout=60)
+        except subprocess.TimeoutExpired:
+            raise HTTPException(status_code=504, detail="search timed out")
+        if proc.returncode != 0:
+            raise HTTPException(status_code=502,
+                                detail=("search failed: " + (proc.stderr or proc.stdout))[-300:])
+        try:
+            return json.loads(proc.stdout)
+        except json.JSONDecodeError:
+            raise HTTPException(status_code=502, detail="search returned invalid JSON")
+    finally:
+        _search_lock.release()
+
+
+@app.post("/api/admin/add")
+def admin_add(body: AddSongInput, request: Request) -> dict:
+    enforce_write(request)
+    url = body.youtube_url.strip()
+    if ml.video_id(url) is None:
+        raise HTTPException(status_code=400, detail="not a valid YouTube URL")
+    if download_quota.remaining() < 1:
+        raise HTTPException(status_code=429, detail="download quota exhausted",
+                            headers={"Retry-After": str(int(download_quota.reset_in()) + 1)})
+    if not _download_lock.acquire(blocking=False):
+        raise HTTPException(status_code=409, detail="a download is already in progress")
+    try:
+        if download_quota.remaining() < 1:
+            raise HTTPException(status_code=429, detail="download quota exhausted",
+                                headers={"Retry-After": str(int(download_quota.reset_in()) + 1)})
+        with ml.flock():
+            master = ml.load_master()
+            songs = master.get("songs", [])
+            if len(songs) >= MAX_MASTER_SONGS:
+                raise HTTPException(status_code=429, detail="master list full")
+            song = {
+                "id": "", "title": body.title.strip(), "artist": body.artist.strip(),
+                "genre": body.genre.strip() or "Unsorted", "youtube_url": url,
+                "youtube_kind": body.youtube_kind.strip(),
+                "youtube_title": body.youtube_title.strip(), "duration": None,
+            }
+            sid = ml.make_song_id(song)
+            if ml.song_by_id(master, sid):
+                raise HTTPException(status_code=409, detail="song already in the master list")
+            song["id"] = sid
+            song["asset"] = ml.expected_asset(song)
+            songs.append(song)
+            master["songs"] = songs
+            ml.save_master(master)
+        summary, log_tail = _download_and_summarize(["--only", sid, "--max-downloads", "1"], timeout=300)
+        download_quota.record(max(1, summary.get("attempted", 0)))
+        song["duration"] = None
+        return {"song": slim(song), "download": summary, "quota": quota_state(), "log": log_tail}
+    finally:
+        _download_lock.release()
+
+
+@app.post("/api/admin/refresh")
+def admin_refresh(request: Request) -> dict:
+    enforce_write(request)
+    if not _download_lock.acquire(blocking=False):
+        raise HTTPException(status_code=409, detail="a download is already in progress")
+    try:
+        remaining = download_quota.remaining()
+        if remaining < 1:
+            raise HTTPException(status_code=429, detail="download quota exhausted",
+                                headers={"Retry-After": str(int(download_quota.reset_in()) + 1)})
+        summary, log_tail = _download_and_summarize(
+            ["--max-downloads", str(remaining)], timeout=900)
+        download_quota.record(max(0, summary.get("attempted", 0)))
+        return {"summary": summary, "quota": quota_state(), "log": log_tail}
+    finally:
+        _download_lock.release()
 
 
 # --------------------------------------------------------------------------- #

@@ -151,6 +151,10 @@ def main() -> int:
     parser.add_argument("--only", type=str, default=None,
                         help="Comma-separated master ids (or id substrings) to limit to")
     parser.add_argument("--delay", type=float, default=0.0)
+    parser.add_argument("--max-downloads", type=int, default=0,
+                        help="Cap successful downloads this run (0 = unlimited)")
+    parser.add_argument("--summary-json", type=Path, default=None,
+                        help="Write a machine-readable result summary to this path")
     args = parser.parse_args()
 
     logging.basicConfig(level=logging.INFO, format="%(message)s", stream=sys.stdout)
@@ -160,7 +164,10 @@ def main() -> int:
     if args.only:
         wanted = {x.strip() for x in args.only.split(",") if x.strip()}
         songs = [s for s in songs if s.get("id") in wanted or any(w in (s.get("id") or "") for w in wanted)]
-        log.info("limiting to %d song(s)", len(songs))
+        # Never prune when restricting to specific songs: the "referenced" set
+        # would only cover the subset and trash everything else.
+        args.prune = False
+        log.info("limiting to %d song(s); pruning disabled", len(songs))
 
     # --- plan ---------------------------------------------------------------
     to_download: list[dict] = []
@@ -187,6 +194,10 @@ def main() -> int:
     # referenced must also include destinations of moves
     for _src, dst, _s in to_move:
         referenced.add(dst)
+
+    if args.max_downloads and len(to_download) > args.max_downloads:
+        log.info("capping downloads to %d (of %d missing)", args.max_downloads, len(to_download))
+        to_download = to_download[: args.max_downloads]
 
     # --- prune candidates ---------------------------------------------------
     orphans: list[Path] = []
@@ -224,6 +235,8 @@ def main() -> int:
             return 1
 
     moved = downloaded = failed = trashed = 0
+    downloaded_ids: list[str] = []
+    failed_ids: list[str] = []
     try:
         for src, dst, song in to_move:
             dst.parent.mkdir(parents=True, exist_ok=True)
@@ -234,8 +247,10 @@ def main() -> int:
             log.info("fetch  %s — %s", song.get("artist"), song.get("title"))
             if download_mp3(base, song["youtube_url"], dst):
                 downloaded += 1
+                downloaded_ids.append(song.get("id", ""))
             else:
                 failed += 1
+                failed_ids.append(song.get("id", ""))
             if args.delay:
                 time.sleep(args.delay)
     finally:
@@ -271,6 +286,14 @@ def main() -> int:
 
     log.info("done: moved=%d downloaded=%d trashed=%d failed=%d (duration updates=%d)",
              moved, downloaded, trashed, failed, changed)
+
+    if args.summary_json:
+        args.summary_json.parent.mkdir(parents=True, exist_ok=True)
+        args.summary_json.write_text(json.dumps({
+            "downloaded": downloaded, "moved": moved, "trashed": trashed,
+            "failed": failed, "attempted": downloaded + failed,
+            "downloaded_ids": downloaded_ids, "failed_ids": failed_ids,
+        }, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
     if args.commit:
         with ml.flock():

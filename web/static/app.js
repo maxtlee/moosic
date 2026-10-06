@@ -8,6 +8,7 @@ const BASE = location.pathname.replace(/[^/]*$/, "");
 const $ = (sel) => document.querySelector(sel);
 
 const audio = $("#audio");
+const adminState = { candidates: [] };
 const state = {
   master: [],              // slim songs from /api/library
   index: new Map(),        // id -> song
@@ -245,6 +246,18 @@ function setView(type, value = "") {
 }
 
 function apply() {
+  if (state.viewType === "admin") {
+    $("#library-view").hidden = true;
+    $("#admin-panel").hidden = false;
+    renderGenres();
+    renderPlaylists();
+    document.querySelectorAll(".nav-item").forEach((b) =>
+      b.classList.toggle("is-active", b.dataset.view === "admin"));
+    loadQuota();
+    return;
+  }
+  $("#library-view").hidden = false;
+  $("#admin-panel").hidden = true;
   const q = state.query.trim().toLowerCase();
   let rows;
   if (state.viewType === "playlist") {
@@ -619,6 +632,135 @@ async function doCommit() {
   refreshStatus();
 }
 
+/* ------------------------------- admin ------------------------------ */
+function fmtClock(s) {
+  s = Math.max(0, Math.ceil(s));
+  return `${Math.floor(s / 60)}:${(s % 60).toString().padStart(2, "0")}`;
+}
+
+async function loadQuota() {
+  try { state.quota = await api("/api/admin/quota"); renderQuota(); } catch (_) { /* ignore */ }
+}
+
+function renderQuota() {
+  const q = state.quota;
+  if (!q) return;
+  const pct = q.limit ? (q.used / q.limit) * 100 : 0;
+  const fill = $("#quota-fill");
+  fill.style.width = pct + "%";
+  fill.classList.toggle("low", q.remaining > 0 && q.remaining <= 5);
+  fill.classList.toggle("out", q.remaining <= 0);
+  const reset = q.remaining <= 0 ? ` · resets in ${fmtClock(q.reset_in)}` : "";
+  $("#quota-text").textContent =
+    `Downloads: ${q.used} / ${q.limit} used in the last ${Math.round(q.window / 60)} min${reset}`;
+  document.querySelectorAll(".result .btn.add").forEach((b) => { b.disabled = q.remaining <= 0; });
+}
+
+async function doSearch(e) {
+  if (e) e.preventDefault();
+  const q = $("#admin-q").value.trim();
+  if (!q) return;
+  const btn = $("#search-btn");
+  btn.classList.add("busy");
+  btn.textContent = "Searching…";
+  const box = $("#search-results");
+  box.innerHTML = '<p class="hint">Searching YouTube Music…</p>';
+  try {
+    const data = await api("/api/search?q=" + encodeURIComponent(q) + "&limit=8");
+    adminState.candidates = data.candidates || [];
+    renderResults();
+  } catch (err) {
+    box.innerHTML = "";
+    toast(err.message, true);
+  } finally {
+    btn.classList.remove("busy");
+    btn.textContent = "Search";
+  }
+}
+
+function renderResults() {
+  const box = $("#search-results");
+  box.innerHTML = "";
+  const cands = adminState.candidates;
+  if (!cands.length) { box.innerHTML = '<p class="hint">No results.</p>'; return; }
+  const q = state.quota;
+  for (const c of cands) {
+    const row = document.createElement("div");
+    row.className = "result" + (c.is_best ? " best" : "");
+    const main = document.createElement("div");
+    main.className = "r-main";
+    const t = document.createElement("span");
+    t.className = "r-title";
+    t.textContent = c.title;
+    const sub = document.createElement("span");
+    sub.className = "r-sub";
+    sub.textContent = `${c.artist || "unknown"} · ${c.duration ? fmtTime(c.duration) : "—"} · ${c.kind}`;
+    main.append(t, sub);
+    const kind = document.createElement("span");
+    kind.className = "badge" + (c.is_best ? " best" : "");
+    kind.textContent = c.is_best ? "★ best" : c.kind;
+    const score = document.createElement("span");
+    score.className = "r-score";
+    score.textContent = c.score;
+    const add = document.createElement("button");
+    add.className = "btn btn-primary add";
+    add.textContent = "Add & download";
+    if (q && q.remaining <= 0) add.disabled = true;
+    add.onclick = () => addCandidate(c, add);
+    row.append(main, kind, score, add);
+    box.appendChild(row);
+  }
+}
+
+async function addCandidate(c, btn) {
+  if (btn) { btn.classList.add("busy"); btn.textContent = "Downloading…"; }
+  try {
+    const r = await api("/api/admin/add", {
+      method: "POST",
+      body: {
+        title: c.title, artist: c.artist, genre: "Unsorted",
+        youtube_url: c.url, youtube_kind: c.kind, youtube_title: c.title,
+      },
+    });
+    toast(`Added “${r.song.title}” — ${r.download.downloaded ? "downloaded" : "download failed"}`);
+    state.quota = r.quota;
+    renderQuota();
+    await reloadLibrary();
+    refreshStatus();
+    if (btn) { btn.textContent = r.download.downloaded ? "✓ Added" : "⚠ Retry"; btn.disabled = r.download.downloaded; }
+    if (btn) btn.classList.remove("busy");
+  } catch (err) {
+    toast(err.message, true);
+    if (btn) { btn.classList.remove("busy"); btn.textContent = "Add & download"; }
+    loadQuota();
+  }
+}
+
+async function doRefresh() {
+  const btn = $("#refresh-assets");
+  const log = $("#admin-log");
+  btn.classList.add("busy");
+  btn.textContent = "Refreshing…";
+  log.hidden = false;
+  log.textContent = "Working…";
+  try {
+    const r = await api("/api/admin/refresh", { method: "POST" });
+    const s = r.summary;
+    toast(`Refresh: ${s.downloaded} downloaded · ${s.moved} renamed · ${s.trashed} trashed`);
+    log.textContent = (r.log || "").trim() || "done";
+    state.quota = r.quota;
+    renderQuota();
+    await reloadLibrary();
+    refreshStatus();
+  } catch (err) {
+    toast(err.message, true);
+    log.textContent = err.message;
+  } finally {
+    btn.classList.remove("busy");
+    btn.textContent = "Refresh assets now";
+  }
+}
+
 /* ------------------------------- loaders ---------------------------- */
 async function reloadLibrary() {
   const data = await api("/api/library");
@@ -658,6 +800,8 @@ $("#fav").onclick = () => {
 $("#new-playlist").onclick = newPlaylist;
 $("#add-song").onclick = addSong;
 $("#commit").onclick = doCommit;
+$("#search-form").addEventListener("submit", doSearch);
+$("#refresh-assets").onclick = doRefresh;
 
 audio.addEventListener("play", () => { $("#play").textContent = "❚❚"; });
 audio.addEventListener("pause", () => { $("#play").textContent = "▶"; });

@@ -16,6 +16,7 @@
       <nav class="nav">
         <button class="nav-item is-active" data-view="all"><span>🏠</span> All songs</button>
         <button class="nav-item" data-view="favorites"><span>♥</span> Favorites</button>
+        <button class="nav-item" data-view="admin"><span>⚙</span> Admin</button>
       </nav>
 
       <div class="side-block">
@@ -57,6 +58,7 @@
         </button>
       </header>
 
+      <div id="library-view">
       <section class="hero" id="hero">
         <div class="hero-art" id="hero-art">♪</div>
         <div class="hero-copy">
@@ -85,6 +87,43 @@
           <div id="track-rows"></div>
         </div>
         <p class="empty" id="empty" hidden>No songs match your search.</p>
+      </section>
+      </div>
+
+      <section class="admin" id="admin-panel" hidden>
+        <div class="admin-head">
+          <p class="eyebrow">Admin</p>
+          <h1>Add &amp; manage music</h1>
+          <p class="muted">Search YouTube Music, add songs to the master list and
+            download them on the spot. Public and rate-limited.</p>
+        </div>
+
+        <div class="quota" id="admin-quota">
+          <div class="quota-bar"><span id="quota-fill"></span></div>
+          <span id="quota-text" class="muted">Downloads: —</span>
+        </div>
+
+        <div class="admin-block">
+          <h2>Search &amp; add</h2>
+          <form id="search-form" class="admin-search">
+            <input id="admin-q" type="search" autocomplete="off" spellcheck="false"
+                   placeholder='Try "NewJeans - Ditto" or just a title'>
+            <button class="btn btn-primary" type="submit" id="search-btn">Search</button>
+          </form>
+          <p class="hint">Results are ranked the same way the batch linker scores
+            songs (official audio / lyric video preferred, live/cover/remix penalised).
+            The ★ result is the recommended pick.</p>
+          <div id="search-results" class="search-results"></div>
+        </div>
+
+        <div class="admin-block">
+          <h2>Refresh assets</h2>
+          <p class="hint">Reconcile the assets folder with the master list:
+            download missing files, rename retagged ones, and move orphans to
+            <code>_trash/</code>.</p>
+          <button id="refresh-assets" class="btn">Refresh assets now</button>
+          <pre id="admin-log" class="admin-log" hidden></pre>
+        </div>
       </section>
     </main>
 
