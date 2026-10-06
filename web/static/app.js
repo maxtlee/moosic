@@ -4,7 +4,7 @@
  * Moosic web client — library, playlists, master edits, commit button.
  * ------------------------------------------------------------------ */
 
-const BASE = location.pathname.replace(/[^/]*$/, "");
+const BASE = new URL(".", location.href).pathname; // directory of the current URL, always ends with "/"
 const $ = (sel) => document.querySelector(sel);
 
 const audio = $("#audio");
@@ -50,7 +50,7 @@ async function api(path, { method = "GET", body } = {}) {
     opt.headers["Content-Type"] = "application/json";
     opt.body = JSON.stringify(body);
   }
-  const res = await fetch(BASE + path, opt);
+  const res = await fetch(BASE + String(path).replace(/^\/+/, ""), opt);
   let data = null;
   try { data = await res.json(); } catch (_) { /* no body */ }
   if (!res.ok) {

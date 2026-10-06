@@ -337,7 +337,8 @@ def status() -> dict:
 
 @app.get("/")
 def index() -> FileResponse:
-    return FileResponse(STATIC / "index.html", media_type="text/html")
+    return FileResponse(STATIC / "index.html", media_type="text/html",
+                        headers={"Cache-Control": "no-cache"})
 
 
 # --------------------------------------------------------------------------- #
