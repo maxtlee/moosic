@@ -15,6 +15,10 @@
 
 * { box-sizing: border-box; }
 
+/* Author `display` rules (e.g. .modal-root{display:grid}) otherwise override the
+   UA [hidden] rule, leaving invisible overlays that block clicks. */
+[hidden] { display: none !important; }
+
 html, body {
   margin: 0;
   height: 100%;
@@ -303,11 +307,12 @@ input[type="range"]::-moz-range-thumb {
 
 /* toasts */
 .toasts { position: fixed; bottom: calc(var(--player-h) + 14px); right: 16px; z-index: 200;
-  display: flex; flex-direction: column; gap: 8px; }
+  display: flex; flex-direction: column; gap: 8px; pointer-events: none; }
 .toast {
   background: #202127; border: 1px solid var(--line); border-left: 3px solid var(--accent);
   border-radius: 8px; padding: 10px 14px; max-width: 340px; font-size: 13px;
   box-shadow: 0 12px 30px rgba(0,0,0,0.5); animation: toast-in 0.16s ease-out;
+  pointer-events: auto;
 }
 .toast.err { border-left-color: #ff6b6b; }
 @keyframes toast-in { from { transform: translateY(8px); opacity: 0; } to { transform: none; opacity: 1; } }
