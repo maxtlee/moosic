@@ -34,6 +34,7 @@ import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 
+import fetch_covers
 import musiclib as ml
 
 ROOT = Path(__file__).resolve().parent
@@ -155,6 +156,8 @@ def main() -> int:
                         help="Cap successful downloads this run (0 = unlimited)")
     parser.add_argument("--summary-json", type=Path, default=None,
                         help="Write a machine-readable result summary to this path")
+    parser.add_argument("--no-covers", action="store_true",
+                        help="Skip fetching missing album covers")
     args = parser.parse_args()
 
     logging.basicConfig(level=logging.INFO, format="%(message)s", stream=sys.stdout)
@@ -271,6 +274,12 @@ def main() -> int:
             shutil.move(str(p), str(dest))
             trashed += 1
 
+    # --- covers -------------------------------------------------------------
+    cover_res = {"ok": 0, "failed": 0, "skipped": 0}
+    if not args.no_covers:
+        cover_res = fetch_covers.ensure_covers(songs)
+        log.info("covers: %s", cover_res)
+
     # --- write asset + duration back to master ------------------------------
     changed = 0
     for song in songs:
@@ -293,6 +302,7 @@ def main() -> int:
             "downloaded": downloaded, "moved": moved, "trashed": trashed,
             "failed": failed, "attempted": downloaded + failed,
             "downloaded_ids": downloaded_ids, "failed_ids": failed_ids,
+            "covers": cover_res,
         }, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
     if args.commit:

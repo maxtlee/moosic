@@ -157,10 +157,11 @@ a { color: inherit; text-decoration: none; }
 .track.is-playing { background: var(--panel-2); }
 .track .idx { color: var(--muted); font-variant-numeric: tabular-nums; }
 .track.is-playing .idx { color: var(--accent); }
-.track-title { display: flex; flex-direction: column; min-width: 0; }
-.track-title strong { font-weight: 550; }
-.track-title span { color: var(--muted); font-size: 12.5px; }
-.track-title strong, .track-title span {
+.track-title { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.track-text { display: flex; flex-direction: column; min-width: 0; }
+.track-text strong { font-weight: 550; }
+.track-text span { color: var(--muted); font-size: 12.5px; }
+.track-text strong, .track-text span {
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 .track .genre { color: var(--muted); font-size: 12.5px; }
@@ -361,3 +362,27 @@ input[type="range"]::-moz-range-thumb {
 }
 .busy { opacity: .55; pointer-events: none; }
 code { background: var(--panel-2); padding: 1px 5px; border-radius: 5px; font-size: 0.9em; }
+
+/* ---------------- album covers ---------------- */
+.art { display: grid; place-items: center; overflow: hidden; }
+.art img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.row-art {
+  width: 38px; height: 38px; border-radius: 6px; flex: none;
+  font-size: 14px; color: rgba(255,255,255,0.85);
+}
+.now-art { overflow: hidden; }
+.now-art img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; display: block; }
+.hero-art.mosaic {
+  display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr;
+  gap: 2px; padding: 0; font-size: 0;
+}
+.mosaic-cell {
+  overflow: hidden; display: grid; place-items: center;
+  font-size: 22px; color: rgba(255,255,255,0.8);
+}
+.mosaic-cell img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.result .thumb {
+  width: 44px; height: 44px; border-radius: 6px; overflow: hidden;
+  flex: none; background: var(--panel-2);
+}
+.result .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }

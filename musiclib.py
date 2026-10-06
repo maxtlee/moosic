@@ -29,6 +29,7 @@ DATA_DIR = Path(os.environ.get("MOOSIC_DATA", Path.home() / "Projects" / "Music"
 MASTER = DATA_DIR / "master.json"
 PLAYLISTS_DIR = DATA_DIR / "playlists"
 ASSETS_DIR = DATA_DIR / "assets"
+COVERS_DIR = ASSETS_DIR / "_covers"
 TRASH_DIR = ASSETS_DIR / "_trash"
 LOCK_PATH = DATA_DIR / ".locks" / "music.lock"
 
@@ -85,6 +86,20 @@ def expected_asset(song: dict) -> str:
     return (f"{sanitize(song.get('genre') or 'Unsorted')}/"
             f"{sanitize(song.get('artist') or 'Unknown Artist')}/"
             f"{sanitize(song.get('title') or 'Untitled')}.mp3")
+
+
+def safe_id(sid: str) -> str:
+    """Filesystem-safe form of a song id (ids look like ``yt:<videoId>``)."""
+    return re.sub(r"[^A-Za-z0-9_.-]", "_", sid or "unknown")
+
+
+def cover_rel(sid: str) -> str:
+    return f"_covers/{safe_id(sid)}.jpg"
+
+
+def cover_file(song: dict) -> Path | None:
+    rel = song.get("cover")
+    return (ASSETS_DIR / rel) if rel else None
 
 
 def now_iso() -> str:

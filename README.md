@@ -16,7 +16,8 @@ cloned at `~/Projects/Music` and selected with `MOOSIC_DATA`.
 | File | Role |
 |---|---|
 | `musiclib.py` | shared data layer: master/playlist IO, stable ids, slugify, locking, git commit/push |
-| `download_assets.py` | **asset refresher** (yt-dlp via yt-audio-api): reconciles `assets/` with `master.json` — downloads missing, renames retagged files, prunes orphans to `_trash/`, writes `asset`/`duration` back |
+| `download_assets.py` | **asset refresher** (yt-dlp via yt-audio-api): reconciles `assets/` with `master.json` — downloads missing, renames retagged files, prunes orphans to `_trash/`, writes `asset`/`duration` back, and backfills missing covers |
+| `fetch_covers.py` | album covers from YouTube thumbnails → `assets/_covers/<id>.jpg` + `cover` field (`--execute`, `--force`) |
 | `watch_downloads.py` | watches `master.json` and runs the refresher on change |
 | `link_youtube.py` | resolves missing YouTube URLs in `master.json` using YTMusic |
 | `search_youtube.py` | ranked YouTube Music search (reuses `link_youtube` scoring); powers the web admin panel |

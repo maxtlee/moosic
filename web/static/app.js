@@ -44,6 +44,68 @@ function paintArt(el, seed) {
   el.style.background = `linear-gradient(135deg, hsl(${h} 55% 42%), hsl(${(h + 70) % 360} 60% 30%))`;
 }
 
+const coverUrl = (song) => BASE + "api/cover/" + encodeURIComponent(song.id);
+
+function artEl(song, cls) {
+  const wrap = document.createElement("span");
+  wrap.className = cls + " art";
+  paintArt(wrap, (song.artist || "") + (song.title || ""));
+  if (song.has_cover) {
+    const img = document.createElement("img");
+    img.alt = "";
+    img.loading = "lazy";
+    img.src = coverUrl(song);
+    img.onerror = () => { img.remove(); wrap.textContent = (song.title || "♪").trim().charAt(0).toUpperCase() || "♪"; };
+    wrap.appendChild(img);
+  } else {
+    wrap.textContent = (song.title || "♪").trim().charAt(0).toUpperCase() || "♪";
+  }
+  return wrap;
+}
+
+function paintArtInto(el, song) {
+  el.replaceChildren();
+  paintArt(el, (song.artist || "") + (song.title || ""));
+  if (song.has_cover) {
+    const img = document.createElement("img");
+    img.alt = "";
+    img.src = coverUrl(song);
+    img.onerror = () => { img.remove(); el.textContent = (song.title || "♪").trim().charAt(0).toUpperCase() || "♪"; };
+    el.appendChild(img);
+  } else {
+    el.textContent = (song.title || "♪").trim().charAt(0).toUpperCase() || "♪";
+  }
+}
+
+function renderHeroArt(songs) {
+  const el = $("#hero-art");
+  const picks = songs.slice(0, 4);
+  el.classList.remove("mosaic");
+  if (picks.length === 0) {
+    el.replaceChildren();
+    paintArt(el, "moosic");
+    el.textContent = "♪";
+    return;
+  }
+  if (picks.length === 1) { paintArtInto(el, picks[0]); return; }
+  el.classList.add("mosaic");
+  el.replaceChildren();
+  for (const s of picks) {
+    const cell = document.createElement("span");
+    cell.className = "mosaic-cell";
+    paintArt(cell, (s.artist || "") + (s.title || ""));
+    if (s.has_cover) {
+      const img = document.createElement("img");
+      img.alt = "";
+      img.loading = "lazy";
+      img.src = coverUrl(s);
+      img.onerror = () => img.remove();
+      cell.appendChild(img);
+    }
+    el.appendChild(cell);
+  }
+}
+
 async function api(path, { method = "GET", body } = {}) {
   const opt = { method, headers: {} };
   if (body !== undefined) {
@@ -309,7 +371,9 @@ function renderHero() {
 
   $("#hero-title").textContent = title;
   $("#hero-meta").textContent = meta;
-  paintArt($("#hero-art"), title);
+  const heroSongs = state.viewType === "playlist" && state.playlist
+    ? state.playlist.songs : state.filtered;
+  renderHeroArt(heroSongs);
   const box = $("#hero-actions");
   box.innerHTML = "";
   for (const [label, fn] of actions) {
@@ -338,11 +402,15 @@ function renderRows() {
 
     const title = document.createElement("span");
     title.className = "track-title";
+    title.appendChild(artEl(s, "row-art"));
+    const text = document.createElement("span");
+    text.className = "track-text";
     const strong = document.createElement("strong");
     strong.textContent = s.missing ? "⚠ missing from master" : s.title;
     const artist = document.createElement("span");
     artist.textContent = (s.artist || "") + (s.has_asset === false ? " · ⏳ not downloaded" : "");
-    title.append(strong, artist);
+    text.append(strong, artist);
+    title.appendChild(text);
 
     const genre = document.createElement("span");
     genre.className = "genre";
@@ -391,8 +459,7 @@ function play(id) {
   audio.play().catch(() => {});
   $("#now-title").textContent = song.title;
   $("#now-artist").textContent = song.artist + (song.genre ? " · " + song.genre : "");
-  paintArt($("#now-art"), song.artist + song.title);
-  $("#now-art").textContent = (song.title || "♪").charAt(0).toUpperCase();
+  paintArtInto($("#now-art"), song);
   const link = $("#now-link");
   if (song.youtube_url) { link.href = song.youtube_url; link.hidden = false; } else link.hidden = true;
   const fav = $("#fav");
@@ -707,7 +774,18 @@ function renderResults() {
     add.textContent = "Add & download";
     if (q && q.remaining <= 0) add.disabled = true;
     add.onclick = () => addCandidate(c, add);
-    row.append(main, kind, score, add);
+    const thumb = document.createElement("span");
+    thumb.className = "thumb";
+    if (c.thumbnail) {
+      const img = document.createElement("img");
+      img.src = c.thumbnail;
+      img.alt = "";
+      img.loading = "lazy";
+      img.referrerPolicy = "no-referrer";
+      img.onerror = () => img.remove();
+      thumb.appendChild(img);
+    }
+    row.append(thumb, main, kind, score, add);
     box.appendChild(row);
   }
 }

@@ -238,6 +238,7 @@ class AddSongInput(BaseModel):
 # helpers
 # --------------------------------------------------------------------------- #
 def slim(song: dict) -> dict:
+    cf = ml.cover_file(song)
     return {
         "id": song.get("id", ""),
         "title": song.get("title", ""),
@@ -246,6 +247,7 @@ def slim(song: dict) -> dict:
         "duration": song.get("duration"),
         "youtube_url": song.get("youtube_url", ""),
         "has_asset": ml.asset_file(song).is_file(),
+        "has_cover": bool(cf and cf.is_file()),
     }
 
 
@@ -325,6 +327,22 @@ def stream(sid: str) -> FileResponse:
         raise HTTPException(status_code=404, detail="song not found")
     return FileResponse(resolve_stream(song), media_type="audio/mpeg",
                         filename=Path(song.get("asset", "audio.mp3")).name)
+
+
+@app.get("/api/cover/{sid}")
+def cover(sid: str) -> FileResponse:
+    song = ml.song_by_id(ml.load_master(), sid)
+    if song is None:
+        raise HTTPException(status_code=404, detail="song not found")
+    path = ml.cover_file(song)
+    if not path or not path.is_file():
+        raise HTTPException(status_code=404, detail="no cover")
+    root = ml.ASSETS_DIR.resolve()
+    target = path.resolve()
+    if root != target and root not in target.parents:
+        raise HTTPException(status_code=400, detail="invalid cover path")
+    return FileResponse(target, media_type="image/jpeg",
+                        headers={"Cache-Control": "public, max-age=86400"})
 
 
 @app.get("/api/status")

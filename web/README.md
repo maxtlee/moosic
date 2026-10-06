@@ -44,9 +44,10 @@ Config (environment, or `.env`):
 ## API
 
 Reads
-- `GET /api/library` → `{count, genres, songs:[{id,title,artist,genre,duration,youtube_url,has_asset}]}`
+- `GET /api/library` → `{count, genres, songs:[{id,title,artist,genre,duration,youtube_url,has_asset,has_cover}]}`
 - `GET /api/playlists` · `GET /api/playlists/{slug}`
 - `GET /api/stream/{song_id}` → MP3 with Range support (`206`)
+- `GET /api/cover/{song_id}` → JPEG album cover (`404` if none; the UI falls back to gradient art)
 - `GET /api/status` → git state (`dirty`, `ahead/behind`, `last_commit`) + commit cooldown
 - `GET /api/health`
 
@@ -98,13 +99,33 @@ The **Admin** item in the sidebar is the "add music" workflow:
    and returns ranked candidates, marking the recommended one **★ best**.
 2. Click **Add & download** on a result. The server:
    - writes the song into `master.json` with a stable id and its asset path,
-   - downloads it on the spot via `download_assets.py --only <id> --execute`,
+   - downloads it on the spot via `download_assets.py --only <id> --execute`
+     (which also fetches its cover),
    - returns the song plus the download summary and updated quota.
 3. **Refresh assets now** runs the full reconciler (up to the remaining quota).
 
 Everything the admin panel does lands in the working tree; use the **Commit**
 button to version it. Searches are rate-limited separately (`MOOSIC_SEARCH_RPM`)
 so the YouTube Music API isn't hammered.
+
+## Album covers
+
+The downloaded MP3s have no embedded art, so the cover is the video's YouTube
+thumbnail (`i.ytimg.com`, trying `maxresdefault` → `sddefault` → `hqdefault` →
+`mqdefault`). Files live at `assets/_covers/<safe-id>.jpg` (gitignored, on the
+HDD) with a `cover` path recorded in `master.json`; `GET /api/cover/{id}` serves
+them and the UI square-crops with `object-fit: cover`. Covers are regeneratable
+from the master list, so they are not versioned.
+
+```bash
+cd ~/Projects/Moosic
+python3 fetch_covers.py --execute           # backfill missing covers
+python3 fetch_covers.py --execute --force   # re-fetch everything
+```
+
+`download_assets.py` — and therefore the admin **Refresh assets** button and the
+add-and-download flow — also backfills missing covers. A missing cover degrades
+to a deterministic gradient tile.
 
 ## Safety model (public writes)
 

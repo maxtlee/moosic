@@ -45,6 +45,10 @@ def candidate(song: dict, result: dict, is_best: bool = False) -> dict:
     vid = result.get("videoId")
     artists = ", ".join(ly.artist_names(result))
     score = ly.score_result(song, result)
+    thumbs = result.get("thumbnails") or []
+    thumb = ""
+    if thumbs:
+        thumb = max(thumbs, key=lambda t: (t.get("width") or 0)).get("url", "")
     return {
         "video_id": vid,
         "url": f"https://www.youtube.com/watch?v={vid}",
@@ -54,6 +58,7 @@ def candidate(song: dict, result: dict, is_best: bool = False) -> dict:
         "views": ly.parse_views(result.get("views")),
         "kind": ly.pick_kind(result),
         "score": round(score, 1),
+        "thumbnail": thumb,
         "is_best": is_best,
     }
 
