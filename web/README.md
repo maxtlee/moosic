@@ -192,6 +192,11 @@ Playback is driven by a single ordered **queue** (`state.queue`) with a cursor,
 so next/back are exact inverses and the behaviour doesn't change as complexity
 grows.
 
+- **Song menu:** right-click a song row (desktop) or use the **⋮** kebab
+  (touch) to open the same menu — Play, Play next, Add to queue, Add to
+  playlist, Edit details, Wrong match — replace, and Delete. The browser's
+  native context menu is suppressed site-wide (except inside text fields, so
+  paste still works).
 - **Queue:** playing from a view seeds the queue with that view's songs. The row
   action sheet has **Play next** (insert after the current track) and **Add to
   queue** (append). The **Queue** view shows the current track + upcoming, lets

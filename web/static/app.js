@@ -514,6 +514,7 @@ function renderRows() {
     const row = document.createElement("div");
     row.className = "track";
     row.dataset.id = s.id;
+    row.dataset.songId = s.id;
     row.tabIndex = 0;
     if (s.id === state.currentId) row.classList.add("is-playing");
     if (s.missing) row.classList.add("missing");
@@ -798,6 +799,7 @@ function renderQueue() {
     const row = document.createElement("div");
     row.className = "queue-item" + (idx === state.cursor ? " current" : "")
       + (idx < state.cursor ? " played" : "");
+    row.dataset.songId = id;
     row.appendChild(artEl(s, "q-art"));
     const main = document.createElement("div");
     main.className = "q-main";
@@ -1096,6 +1098,7 @@ function localMatches(q, limit = 8) {
 function resultRow({ song, yt, onPlay, action }) {
   const row = document.createElement("div");
   row.className = "result";
+  if (song && song.id) row.dataset.songId = song.id;
   const thumb = document.createElement("span");
   thumb.className = "thumb";
   if (yt && yt.thumbnail) {
@@ -1573,6 +1576,26 @@ $("#now-open").onclick = (e) => {
   if (window.matchMedia("(max-width: 820px)").matches) openNowSheet();
 };
 
+function songMenuItems(song) {
+  const items = [
+    { label: "Play", fn: () => play(song.id) },
+    { label: "Play next", fn: () => enqueue(song.id, true) },
+    { label: "Add to queue", fn: () => enqueue(song.id, false) },
+    { label: "Add to playlist", fn: () => addToPlaylist(song) },
+    { label: "Edit details", fn: () => editSong(song) },
+    { label: "Wrong match — replace", fn: () => replaceMatch(song) },
+  ];
+  if (state.viewType === "playlist") {
+    items.push(
+      { label: "Move up", fn: () => moveInPlaylist(song.id, -1) },
+      { label: "Move down", fn: () => moveInPlaylist(song.id, 1) },
+      { label: "Remove from playlist", danger: true, fn: () => removeFromPlaylist(song.id) },
+    );
+  }
+  items.push({ label: "Delete from library", danger: true, fn: () => deleteSong(song) });
+  return items;
+}
+
 function closeActionSheet() { $("#sheet-root").hidden = true; $("#sheet-panel").replaceChildren(); }
 function openActionSheet(song) {
   const panel = $("#sheet-panel");
@@ -1587,25 +1610,12 @@ function openActionSheet(song) {
   info.append(t, a);
   head.append(info);
   panel.appendChild(head);
-  const add = (label, danger, fn) => {
+  for (const it of songMenuItems(song)) {
     const b = document.createElement("button");
-    b.className = "sheet-item" + (danger ? " danger" : "");
-    b.textContent = label;
-    b.onclick = async () => { closeActionSheet(); await fn(); };
+    b.className = "sheet-item" + (it.danger ? " danger" : "");
+    b.textContent = it.label;
+    b.onclick = async () => { closeActionSheet(); await it.fn(); };
     panel.appendChild(b);
-  };
-  add("Play next", false, () => enqueue(song.id, true));
-  add("Add to queue", false, () => enqueue(song.id, false));
-  if (state.viewType === "playlist") {
-    add("Move up", false, () => moveInPlaylist(song.id, -1));
-    add("Move down", false, () => moveInPlaylist(song.id, 1));
-    add("Remove from playlist", true, () => removeFromPlaylist(song.id));
-  } else {
-    add("Play", false, () => play(song.id));
-    add("Add to playlist", false, () => addToPlaylist(song));
-    add("Edit details", false, () => editSong(song));
-    add("Wrong match — replace", false, () => replaceMatch(song));
-    add("Delete from library", true, () => deleteSong(song));
   }
   const cancel = document.createElement("button");
   cancel.className = "sheet-item cancel";
@@ -1615,6 +1625,47 @@ function openActionSheet(song) {
   $("#sheet-root").hidden = false;
 }
 $("#sheet-backdrop").onclick = closeActionSheet;
+
+/* right-click song menu */
+function closeContextMenu() {
+  const m = $("#context-menu");
+  m.hidden = true;
+  m.replaceChildren();
+}
+function openContextMenu(song, x, y) {
+  const menu = $("#context-menu");
+  menu.replaceChildren();
+  for (const it of songMenuItems(song)) {
+    const b = document.createElement("button");
+    b.className = "sheet-item" + (it.danger ? " danger" : "");
+    b.textContent = it.label;
+    b.onclick = async () => { closeContextMenu(); await it.fn(); };
+    menu.appendChild(b);
+  }
+  menu.hidden = false;
+  menu.style.left = "0px";
+  menu.style.top = "0px";
+  const r = menu.getBoundingClientRect();
+  menu.style.left = Math.max(8, Math.min(x, window.innerWidth - r.width - 8)) + "px";
+  menu.style.top = Math.max(8, Math.min(y, window.innerHeight - r.height - 8)) + "px";
+}
+
+document.addEventListener("contextmenu", (e) => {
+  const row = e.target.closest("[data-song-id]");
+  if (row && row.dataset.songId) {
+    const song = songById(row.dataset.songId);
+    if (song) {
+      e.preventDefault();
+      closeActionSheet();
+      openContextMenu(song, e.clientX, e.clientY);
+      return;
+    }
+  }
+  const tag = (e.target.tagName || "").toLowerCase();
+  if (tag === "input" || tag === "textarea") return; // keep native copy/paste in fields
+  e.preventDefault();
+  closeContextMenu();
+});
 
 document.querySelectorAll(".nav-item").forEach((b) =>
   b.onclick = () => { closeDrawer(); setView(b.dataset.view); });
@@ -1632,12 +1683,16 @@ search.addEventListener("keydown", (e) => {
 search.addEventListener("blur", () => setTimeout(closeSearchDropdown, 180));
 document.addEventListener("click", (e) => {
   if (!e.target.closest(".search-wrap")) closeSearchDropdown();
+  if (!e.target.closest("#context-menu")) closeContextMenu();
 });
+window.addEventListener("scroll", closeContextMenu, true);
+window.addEventListener("resize", closeContextMenu);
 $("#sort").addEventListener("change", (e) => { state.sort = e.target.value; apply(); });
 
 document.addEventListener("keydown", (e) => {
   const typing = /INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName);
   if (e.key === "/" && !typing) { e.preventDefault(); search.focus(); return; }
+  if (e.key === "Escape") closeContextMenu();
   if (typing) return;
   if (e.code === "Space") { e.preventDefault(); $("#play").click(); }
   else if (e.key === "ArrowRight") audio.currentTime += 5;
