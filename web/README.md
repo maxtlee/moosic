@@ -197,10 +197,11 @@ grows.
   playlist, Edit details, Wrong match — replace, and Delete. The browser's
   native context menu is suppressed site-wide (except inside text fields, so
   paste still works).
-- **Queue:** playing from a view seeds the queue with that view's songs. The row
-  action sheet has **Play next** (insert after the current track) and **Add to
-  queue** (append). The **Queue** view shows the current track + upcoming, lets
-  you remove items, and **Clear queue**.
+- **Queue:** a **right sidebar** (toggle the **Queue** nav item, or ✕ to close)
+  lets you manage the queue while you keep browsing songs. Playing from a view
+  seeds the queue with that view's songs; **Play next** inserts after the current
+  track and **Add to queue** appends; remove items or **Clear queue**. On mobile
+  it becomes a right-hand drawer.
 - **Shuffle** cycles **off → shuffle → smart shuffle** (the button shows ⤨ / ✨).
   Both modes build a **stable play order up front**, so *back* retraces exactly
   what *next* played — even while shuffling.

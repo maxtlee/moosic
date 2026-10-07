@@ -369,12 +369,11 @@ function setView(type, value = "") {
   apply();
 }
 
-function apply() {
+function applyInner() {
   if (state.viewType === "admin") {
     $("#library-view").hidden = true;
     $("#search-view").hidden = true;
     $("#albums-view").hidden = true;
-    $("#queue-view").hidden = true;
     $("#admin-panel").hidden = false;
     renderGenres();
     renderPlaylists();
@@ -387,7 +386,6 @@ function apply() {
     $("#library-view").hidden = true;
     $("#admin-panel").hidden = true;
     $("#albums-view").hidden = true;
-    $("#queue-view").hidden = true;
     $("#search-view").hidden = false;
     renderGenres();
     renderPlaylists();
@@ -399,7 +397,6 @@ function apply() {
     $("#library-view").hidden = true;
     $("#admin-panel").hidden = true;
     $("#search-view").hidden = true;
-    $("#queue-view").hidden = true;
     $("#albums-view").hidden = false;
     renderGenres();
     renderPlaylists();
@@ -408,24 +405,10 @@ function apply() {
     reloadAlbums().then(renderAlbums);
     return;
   }
-  if (state.viewType === "queue") {
-    $("#library-view").hidden = true;
-    $("#admin-panel").hidden = true;
-    $("#search-view").hidden = true;
-    $("#albums-view").hidden = true;
-    $("#queue-view").hidden = false;
-    renderGenres();
-    renderPlaylists();
-    document.querySelectorAll(".nav-item").forEach((b) =>
-      b.classList.toggle("is-active", b.dataset.view === "queue"));
-    renderQueue();
-    return;
-  }
   $("#library-view").hidden = false;
   $("#admin-panel").hidden = true;
   $("#search-view").hidden = true;
   $("#albums-view").hidden = true;
-  $("#queue-view").hidden = true;
   // Library views default to rating order; playlists/albums keep their own order.
   if (state.sort === "default" && state.viewType !== "playlist" && state.viewType !== "album") {
     state.sort = "rating";
@@ -467,6 +450,11 @@ function apply() {
     b.classList.toggle("is-active",
       (b.dataset.view === "all" && state.viewType === "all")));
   $("#empty").hidden = rows.length !== 0;
+}
+
+function apply() {
+  applyInner();
+  syncQueueNav();
 }
 
 function renderHero() {
@@ -633,7 +621,7 @@ function startAudio(id) {
       title: song.title, artist: song.artist, album: song.album || song.genre || "",
     });
   }
-  if (state.viewType === "queue") renderQueue();
+  if (queuePanelOpen()) renderQueue();
 }
 
 function shuffleArray(ids) {
@@ -746,7 +734,7 @@ function enqueue(id, asNext) {
   else state.queue.push(id);
   state.manualIds.add(id);
   toast(asNext ? "Playing next" : "Added to queue");
-  if (state.viewType === "queue") renderQueue();
+  if (queuePanelOpen()) renderQueue();
 }
 
 function removeFromQueue(index) {
@@ -829,6 +817,21 @@ function renderQueue() {
   const curEl = list.querySelector(".queue-item.current");
   if (curEl) curEl.scrollIntoView({ block: "nearest" });
 }
+
+function queuePanelOpen() {
+  const layout = document.querySelector(".layout");
+  return !!layout && layout.classList.contains("queue-open");
+}
+function syncQueueNav() {
+  const nav = document.querySelector('.nav-item[data-view="queue"]');
+  if (nav) nav.classList.toggle("is-active", queuePanelOpen());
+}
+function setQueuePanel(open) {
+  document.querySelector(".layout").classList.toggle("queue-open", open);
+  syncQueueNav();
+  if (open) renderQueue();
+}
+function toggleQueuePanel() { setQueuePanel(!queuePanelOpen()); }
 
 /* --------------------------- playlist ops --------------------------- */
 async function openPlaylist(slug) {
@@ -1520,6 +1523,7 @@ document.querySelectorAll(".js-repeat").forEach((el) => { el.onclick = toggleRep
 
 $("#new-playlist").onclick = newPlaylist;
 $("#queue-clear").onclick = clearQueue;
+$("#queue-close").onclick = () => setQueuePanel(false);
 $("#add-song").onclick = addSong;
 $("#commit").onclick = doCommit;
 $("#refresh-assets").onclick = doRefresh;
@@ -1668,7 +1672,11 @@ document.addEventListener("contextmenu", (e) => {
 });
 
 document.querySelectorAll(".nav-item").forEach((b) =>
-  b.onclick = () => { closeDrawer(); setView(b.dataset.view); });
+  b.onclick = () => {
+    closeDrawer();
+    if (b.dataset.view === "queue") { toggleQueuePanel(); return; }
+    setView(b.dataset.view);
+  });
 
 const search = $("#search");
 search.addEventListener("input", () => {

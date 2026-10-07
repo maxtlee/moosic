@@ -6,7 +6,7 @@
   <meta name="color-scheme" content="dark">
   <title>Moosic</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>%F0%9F%8E%B5</text></svg>">
-  <link rel="stylesheet" href="static/style.css?v=20261006r">
+  <link rel="stylesheet" href="static/style.css?v=20261006s">
 </head>
 <body>
   <div class="layout">
@@ -104,18 +104,6 @@
         <div id="album-grid" class="album-grid"></div>
       </section>
 
-      <section class="queue-page" id="queue-view" hidden>
-        <div class="admin-head">
-          <p class="eyebrow">Up next</p>
-          <h1>Queue</h1>
-          <p class="muted" id="queue-sub">—</p>
-          <div class="hero-actions">
-            <button id="queue-clear" class="btn">Clear queue</button>
-          </div>
-        </div>
-        <div id="queue-list" class="queue-list"></div>
-      </section>
-
       <section class="search-page" id="search-view" hidden>
         <div class="admin-head">
           <p class="eyebrow">Search</p>
@@ -164,6 +152,16 @@
         </div>
       </section>
     </main>
+
+    <aside class="queue-panel" id="queue-panel" aria-label="Queue">
+      <div class="queue-head">
+        <h3>Queue</h3>
+        <button id="queue-close" class="mini-btn" title="Close queue" aria-label="Close queue">✕</button>
+      </div>
+      <p class="muted" id="queue-sub">—</p>
+      <button id="queue-clear" class="btn">Clear queue</button>
+      <div id="queue-list" class="queue-list"></div>
+    </aside>
 
     <footer class="player" id="player">
       <div class="now" id="now-open">
@@ -246,6 +244,6 @@
   <div id="modal-root" class="modal-root" hidden></div>
   <div id="toasts" class="toasts"></div>
   <audio id="audio" preload="metadata"></audio>
-  <script src="static/app.js?v=20261006r"></script>
+  <script src="static/app.js?v=20261006s"></script>
 </body>
 </html>
