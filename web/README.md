@@ -185,6 +185,30 @@ The layout adapts at ≤820px:
   it (or the ⌃ chevron) opens a **full-screen Now Playing sheet** with large art,
   seek, transport, 5-star rating, favorite and volume.
 
+## Playback: queue, shuffle, smart shuffle
+
+Playback is driven by a single ordered **queue** (`state.queue`) with a cursor,
+so next/back are exact inverses and the behaviour doesn't change as complexity
+grows.
+
+- **Queue:** playing from a view seeds the queue with that view's songs. The row
+  action sheet has **Play next** (insert after the current track) and **Add to
+  queue** (append). The **Queue** view shows the current track + upcoming, lets
+  you remove items, and **Clear queue**.
+- **Shuffle** cycles **off → shuffle → smart shuffle** (the button shows ⤨ / ✨).
+  Both modes build a **stable play order up front**, so *back* retraces exactly
+  what *next* played — even while shuffling.
+- **Smart shuffle** builds a rating-weighted random permutation
+  (Efraimidis–Spirakis): weight = `0.4 + rating`, unrated = neutral `0.5`. A
+  5-star song is ~3.5× as likely to come up early as an unrated one, and even a
+  0-rated song stays ~1/3 as likely — deliberately generous randomness so it
+  never feels deterministic. Toggling modes re-orders only the unplayed tail and
+  keeps manual queue additions and the current track in place.
+- **Skip / back:** *next* advances the play order and stops at the end unless
+  repeat is *all* (then wraps); *back* restarts the track if more than 3 s in,
+  otherwise steps back one. Repeat *one* loops the current track but manual
+  next/back still move.
+
 ## Safety model (public writes)
 
 The site is **unauthenticated by design** — anyone can create/edit/delete

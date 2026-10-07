@@ -6,7 +6,7 @@
   <meta name="color-scheme" content="dark">
   <title>Moosic</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>%F0%9F%8E%B5</text></svg>">
-  <link rel="stylesheet" href="static/style.css?v=20261006n">
+  <link rel="stylesheet" href="static/style.css?v=20261006p">
 </head>
 <body>
   <div class="layout">
@@ -17,6 +17,7 @@
         <button class="nav-item is-active" data-view="all"><span>🏠</span> All songs</button>
         <button class="nav-item" data-view="albums"><span>💿</span> Albums</button>
         <button class="nav-item" data-view="favorites"><span>♥</span> Favorites</button>
+        <button class="nav-item" data-view="queue"><span>☰</span> Queue</button>
         <button class="nav-item" data-view="admin"><span>⚙</span> Admin</button>
       </nav>
 
@@ -102,6 +103,18 @@
           <p class="muted" id="albums-sub">—</p>
         </div>
         <div id="album-grid" class="album-grid"></div>
+      </section>
+
+      <section class="queue-page" id="queue-view" hidden>
+        <div class="admin-head">
+          <p class="eyebrow">Up next</p>
+          <h1>Queue</h1>
+          <p class="muted" id="queue-sub">—</p>
+          <div class="hero-actions">
+            <button id="queue-clear" class="btn">Clear queue</button>
+          </div>
+        </div>
+        <div id="queue-list" class="queue-list"></div>
       </section>
 
       <section class="search-page" id="search-view" hidden>
@@ -234,6 +247,6 @@
   <div id="modal-root" class="modal-root" hidden></div>
   <div id="toasts" class="toasts"></div>
   <audio id="audio" preload="metadata"></audio>
-  <script src="static/app.js?v=20261006n"></script>
+  <script src="static/app.js?v=20261006p"></script>
 </body>
 </html>

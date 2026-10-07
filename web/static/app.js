@@ -26,8 +26,12 @@ const state = {
   searchLoading: false,
   albums: [],
   album: null,
+  queue: [],          // ordered play queue (song ids); current is queue[cursor]
+  cursor: -1,         // index of the currently playing song
+  context: [],        // ids of the view playback started from
+  manualIds: new Set(),
   currentId: null,
-  shuffle: false,
+  shuffle: "off",
   repeat: "off",
   favorites: new Set(JSON.parse(localStorage.getItem("moosic.favorites") || "[]")),
   status: null,
@@ -371,6 +375,7 @@ function apply() {
     $("#library-view").hidden = true;
     $("#search-view").hidden = true;
     $("#albums-view").hidden = true;
+    $("#queue-view").hidden = true;
     $("#admin-panel").hidden = false;
     renderGenres();
     renderPlaylists();
@@ -383,6 +388,7 @@ function apply() {
     $("#library-view").hidden = true;
     $("#admin-panel").hidden = true;
     $("#albums-view").hidden = true;
+    $("#queue-view").hidden = true;
     $("#search-view").hidden = false;
     renderGenres();
     renderPlaylists();
@@ -394,6 +400,7 @@ function apply() {
     $("#library-view").hidden = true;
     $("#admin-panel").hidden = true;
     $("#search-view").hidden = true;
+    $("#queue-view").hidden = true;
     $("#albums-view").hidden = false;
     renderGenres();
     renderPlaylists();
@@ -402,10 +409,24 @@ function apply() {
     reloadAlbums().then(renderAlbums);
     return;
   }
+  if (state.viewType === "queue") {
+    $("#library-view").hidden = true;
+    $("#admin-panel").hidden = true;
+    $("#search-view").hidden = true;
+    $("#albums-view").hidden = true;
+    $("#queue-view").hidden = false;
+    renderGenres();
+    renderPlaylists();
+    document.querySelectorAll(".nav-item").forEach((b) =>
+      b.classList.toggle("is-active", b.dataset.view === "queue"));
+    renderQueue();
+    return;
+  }
   $("#library-view").hidden = false;
   $("#admin-panel").hidden = true;
   $("#search-view").hidden = true;
   $("#albums-view").hidden = true;
+  $("#queue-view").hidden = true;
   const q = state.query.trim().toLowerCase();
   let rows;
   if (state.viewType === "playlist") {
@@ -600,7 +621,7 @@ function syncNow(song) {
   rebuildPlayerRating();
 }
 
-function play(id) {
+function startAudio(id) {
   const song = songById(id);
   if (!song || song.missing) return;
   state.currentId = id;
@@ -612,27 +633,203 @@ function play(id) {
   localStorage.setItem("moosic.last", id);
   if ("mediaSession" in navigator) {
     navigator.mediaSession.metadata = new MediaMetadata({
-      title: song.title, artist: song.artist, album: song.genre,
+      title: song.title, artist: song.artist, album: song.album || song.genre || "",
     });
   }
+  if (state.viewType === "queue") renderQueue();
 }
 
-function step(delta) {
-  if (!state.filtered.length) return;
-  if (state.shuffle && delta > 0) {
-    const others = state.filtered.filter((s) => s.id !== state.currentId);
-    if (others.length) play(others[Math.floor(Math.random() * others.length)].id);
+function shuffleArray(ids) {
+  const a = ids.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// Rating-weighted random order (Efraimidis–Spirakis). Unrated songs are
+// neutral (0.5) and weight = 0.4 + rating, so even a 0-rated song stays ~1/3
+// as likely as a 5-star one — a deliberately generous randomness band.
+function weightOf(id) {
+  const r = state.ratings[id];
+  const v = (r === undefined || r === null) ? 0.5 : r;
+  return 0.4 + v;
+}
+function smartOrder(ids) {
+  return ids
+    .map((id) => ({ id, key: Math.pow(Math.random(), 1 / weightOf(id)) }))
+    .sort((a, b) => b.key - a.key)
+    .map((o) => o.id);
+}
+
+function buildOrder(ctx, startId) {
+  const rest = ctx.filter((x) => x !== startId);
+  if (state.shuffle === "smart") return [startId, ...smartOrder(rest)];
+  if (state.shuffle === "on") return [startId, ...shuffleArray(rest)];
+  return ctx.slice();
+}
+
+// Re-order the not-yet-played tail for the current shuffle mode, keeping the
+// current track and manual queue additions where they are.
+function rebuildTail() {
+  if (!state.queue.length) return;
+  const played = new Set(state.queue.slice(0, state.cursor + 1));
+  const tail = state.queue.slice(state.cursor + 1);
+  const manual = tail.filter((id) => state.manualIds.has(id));
+  const rest = state.context.filter((id) => !played.has(id) && !state.manualIds.has(id));
+  const ordered = state.shuffle === "smart" ? smartOrder(rest)
+    : state.shuffle === "on" ? shuffleArray(rest) : rest;
+  state.queue = state.queue.slice(0, state.cursor + 1).concat(manual, ordered);
+}
+
+// Play `id` now. If it is already queued, just move the cursor; otherwise start
+// a fresh queue from `contextIds` (the current view by default).
+function play(id, contextIds) {
+  const song = songById(id);
+  if (!song || song.missing) return;
+  if (state.queue.includes(id)) {
+    state.cursor = state.queue.indexOf(id);
+    startAudio(id);
     return;
   }
-  let i = state.filtered.findIndex((s) => s.id === state.currentId);
-  if (i === -1) i = 0;
-  let next = i + delta;
-  if (next >= state.filtered.length) {
-    if (state.repeat === "off") { audio.pause(); return; }
-    next = 0;
+  const ctx = (contextIds && contextIds.length)
+    ? contextIds.slice()
+    : (state.filtered.length ? state.filtered.map((s) => s.id) : [id]);
+  state.context = ctx;
+  state.manualIds = new Set();
+  state.queue = buildOrder(ctx, id);
+  state.cursor = state.queue.indexOf(id);
+  startAudio(id);
+}
+
+function nextTrack() {
+  if (!state.queue.length) return;
+  if (state.cursor + 1 < state.queue.length) {
+    state.cursor += 1;
+    startAudio(state.queue[state.cursor]);
+    return;
   }
-  if (next < 0) next = state.filtered.length - 1;
-  play(state.filtered[next].id);
+  if (state.repeat === "all") {
+    state.cursor = 0;
+    startAudio(state.queue[0]);
+    return;
+  }
+  audio.pause();
+}
+
+function prevTrack() {
+  if (audio.currentTime > 3) { audio.currentTime = 0; return; }
+  if (!state.queue.length) return;
+  if (state.cursor > 0) {
+    state.cursor -= 1;
+    startAudio(state.queue[state.cursor]);
+    return;
+  }
+  if (state.repeat === "all") {
+    state.cursor = state.queue.length - 1;
+    startAudio(state.queue[state.cursor]);
+    return;
+  }
+  audio.currentTime = 0;
+}
+
+function enqueue(id, asNext) {
+  if (!songById(id)) return;
+  if (state.queue.includes(id)) {
+    const i = state.queue.indexOf(id);
+    state.queue.splice(i, 1);
+    if (i < state.cursor) state.cursor -= 1;
+  }
+  if (state.cursor < 0) {
+    play(id, state.filtered.length ? state.filtered.map((s) => s.id) : [id]);
+    return;
+  }
+  if (asNext) state.queue.splice(state.cursor + 1, 0, id);
+  else state.queue.push(id);
+  state.manualIds.add(id);
+  toast(asNext ? "Playing next" : "Added to queue");
+  if (state.viewType === "queue") renderQueue();
+}
+
+function removeFromQueue(index) {
+  if (index < 0 || index >= state.queue.length) return;
+  const wasCurrent = index === state.cursor;
+  state.queue.splice(index, 1);
+  if (index < state.cursor) state.cursor -= 1;
+  if (wasCurrent) {
+    if (state.cursor >= state.queue.length) state.cursor = state.queue.length - 1;
+    if (state.cursor >= 0) startAudio(state.queue[state.cursor]);
+    else audio.pause();
+  }
+  renderQueue();
+}
+
+function clearQueue() {
+  if (state.currentId && state.queue.includes(state.currentId)) {
+    state.queue = [state.currentId];
+    state.cursor = 0;
+  } else {
+    state.queue = [];
+    state.cursor = -1;
+  }
+  state.manualIds = new Set();
+  renderQueue();
+  toast("Queue cleared");
+}
+
+function renderQueue() {
+  const list = $("#queue-list");
+  if (!list) return;
+  list.replaceChildren();
+  const played = Math.max(0, state.cursor + 1);
+  $("#queue-sub").textContent = state.queue.length
+    ? `${played} played · ${state.queue.length - played} up next`
+    : "Nothing queued.";
+  if (!state.queue.length) {
+    const p = document.createElement("p");
+    p.className = "hint";
+    p.textContent = "Play something, or use “Play next” / “Add to queue” on a song.";
+    list.appendChild(p);
+    return;
+  }
+  const startView = Math.max(0, state.cursor - 3);
+  const endView = Math.min(state.queue.length, startView + 120);
+  for (let idx = startView; idx < endView; idx++) {
+    const id = state.queue[idx];
+    const s = songById(id);
+    if (!s) continue;
+    const row = document.createElement("div");
+    row.className = "queue-item" + (idx === state.cursor ? " current" : "")
+      + (idx < state.cursor ? " played" : "");
+    row.appendChild(artEl(s, "q-art"));
+    const main = document.createElement("div");
+    main.className = "q-main";
+    const t = document.createElement("strong"); t.textContent = s.title;
+    const a = document.createElement("span"); a.className = "muted"; a.textContent = s.artist || "";
+    main.append(t, a);
+    row.appendChild(main);
+    if (idx === state.cursor) {
+      const b = document.createElement("span"); b.className = "badge best"; b.textContent = "Now playing";
+      row.appendChild(b);
+    }
+    const rm = document.createElement("button");
+    rm.className = "mini-btn";
+    rm.textContent = "✕";
+    rm.title = "Remove from queue";
+    rm.onclick = (e) => { e.stopPropagation(); removeFromQueue(idx); };
+    row.appendChild(rm);
+    row.onclick = () => play(id);
+    list.appendChild(row);
+  }
+  if (endView < state.queue.length) {
+    const more = document.createElement("p");
+    more.className = "hint";
+    more.textContent = `… ${state.queue.length - endView} more`;
+    list.appendChild(more);
+  }
+  const curEl = list.querySelector(".queue-item.current");
+  if (curEl) curEl.scrollIntoView({ block: "nearest" });
 }
 
 /* --------------------------- playlist ops --------------------------- */
@@ -1292,11 +1489,19 @@ function togglePlay() {
   if (!state.currentId) return;
   if (audio.paused) audio.play().catch(() => {}); else audio.pause();
 }
-function nextTrack() { step(1); }
-function prevTrack() { if (audio.currentTime > 3) audio.currentTime = 0; else step(-1); }
 function toggleShuffle() {
-  state.shuffle = !state.shuffle;
-  document.querySelectorAll(".js-shuffle").forEach((el) => el.classList.toggle("is-on", state.shuffle));
+  state.shuffle = state.shuffle === "off" ? "on"
+    : state.shuffle === "on" ? "smart" : "off";
+  document.querySelectorAll(".js-shuffle").forEach((el) => {
+    el.classList.toggle("is-on", state.shuffle !== "off");
+    el.classList.toggle("smart", state.shuffle === "smart");
+    el.textContent = state.shuffle === "smart" ? "✨" : "⤨";
+    el.title = state.shuffle === "smart" ? "Smart shuffle (rating-weighted)"
+      : state.shuffle === "on" ? "Shuffle" : "Shuffle off";
+  });
+  if (state.queue.length) rebuildTail();
+  toast(state.shuffle === "smart" ? "Smart shuffle on"
+    : state.shuffle === "on" ? "Shuffle on" : "Shuffle off");
 }
 function toggleRepeat() {
   state.repeat = state.repeat === "off" ? "all" : state.repeat === "all" ? "one" : "off";
@@ -1322,6 +1527,7 @@ document.querySelectorAll(".js-repeat").forEach((el) => { el.onclick = toggleRep
 document.querySelectorAll(".js-fav").forEach((el) => { el.onclick = toggleFav; });
 
 $("#new-playlist").onclick = newPlaylist;
+$("#queue-clear").onclick = clearQueue;
 $("#add-song").onclick = addSong;
 $("#commit").onclick = doCommit;
 $("#refresh-assets").onclick = doRefresh;
@@ -1330,7 +1536,7 @@ audio.addEventListener("play", syncPlayIcon);
 audio.addEventListener("pause", syncPlayIcon);
 audio.addEventListener("loadedmetadata", syncTimes);
 audio.addEventListener("timeupdate", syncTimes);
-audio.addEventListener("ended", () => { if (state.repeat !== "one") step(1); });
+audio.addEventListener("ended", () => { if (state.repeat !== "one") nextTrack(); });
 audio.addEventListener("error", () => { if (state.currentId) toast("Could not play that track", true); });
 
 document.querySelectorAll(".js-seek").forEach((el) => {
@@ -1399,6 +1605,8 @@ function openActionSheet(song) {
     b.onclick = async () => { closeActionSheet(); await fn(); };
     panel.appendChild(b);
   };
+  add("Play next", false, () => enqueue(song.id, true));
+  add("Add to queue", false, () => enqueue(song.id, false));
   if (state.viewType === "playlist") {
     add("Move up", false, () => moveInPlaylist(song.id, -1));
     add("Move down", false, () => moveInPlaylist(song.id, 1));
@@ -1445,8 +1653,8 @@ document.addEventListener("keydown", (e) => {
   if (e.code === "Space") { e.preventDefault(); $("#play").click(); }
   else if (e.key === "ArrowRight") audio.currentTime += 5;
   else if (e.key === "ArrowLeft") audio.currentTime -= 5;
-  else if (e.key === "n") step(1);
-  else if (e.key === "p") step(-1);
+  else if (e.key === "n") nextTrack();
+  else if (e.key === "p") prevTrack();
 });
 
 /* ------------------------------- boot ------------------------------- */
