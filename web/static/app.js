@@ -898,6 +898,7 @@ function resultRow({ song, yt, onPlay, action }) {
   const dur = yt ? yt.duration : (song && song.duration);
   if (dur) bits.push(fmtTime(dur));
   if (yt && yt.kind) bits.push(yt.kind);
+  if (!yt && song && song.video_id) bits.push("yt:" + song.video_id);
   sub.textContent = bits.join(" · ");
   main.append(t, sub);
   row.append(thumb, main);
@@ -983,11 +984,30 @@ function renderSearchPage() {
     p.textContent = "No library matches."; lbox.appendChild(p);
   }
   for (const s of local) {
+    const actions = document.createElement("span");
+    actions.className = "row-actions";
+    if (s.youtube_url) {
+      const ytLink = document.createElement("a");
+      ytLink.className = "icon-btn";
+      ytLink.href = s.youtube_url;
+      ytLink.target = "_blank";
+      ytLink.rel = "noopener";
+      ytLink.title = `Current match: ${s.video_id || ""}`;
+      ytLink.textContent = "↗";
+      ytLink.onclick = (e) => e.stopPropagation();
+      actions.appendChild(ytLink);
+    }
+    const fix = document.createElement("button");
+    fix.className = "btn";
+    fix.textContent = "Fix match";
+    fix.onclick = (e) => { e.stopPropagation(); replaceMatch(s); };
+    actions.appendChild(fix);
     const addBtn = document.createElement("button");
     addBtn.className = "btn";
     addBtn.textContent = "＋ Playlist";
-    addBtn.onclick = () => addToPlaylist(s);
-    lbox.appendChild(resultRow({ song: s, onPlay: () => play(s.id), action: addBtn }));
+    addBtn.onclick = (e) => { e.stopPropagation(); addToPlaylist(s); };
+    actions.appendChild(addBtn);
+    lbox.appendChild(resultRow({ song: s, onPlay: () => play(s.id), action: actions }));
   }
 
   const ybox = $("#search-yt");
@@ -1015,6 +1035,28 @@ function renderSearchPage() {
       action.onclick = () => addFromYt(e, action);
     }
     ybox.appendChild(resultRow({ yt: e, action }));
+  }
+}
+
+async function replaceMatch(song) {
+  if (!song || !song.id) return;
+  if (!window.confirm(`Mark the current YouTube match for “${song.title}” as wrong and download the next-best match?`)) return;
+  toast("Looking for a better match…");
+  try {
+    const r = await api("/api/songs/" + encodeURIComponent(song.id) + "/replace-match", { method: "POST" });
+    state.quota = r.quota;
+    renderQuota();
+    await reloadLibrary();
+    apply();
+    if (state.currentId === song.id) {
+      const s2 = songById(song.id);
+      if (s2) syncNow(s2);
+    }
+    toast(`Replaced → ${r.match.title} (${r.download.downloaded ? "downloaded" : "download failed"})`);
+    refreshStatus();
+  } catch (e) {
+    toast(e.message, true);
+    loadQuota();
   }
 }
 
@@ -1169,6 +1211,10 @@ function openNowSheet() { if (state.currentId) nowSheet.hidden = false; }
 function closeNowSheet() { nowSheet.hidden = true; }
 $("#expand").onclick = openNowSheet;
 $("#ns-close").onclick = closeNowSheet;
+$("#ns-fix").onclick = () => {
+  const s = state.currentId ? songById(state.currentId) : null;
+  if (s) replaceMatch(s);
+};
 $("#now-open").onclick = (e) => {
   if (e.target.closest("button, a, input")) return;
   if (window.matchMedia("(max-width: 820px)").matches) openNowSheet();
@@ -1203,6 +1249,7 @@ function openActionSheet(song) {
     add("Play", false, () => play(song.id));
     add("Add to playlist", false, () => addToPlaylist(song));
     add("Edit details", false, () => editSong(song));
+    add("Wrong match — replace", false, () => replaceMatch(song));
     add("Delete from library", true, () => deleteSong(song));
   }
   const cancel = document.createElement("button");

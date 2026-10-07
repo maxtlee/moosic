@@ -87,34 +87,37 @@ def entry_video(result: dict, bad: set[str], song: dict) -> dict | None:
     }
 
 
+def search_entries(query: str, limit: int = 15, bad: set | None = None) -> list[dict]:
+    """Song-first, deduplicated results; ``bad`` video ids are excluded."""
+    if bad is None:
+        bad = set(ml.load_bad_links().get("video_ids", []))
+    title, artist = parse_query(query)
+    song = {"title": title, "artist": artist}
+    yt = YTMusic()
+    entries: dict[str, dict] = {}
+    for r in (yt.search(query, filter="songs", limit=15) or []):
+        e = entry_song(r, bad)
+        if e:
+            entries[e["key"]] = e  # canonical song result wins
+    for r in (yt.search(query, filter="videos", limit=10) or []):
+        e = entry_video(r, bad, song)
+        if e and e["key"] not in entries:
+            entries[e["key"]] = e
+    return sorted(
+        entries.values(),
+        key=lambda e: (0 if e["source"] == "ytmusic" else 1, -(e.get("score") or 0)),
+    )[:limit]
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--query", required=True)
     parser.add_argument("--limit", type=int, default=12)
     args = parser.parse_args()
 
-    bad = set(ml.load_bad_links().get("video_ids", [])) if hasattr(ml, "load_bad_links") else set()
-    title, artist = parse_query(args.query)
-    song = {"title": title, "artist": artist}
-    yt = YTMusic()
-
-    entries: dict[str, dict] = {}
-    for r in (yt.search(args.query, filter="songs", limit=15) or []):
-        e = entry_song(r, bad)
-        if e:
-            entries[e["key"]] = e  # canonical song result wins
-    for r in (yt.search(args.query, filter="videos", limit=10) or []):
-        e = entry_video(r, bad, song)
-        if e and e["key"] not in entries:
-            entries[e["key"]] = e
-
-    results = sorted(
-        entries.values(),
-        key=lambda e: (0 if e["source"] == "ytmusic" else 1, -(e.get("score") or 0)),
-    )[: args.limit]
-
+    results = search_entries(args.query, args.limit)
     master = ml.load_master()
-    lib_keys = {norm_key(s.get("title", ""), s.get("artist", "")) for s in master.get("songs", [])}
+    lib_keys = {ml.norm_key(s.get("title", ""), s.get("artist", "")) for s in master.get("songs", [])}
     lib_vids = {ml.video_id(s.get("youtube_url", "")) for s in master.get("songs", [])}
     for e in results:
         e["in_library"] = e["key"] in lib_keys or e["video_id"] in lib_vids

@@ -250,6 +250,8 @@ def slim(song: dict, ratings: dict | None = None) -> dict:
         "genre": song.get("genre", ""),
         "duration": song.get("duration"),
         "youtube_url": song.get("youtube_url", ""),
+        "video_id": ml.video_id_of(song),
+        "album": song.get("album", ""),
         "has_asset": ml.asset_file(song).is_file(),
         "has_cover": bool(cf and cf.is_file()),
         "rating": (ratings or {}).get(song.get("id")),
@@ -515,6 +517,67 @@ def set_rating(sid: str, body: RatingInput, request: Request) -> dict:
             ratings[sid] = round(body.rating, 3)
         ml.save_ratings(ratings)
     return {"id": sid, "rating": ratings.get(sid)}
+
+
+@app.post("/api/songs/{sid}/replace-match")
+def replace_match(sid: str, request: Request) -> dict:
+    """Mark the current video wrong (add to bad_links), pick the next-best match,
+    and re-download. Works for already-downloaded songs too."""
+    enforce_write(request)
+    if download_quota.remaining() < 1:
+        raise HTTPException(status_code=429, detail="download quota exhausted",
+                            headers={"Retry-After": str(int(download_quota.reset_in()) + 1)})
+    if not _download_lock.acquire(blocking=False):
+        raise HTTPException(status_code=409, detail="a download is already in progress")
+    try:
+        with ml.flock():
+            master = ml.load_master()
+            song = ml.song_by_id(master, sid)
+            if song is None:
+                raise HTTPException(status_code=404, detail="song not found")
+            old_vid = ml.video_id_of(song)
+            title, artist, album = song.get("title", ""), song.get("artist", ""), song.get("album", "")
+            if old_vid:
+                ml.add_bad_link(old_vid)
+        try:
+            proc = run_tool([str(TOOL_DIR / "match_song.py"),
+                             "--title", title, "--artist", artist, "--album", album], timeout=60)
+        except subprocess.TimeoutExpired:
+            raise HTTPException(status_code=504, detail="match search timed out")
+        if proc.returncode != 0:
+            raise HTTPException(status_code=502, detail=("match failed: " + (proc.stderr or proc.stdout))[-200:])
+        best = (json.loads(proc.stdout) or {}).get("best")
+        if not best:
+            raise HTTPException(status_code=409, detail="no alternative match found")
+        with ml.flock():
+            master = ml.load_master()
+            song = ml.song_by_id(master, sid)
+            if song is None:
+                raise HTTPException(status_code=404, detail="song not found")
+            old_asset = ml.asset_file(song)
+            old_cover = ml.cover_file(song)
+            song["youtube_url"] = best["url"]
+            song["video_id"] = best["video_id"]
+            song["youtube_kind"] = best.get("kind", "")
+            song["youtube_title"] = best.get("title", "")
+            if best.get("album"):
+                song["album"] = best["album"]
+            song["duration"] = None
+            song.pop("cover", None)
+            ml.save_master(master)
+            for p in (old_asset, old_cover):
+                try:
+                    if p and p.is_file():
+                        p.unlink()
+                except OSError:
+                    pass
+        summary, log_tail = _download_and_summarize(["--only", sid, "--max-downloads", "1"], timeout=300)
+        download_quota.record(max(1, summary.get("attempted", 0)))
+        fresh = ml.song_by_id(ml.load_master(), sid)
+        return {"song": slim(fresh, ml.load_ratings()), "match": best,
+                "download": summary, "quota": quota_state()}
+    finally:
+        _download_lock.release()
 
 
 @app.post("/api/commit")

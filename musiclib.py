@@ -28,6 +28,7 @@ from pathlib import Path
 DATA_DIR = Path(os.environ.get("MOOSIC_DATA", Path.home() / "Projects" / "Music")).expanduser()
 MASTER = DATA_DIR / "master.json"
 RATINGS = DATA_DIR / "ratings.json"
+BAD_LINKS = DATA_DIR / "bad_links.json"
 PLAYLISTS_DIR = DATA_DIR / "playlists"
 ASSETS_DIR = DATA_DIR / "assets"
 COVERS_DIR = ASSETS_DIR / "_covers"
@@ -179,6 +180,41 @@ def save_ratings(ratings: dict[str, float]) -> None:
         "updated": now_iso(),
         "ratings": {sid: round(float(v), 3) for sid, v in sorted(ratings.items())},
     })
+
+
+# --------------------------------------------------------------------------- #
+# bad youtube links (rejected song<->video matches)
+# --------------------------------------------------------------------------- #
+def load_bad_links() -> dict:
+    if not BAD_LINKS.is_file():
+        return {"video_ids": []}
+    try:
+        data = json.loads(BAD_LINKS.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {"video_ids": []}
+    ids = data.get("video_ids") if isinstance(data, dict) else data
+    return {"video_ids": [v for v in (ids or []) if isinstance(v, str)]}
+
+
+def save_bad_links(data: dict) -> None:
+    _write_json(BAD_LINKS, {
+        "version": 1,
+        "updated": now_iso(),
+        "video_ids": sorted(set(v for v in data.get("video_ids", []) if v)),
+    })
+
+
+def add_bad_link(video_id: str) -> None:
+    if not video_id:
+        return
+    data = load_bad_links()
+    if video_id not in data["video_ids"]:
+        data["video_ids"].append(video_id)
+        save_bad_links(data)
+
+
+def video_id_of(song: dict) -> str | None:
+    return song.get("video_id") or video_id(song.get("youtube_url", ""))
 
 
 def asset_file(song: dict) -> Path:
