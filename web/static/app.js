@@ -15,10 +15,10 @@ const state = {
   genres: {},
   playlists: [],
   playlist: null,          // {slug,name,description,songs:[obj]}
-  viewType: "all",         // all | favorites | genre | playlist
+  viewType: "all",         // all | albums | queue | search | playlist | album | admin
   viewValue: "",
   query: "",
-  sort: "default",
+  sort: "rating",
   filtered: [],
   searchQuery: "",
   searchYt: [],
@@ -33,7 +33,6 @@ const state = {
   currentId: null,
   shuffle: "off",
   repeat: "off",
-  favorites: new Set(JSON.parse(localStorage.getItem("moosic.favorites") || "[]")),
   status: null,
   commitTimer: null,
 };
@@ -427,14 +426,18 @@ function apply() {
   $("#search-view").hidden = true;
   $("#albums-view").hidden = true;
   $("#queue-view").hidden = true;
+  // Library views default to rating order; playlists/albums keep their own order.
+  if (state.sort === "default" && state.viewType !== "playlist" && state.viewType !== "album") {
+    state.sort = "rating";
+    $("#sort").value = "rating";
+  }
   const q = state.query.trim().toLowerCase();
   let rows;
   if (state.viewType === "playlist") {
     rows = (state.playlist ? state.playlist.songs : []).slice();
   } else {
     rows = state.master.slice();
-    if (state.viewType === "favorites") rows = rows.filter((s) => state.favorites.has(s.id));
-    else if (state.viewType === "genre") rows = rows.filter((s) => s.genre === state.viewValue);
+    if (state.viewType === "genre") rows = rows.filter((s) => s.genre === state.viewValue);
     else if (state.viewType === "album" && state.album) {
       rows = rows.filter((s) => (s.album || "") === state.album.album
         && (s.artist || "") === state.album.artist);
@@ -450,8 +453,9 @@ function apply() {
     genre: (a, b) => a.genre.localeCompare(b.genre) || a.artist.localeCompare(b.artist),
     duration: (a, b) => (a.duration || 0) - (b.duration || 0),
   };
-  // "default" keeps playlist order; every other sort applies in every view.
-  if (state.sort !== "default" && sorters[state.sort]) rows = rows.sort(sorters[state.sort]);
+  // "default" keeps playlist/album intrinsic order; any other sort applies.
+  const sortKey = state.sort === "default" ? null : state.sort;
+  if (sortKey && sorters[sortKey]) rows = rows.sort(sorters[sortKey]);
   state.filtered = rows;
   renderRows();
   renderHero();
@@ -461,8 +465,7 @@ function apply() {
   $("#view-count").textContent = `${rows.length} track${rows.length === 1 ? "" : "s"}`;
   document.querySelectorAll(".nav-item").forEach((b) =>
     b.classList.toggle("is-active",
-      (b.dataset.view === "all" && state.viewType === "all") ||
-      (b.dataset.view === "favorites" && state.viewType === "favorites")));
+      (b.dataset.view === "all" && state.viewType === "all")));
   $("#empty").hidden = rows.length !== 0;
 }
 
@@ -476,8 +479,7 @@ function renderHero() {
       ["✎ Rename", () => editPlaylist(state.playlist)],
       ["🗑 Delete", () => deletePlaylist(state.playlist)],
     ];
-  } else if (state.viewType === "favorites") { title = "Favorites"; meta = `${state.filtered.length} tracks`; }
-  else if (state.viewType === "genre") { title = state.viewValue; meta = `${state.filtered.length} tracks`; }
+  } else if (state.viewType === "genre") { title = state.viewValue; meta = `${state.filtered.length} tracks`; }
   else if (state.viewType === "album" && state.album) {
     title = state.album.album;
     meta = `${state.album.artist} · ${state.filtered.length} tracks`;
@@ -611,12 +613,6 @@ function syncNow(song) {
   document.querySelectorAll(".js-now-art").forEach((el) => { if (song) paintArtInto(el, song); });
   document.querySelectorAll(".js-now-link").forEach((el) => {
     if (song && song.youtube_url) { el.href = song.youtube_url; el.hidden = false; } else el.hidden = true;
-  });
-  const isFav = song ? state.favorites.has(song.id) : false;
-  document.querySelectorAll(".js-fav").forEach((el) => {
-    el.hidden = !song;
-    el.textContent = isFav ? "♥" : "♡";
-    el.classList.toggle("is-on", isFav);
   });
   rebuildPlayerRating();
 }
@@ -1416,6 +1412,8 @@ function openAlbum(key) {
   const a = state.albums.find((x) => x.key === key);
   if (!a) return;
   state.album = a;
+  state.sort = "default";
+  $("#sort").value = "default";
   setView("album", key);
 }
 
@@ -1511,20 +1509,11 @@ function toggleRepeat() {
   });
   audio.loop = state.repeat === "one";
 }
-function toggleFav() {
-  if (!state.currentId) return;
-  state.favorites.has(state.currentId) ? state.favorites.delete(state.currentId) : state.favorites.add(state.currentId);
-  localStorage.setItem("moosic.favorites", JSON.stringify([...state.favorites]));
-  play(state.currentId);
-  apply();
-}
-
 document.querySelectorAll(".js-play").forEach((el) => { el.onclick = togglePlay; });
 document.querySelectorAll(".js-next").forEach((el) => { el.onclick = nextTrack; });
 document.querySelectorAll(".js-prev").forEach((el) => { el.onclick = prevTrack; });
 document.querySelectorAll(".js-shuffle").forEach((el) => { el.onclick = toggleShuffle; });
 document.querySelectorAll(".js-repeat").forEach((el) => { el.onclick = toggleRepeat; });
-document.querySelectorAll(".js-fav").forEach((el) => { el.onclick = toggleFav; });
 
 $("#new-playlist").onclick = newPlaylist;
 $("#queue-clear").onclick = clearQueue;

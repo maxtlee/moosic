@@ -6,7 +6,7 @@
   <meta name="color-scheme" content="dark">
   <title>Moosic</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>%F0%9F%8E%B5</text></svg>">
-  <link rel="stylesheet" href="static/style.css?v=20261006p">
+  <link rel="stylesheet" href="static/style.css?v=20261006q">
 </head>
 <body>
   <div class="layout">
@@ -16,7 +16,6 @@
       <nav class="nav">
         <button class="nav-item is-active" data-view="all"><span>🏠</span> All songs</button>
         <button class="nav-item" data-view="albums"><span>💿</span> Albums</button>
-        <button class="nav-item" data-view="favorites"><span>♥</span> Favorites</button>
         <button class="nav-item" data-view="queue"><span>☰</span> Queue</button>
         <button class="nav-item" data-view="admin"><span>⚙</span> Admin</button>
       </nav>
@@ -49,8 +48,8 @@
         <label class="sort">
           <span class="sort-label">Sort</span>
           <select id="sort">
-            <option value="default">Playlist order</option>
-            <option value="rating">My rating</option>
+            <option value="rating">Rating (high → low)</option>
+            <option value="default">Playlist / album order</option>
             <option value="title">Title</option>
             <option value="artist">Artist</option>
             <option value="genre">Genre</option>
@@ -173,7 +172,6 @@
           <strong class="js-now-title" id="now-title">Nothing playing</strong>
           <span class="js-now-artist muted" id="now-artist">Pick a track to begin</span>
         </div>
-        <button class="icon-btn fav js-fav" id="fav" title="Add to favorites" hidden>♡</button>
         <span class="now-rating js-now-rating" id="now-rating"></span>
         <a class="icon-btn youtube js-now-link" id="now-link" href="#" target="_blank"
            rel="noopener" title="Open source on YouTube" hidden>↗</a>
@@ -229,7 +227,6 @@
       <button class="icon-btn js-repeat" title="Repeat">↻</button>
     </div>
     <div class="ns-bottom">
-      <button class="icon-btn js-fav" title="Favorite" hidden>♡</button>
       <button id="ns-fix" class="icon-btn" title="Wrong match — find a better video">⇄</button>
       <a class="icon-btn js-now-link" href="#" target="_blank" rel="noopener" title="Open source on YouTube" hidden>↗</a>
       <span class="ns-vol">
@@ -247,6 +244,6 @@
   <div id="modal-root" class="modal-root" hidden></div>
   <div id="toasts" class="toasts"></div>
   <audio id="audio" preload="metadata"></audio>
-  <script src="static/app.js?v=20261006p"></script>
+  <script src="static/app.js?v=20261006q"></script>
 </body>
 </html>

@@ -163,8 +163,9 @@ model ("how much I like it" vs "how much a friend likes it") later.
 - The UI shows a 5-star control (0.2 steps) in **every track row** and in the
   **player bar**, so you can rate while listening or from any list. Clicking the
   active star clears the rating.
-- **Sort → My rating** orders songs highest-first in every view (including
-  playlists); unrated count as 0 and ties keep their existing order.
+- **All songs is sorted by rating by default** (highest first) and can be
+  re-sorted by playlist/album order, title, artist, genre or duration. Unrated
+  songs count as 0 for sorting and ties keep their existing order.
 - `GET /api/library` and playlist responses include each song's `rating`.
 
 The API accepts any float 0..1, so a finer control (slider, numeric) can be
@@ -183,7 +184,7 @@ The layout adapts at ≤820px:
   move/remove inside a playlist) since hover-only controls don't work on touch.
 - The player collapses to a compact bar (cover, title, prev/play/next); tapping
   it (or the ⌃ chevron) opens a **full-screen Now Playing sheet** with large art,
-  seek, transport, 5-star rating, favorite and volume.
+  seek, transport, 5-star rating and volume.
 
 ## Playback: queue, shuffle, smart shuffle
 

@@ -494,7 +494,7 @@ code { background: var(--panel-2); padding: 1px 5px; border-radius: 5px; font-si
   .player .progress { display: none; }
   .player .now-art { width: 44px; height: 44px; }
   .player .now { gap: 10px; }
-  .player .now-rating, .player .js-fav, .player .js-now-link { display: none; }
+  .player .now-rating, .player .js-now-link { display: none; }
   .player .controls .buttons { gap: 10px; }
   .player .controls .js-shuffle, .player .controls .js-repeat { display: none; }
   .player .icon-btn.play { width: 44px; height: 44px; }
