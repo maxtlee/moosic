@@ -192,6 +192,9 @@ Playback is driven by a single ordered **queue** (`state.queue`) with a cursor,
 so next/back are exact inverses and the behaviour doesn't change as complexity
 grows.
 
+- **Click vs double-click:** on mouse/trackpad devices, **double-click** a row to
+  play (a single click does nothing, avoiding accidental playback); touch
+  devices keep single-tap. Right-click / ⋮ opens the song menu.
 - **Song menu:** right-click a song row (desktop) or use the **⋮** kebab
   (touch) to open the same menu — Play, Play next, Add to queue, Add to
   playlist, Edit details, Wrong match — replace, and Delete. The browser's

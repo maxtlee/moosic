@@ -675,3 +675,6 @@ code { background: var(--panel-2); padding: 1px 5px; border-radius: 5px; font-si
   }
   .layout.queue-open .queue-panel { display: flex; transform: translateX(0); }
 }
+
+/* double-click-to-play rows shouldn't select text */
+.track, .result, .queue-item, .drop-item { user-select: none; -webkit-user-select: none; }

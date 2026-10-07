@@ -43,6 +43,14 @@ const fmtTime = (s) => {
   return `${Math.floor(s / 60)}:${Math.floor(s % 60).toString().padStart(2, "0")}`;
 };
 
+// Play from lists on double-click on mouse/trackpad devices to avoid accidental
+// playback; touch devices keep single-tap (double-tap is unreliable on mobile).
+const DOUBLE_CLICK_TO_PLAY = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+function bindPlayGesture(el, handler) {
+  if (DOUBLE_CLICK_TO_PLAY) el.ondblclick = handler;
+  else el.onclick = handler;
+}
+
 function hashHue(str) {
   let h = 0;
   for (let i = 0; i < str.length; i++) h = (h * 31 + str.charCodeAt(i)) >>> 0;
@@ -561,10 +569,10 @@ function renderRows() {
 
     row.append(idx, title, genre, rating, acts, time);
     const activate = (e) => {
-      if (e.target.closest("button")) return;
+      if (e.target.closest("button, a, input")) return;
       play(s.id);
     };
-    row.onclick = activate;
+    bindPlayGesture(row, activate);
     row.onkeydown = (e) => { if (e.key === "Enter") activate(e); };
     frag.appendChild(row);
   });
@@ -805,7 +813,7 @@ function renderQueue() {
     rm.title = "Remove from queue";
     rm.onclick = (e) => { e.stopPropagation(); removeFromQueue(idx); };
     row.appendChild(rm);
-    row.onclick = () => play(id);
+    bindPlayGesture(row, () => play(id));
     list.appendChild(row);
   }
   if (endView < state.queue.length) {
@@ -1135,7 +1143,7 @@ function resultRow({ song, yt, onPlay, action }) {
   if (action) row.appendChild(action);
   if (onPlay) {
     row.style.cursor = "pointer";
-    row.onclick = (e) => { if (!e.target.closest("button, a")) onPlay(); };
+    bindPlayGesture(row, (e) => { if (!e.target.closest("button, a, input")) onPlay(); });
   }
   return row;
 }
