@@ -399,7 +399,7 @@ code { background: var(--panel-2); padding: 1px 5px; border-radius: 5px; font-si
 .menu-btn { display: none; }
 .expand { display: none; }
 .drawer-overlay { display: none; }
-.track .acts .kebab { display: none; }
+.track .acts .kebab { display: inline-flex; }
 .now-sheet { display: none; }
 
 /* action sheet (bottom sheet) */
