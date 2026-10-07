@@ -73,6 +73,19 @@ def video_id(url: str) -> str | None:
     return None
 
 
+def norm_key(title: str, artist: str) -> str:
+    """Dedup key: primary artist + title, Unicode-aware (keeps CJK)."""
+    def n(s: str) -> str:
+        s = unicodedata.normalize("NFKC", s or "").casefold()
+        return re.sub(r"[\W_]+", " ", s, flags=re.UNICODE).strip()
+    a = re.split(r" feat ", n(artist))[0].strip() or n(artist)
+    return f"{a}|{n(title)}"
+
+
+def song_key_of(song: dict) -> str:
+    return norm_key(song.get("title", ""), song.get("artist", ""))
+
+
 def make_song_id(song: dict) -> str:
     vid = video_id(song.get("youtube_url", ""))
     if vid:

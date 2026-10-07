@@ -434,7 +434,8 @@ def create_song(body: SongInput, request: Request) -> dict:
                 "youtube_kind": body.youtube_kind.strip(),
                 "youtube_title": "", "duration": None}
         sid = ml.make_song_id(song)
-        if ml.song_by_id(master, sid):
+        key = ml.song_key_of(song)
+        if ml.song_by_id(master, sid) or any(ml.song_key_of(s) == key for s in songs):
             raise HTTPException(status_code=409, detail="song already in the master list")
         song["id"] = sid
         song["asset"] = ml.expected_asset(song)
@@ -541,7 +542,8 @@ def admin_quota() -> dict:
 
 
 @app.get("/api/search")
-def search_youtube(q: str, request: Request, limit: int = 8) -> dict:
+def search_songs(q: str, request: Request, limit: int = 12) -> dict:
+    """Song-first YouTube Music search: one canonical video per song, deduped."""
     wait = search_limiter.check(client_ip(request))
     if wait > 0:
         raise HTTPException(status_code=429, detail=f"search slow down; retry in {wait:.0f}s",
@@ -554,7 +556,7 @@ def search_youtube(q: str, request: Request, limit: int = 8) -> dict:
         raise HTTPException(status_code=409, detail="a search is already running")
     try:
         try:
-            proc = run_tool([str(TOOL_DIR / "search_youtube.py"),
+            proc = run_tool([str(TOOL_DIR / "search_songs.py"),
                              "--query", q, "--limit", str(limit)], timeout=60)
         except subprocess.TimeoutExpired:
             raise HTTPException(status_code=504, detail="search timed out")
@@ -596,7 +598,8 @@ def admin_add(body: AddSongInput, request: Request) -> dict:
                 "youtube_title": body.youtube_title.strip(), "duration": None,
             }
             sid = ml.make_song_id(song)
-            if ml.song_by_id(master, sid):
+            key = ml.song_key_of(song)
+            if ml.song_by_id(master, sid) or any(ml.song_key_of(s) == key for s in songs):
                 raise HTTPException(status_code=409, detail="song already in the master list")
             song["id"] = sid
             song["asset"] = ml.expected_asset(song)

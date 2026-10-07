@@ -6,7 +6,7 @@
   <meta name="color-scheme" content="dark">
   <title>Moosic</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>%F0%9F%8E%B5</text></svg>">
-  <link rel="stylesheet" href="static/style.css?v=20261006g">
+  <link rel="stylesheet" href="static/style.css?v=20261006i">
 </head>
 <body>
   <div class="layout">
@@ -40,8 +40,9 @@
         <button id="menu-btn" class="menu-btn" aria-label="Open menu">☰</button>
         <div class="search-wrap">
           <span class="search-icon">⌕</span>
-          <input id="search" type="search" placeholder="Search songs, artists, genres…"
+          <input id="search" type="search" placeholder="Search songs, artists, albums…"
                  autocomplete="off" spellcheck="false">
+          <div id="search-drop" class="search-drop" hidden></div>
         </div>
         <label class="sort">
           <span class="sort-label">Sort</span>
@@ -93,30 +94,37 @@
       </section>
       </div>
 
+      <section class="search-page" id="search-view" hidden>
+        <div class="admin-head">
+          <p class="eyebrow">Search</p>
+          <h1 id="search-title">Results</h1>
+          <p class="muted" id="search-sub">—</p>
+        </div>
+
+        <div class="admin-block" id="local-block">
+          <h2>In your library <span id="local-count" class="muted"></span></h2>
+          <div id="search-local" class="search-results"></div>
+        </div>
+
+        <div class="admin-block" id="yt-block">
+          <h2>Add from YouTube Music <span id="yt-count" class="muted"></span></h2>
+          <p class="hint">One entry per song, each with a single best-matched video.
+            Already-library songs are marked so nothing is added twice.</p>
+          <div id="search-yt" class="search-results"></div>
+        </div>
+      </section>
+
       <section class="admin" id="admin-panel" hidden>
         <div class="admin-head">
           <p class="eyebrow">Admin</p>
-          <h1>Add &amp; manage music</h1>
-          <p class="muted">Search YouTube Music, add songs to the master list and
-            download them on the spot. Public and rate-limited.</p>
+          <h1>Manage music</h1>
+          <p class="muted">Add songs and albums from the search bar at the top.
+            Downloads are public and rate-limited.</p>
         </div>
 
         <div class="quota" id="admin-quota">
           <div class="quota-bar"><span id="quota-fill"></span></div>
           <span id="quota-text" class="muted">Downloads: —</span>
-        </div>
-
-        <div class="admin-block">
-          <h2>Search &amp; add</h2>
-          <form id="search-form" class="admin-search">
-            <input id="admin-q" type="search" autocomplete="off" spellcheck="false"
-                   placeholder='Try "NewJeans - Ditto" or just a title'>
-            <button class="btn btn-primary" type="submit" id="search-btn">Search</button>
-          </form>
-          <p class="hint">Results are ranked the same way the batch linker scores
-            songs (official audio / lyric video preferred, live/cover/remix penalised).
-            The ★ result is the recommended pick.</p>
-          <div id="search-results" class="search-results"></div>
         </div>
 
         <div class="admin-block">
@@ -210,6 +218,6 @@
   <div id="modal-root" class="modal-root" hidden></div>
   <div id="toasts" class="toasts"></div>
   <audio id="audio" preload="metadata"></audio>
-  <script src="static/app.js?v=20261006g"></script>
+  <script src="static/app.js?v=20261006i"></script>
 </body>
 </html>

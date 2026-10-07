@@ -60,15 +60,21 @@ Writes (public, rate-limited)
 - `PUT /api/ratings/{song_id}` → set/clear a rating (`{"rating": 0.8}` or `{"rating": null}`)
 - `POST /api/commit` → `git add -A && git commit && git push` the data repo
 
-Admin (public, rate-limited)
-- `GET /api/search?q=<artist - title>` → ranked YouTube Music candidates using the
-  same scoring as `link_youtube.py` (official audio / lyric video preferred;
-  live/cover/remix/karaoke penalised). Returns `{best, candidates:[...]}`.
-- `POST /api/admin/add` → add a chosen candidate to the master list and download
-  it immediately (via `download_assets.py --only <id> --execute`).
+Search & add (public, rate-limited)
+- `GET /api/search?q=<query>` → **song-first** YouTube Music results
+  (`search_songs.py`): one entry per song, each with a single canonical
+  `video_id`/`url`, album, duration and thumbnail, deduplicated by
+  (artist, title). Songs already in the library are flagged `in_library`
+  so the UI can't add them twice.
+- `POST /api/admin/add` → add a chosen result to the master list and download
+  it immediately (rejects duplicates by video id *or* song key).
 - `POST /api/admin/refresh` → reconcile `assets/` with `master.json`
   (download missing, rename retagged, prune orphans to `_trash/`).
 - `GET /api/admin/quota` → `{limit, used, remaining, window, reset_in}`.
+
+The home **search bar** drives this: typing shows a live dropdown of closest
+library matches plus a "Search YouTube Music" action; Enter opens a search page
+with *In your library* and *Add from YouTube Music* sections.
 
 **Download quota:** a global sliding window of **20 downloads / 30 min**
 (`MOOSIC_DOWNLOAD_LIMIT` / `MOOSIC_DOWNLOAD_WINDOW`). Both add-and-download and

@@ -20,6 +20,9 @@ const state = {
   query: "",
   sort: "default",
   filtered: [],
+  searchQuery: "",
+  searchYt: [],
+  searchLoading: false,
   currentId: null,
   shuffle: false,
   repeat: "off",
@@ -363,6 +366,7 @@ function setView(type, value = "") {
 function apply() {
   if (state.viewType === "admin") {
     $("#library-view").hidden = true;
+    $("#search-view").hidden = true;
     $("#admin-panel").hidden = false;
     renderGenres();
     renderPlaylists();
@@ -371,8 +375,19 @@ function apply() {
     loadQuota();
     return;
   }
+  if (state.viewType === "search") {
+    $("#library-view").hidden = true;
+    $("#admin-panel").hidden = true;
+    $("#search-view").hidden = false;
+    renderGenres();
+    renderPlaylists();
+    document.querySelectorAll(".nav-item").forEach((b) => b.classList.remove("is-active"));
+    renderSearchPage();
+    return;
+  }
   $("#library-view").hidden = false;
   $("#admin-panel").hidden = true;
+  $("#search-view").hidden = true;
   const q = state.query.trim().toLowerCase();
   let rows;
   if (state.viewType === "playlist") {
@@ -819,90 +834,207 @@ function renderQuota() {
   document.querySelectorAll(".result .btn.add").forEach((b) => { b.disabled = q.remaining <= 0; });
 }
 
-async function doSearch(e) {
-  if (e) e.preventDefault();
-  const q = $("#admin-q").value.trim();
+/* --------------------- search (library + YouTube) -------------------- */
+function normText(s) {
+  return (s || "").toLowerCase().normalize("NFKD").replace(/[\u0300-\u036f]/g, "");
+}
+function songKey(s) {
+  return normText(s.artist).split(" feat")[0].trim() + "|" + normText(s.title);
+}
+function fuzzyScore(q, song) {
+  const nq = normText(q);
+  if (!nq) return 0;
+  const title = normText(song.title);
+  const artist = normText(song.artist);
+  const album = normText(song.album);
+  const hay = `${title} ${artist} ${album}`;
+  let score = 0;
+  if (title === nq) score += 100;
+  if (title.startsWith(nq)) score += 60;
+  if (title.includes(nq)) score += 40;
+  if (artist.includes(nq)) score += 25;
+  if (album && album.includes(nq)) score += 15;
+  for (const tok of nq.split(/\s+/).filter(Boolean)) if (hay.includes(tok)) score += 6;
+  return score;
+}
+function localMatches(q, limit = 8) {
+  if (!q.trim()) return [];
+  const seen = new Set();
+  return state.master
+    .map((s) => ({ s, score: fuzzyScore(q, s) }))
+    .filter((r) => r.score > 0)
+    .sort((a, b) => b.score - a.score)
+    .filter((r) => { const k = songKey(r.s); if (seen.has(k)) return false; seen.add(k); return true; })
+    .slice(0, limit)
+    .map((r) => r.s);
+}
+
+function resultRow({ song, yt, onPlay, action }) {
+  const row = document.createElement("div");
+  row.className = "result";
+  const thumb = document.createElement("span");
+  thumb.className = "thumb";
+  if (yt && yt.thumbnail) {
+    const img = document.createElement("img");
+    img.src = yt.thumbnail; img.alt = ""; img.loading = "lazy";
+    img.referrerPolicy = "no-referrer"; img.onerror = () => img.remove();
+    thumb.appendChild(img);
+  } else if (song) {
+    thumb.classList.add("thumb-art-wrap");
+    thumb.appendChild(artEl(song, "thumb-art"));
+  }
+  const main = document.createElement("div");
+  main.className = "r-main";
+  const t = document.createElement("span");
+  t.className = "r-title";
+  t.textContent = (yt || song).title;
+  const sub = document.createElement("span");
+  sub.className = "r-sub";
+  const bits = [];
+  const art = (yt || song).artist;
+  if (art) bits.push(art);
+  const alb = yt ? yt.album : (song && song.album);
+  if (alb) bits.push(alb);
+  const dur = yt ? yt.duration : (song && song.duration);
+  if (dur) bits.push(fmtTime(dur));
+  if (yt && yt.kind) bits.push(yt.kind);
+  sub.textContent = bits.join(" · ");
+  main.append(t, sub);
+  row.append(thumb, main);
+  if (action) row.appendChild(action);
+  if (onPlay) {
+    row.style.cursor = "pointer";
+    row.onclick = (e) => { if (!e.target.closest("button, a")) onPlay(); };
+  }
+  return row;
+}
+
+function renderSearchDropdown() {
+  const q = $("#search").value.trim();
+  const drop = $("#search-drop");
+  if (!q) { drop.hidden = true; drop.replaceChildren(); return; }
+  const local = localMatches(q, 6);
+  drop.replaceChildren();
+  const head = document.createElement("div");
+  head.className = "drop-head";
+  head.textContent = local.length ? "In your library" : "No library matches";
+  drop.appendChild(head);
+  for (const s of local) {
+    const item = document.createElement("button");
+    item.className = "drop-item";
+    item.appendChild(artEl(s, "drop-art"));
+    const info = document.createElement("span");
+    info.className = "drop-info";
+    const t = document.createElement("strong"); t.textContent = s.title;
+    const a = document.createElement("span"); a.className = "muted";
+    a.textContent = s.artist + (s.album ? " · " + s.album : "");
+    info.append(t, a);
+    item.appendChild(info);
+    item.onclick = () => { closeSearchDropdown(); play(s.id); };
+    drop.appendChild(item);
+  }
+  const ytBtn = document.createElement("button");
+  ytBtn.className = "drop-item drop-yt";
+  ytBtn.textContent = `Search YouTube Music for “${q}” →`;
+  ytBtn.onclick = () => { closeSearchDropdown(); openSearch(q); };
+  drop.appendChild(ytBtn);
+  drop.hidden = false;
+}
+function closeSearchDropdown() {
+  const d = $("#search-drop");
+  d.hidden = true;
+  d.replaceChildren();
+}
+
+async function openSearch(q) {
+  q = (q || "").trim();
   if (!q) return;
-  const btn = $("#search-btn");
-  btn.classList.add("busy");
-  btn.textContent = "Searching…";
-  const box = $("#search-results");
-  box.innerHTML = '<p class="hint">Searching YouTube Music…</p>';
+  closeDrawer();
+  closeSearchDropdown();
+  state.searchQuery = q;
+  state.searchYt = [];
+  state.searchLoading = true;
+  $("#search").value = q;
+  setView("search", q);
   try {
-    const data = await api("/api/search?q=" + encodeURIComponent(q) + "&limit=8");
-    adminState.candidates = data.candidates || [];
-    renderResults();
-  } catch (err) {
-    box.innerHTML = "";
-    toast(err.message, true);
-  } finally {
-    btn.classList.remove("busy");
-    btn.textContent = "Search";
+    const data = await api("/api/search?q=" + encodeURIComponent(q) + "&limit=12");
+    state.searchYt = data.results || [];
+  } catch (e) {
+    toast(e.message, true);
+    state.searchYt = [];
   }
+  state.searchLoading = false;
+  apply();
 }
 
-function renderResults() {
-  const box = $("#search-results");
-  box.innerHTML = "";
-  const cands = adminState.candidates;
-  if (!cands.length) { box.innerHTML = '<p class="hint">No results.</p>'; return; }
-  const q = state.quota;
-  for (const c of cands) {
-    const row = document.createElement("div");
-    row.className = "result" + (c.is_best ? " best" : "");
-    const main = document.createElement("div");
-    main.className = "r-main";
-    const t = document.createElement("span");
-    t.className = "r-title";
-    t.textContent = c.title;
-    const sub = document.createElement("span");
-    sub.className = "r-sub";
-    sub.textContent = `${c.artist || "unknown"} · ${c.duration ? fmtTime(c.duration) : "—"} · ${c.kind}`;
-    main.append(t, sub);
-    const kind = document.createElement("span");
-    kind.className = "badge" + (c.is_best ? " best" : "");
-    kind.textContent = c.is_best ? "★ best" : c.kind;
-    const score = document.createElement("span");
-    score.className = "r-score";
-    score.textContent = c.score;
-    const add = document.createElement("button");
-    add.className = "btn btn-primary add";
-    add.textContent = "Add & download";
-    if (q && q.remaining <= 0) add.disabled = true;
-    add.onclick = () => addCandidate(c, add);
-    const thumb = document.createElement("span");
-    thumb.className = "thumb";
-    if (c.thumbnail) {
-      const img = document.createElement("img");
-      img.src = c.thumbnail;
-      img.alt = "";
-      img.loading = "lazy";
-      img.referrerPolicy = "no-referrer";
-      img.onerror = () => img.remove();
-      thumb.appendChild(img);
+function renderSearchPage() {
+  const q = state.searchQuery || "";
+  $("#search-title").textContent = `Results for “${q}”`;
+  const local = localMatches(q, 40);
+  $("#search-sub").textContent = state.searchLoading
+    ? "Searching YouTube Music…"
+    : `${local.length} in your library · ${(state.searchYt || []).length} on YouTube Music`;
+
+  const lbox = $("#search-local");
+  lbox.replaceChildren();
+  $("#local-count").textContent = local.length ? `(${local.length})` : "";
+  if (!local.length) {
+    const p = document.createElement("p"); p.className = "hint";
+    p.textContent = "No library matches."; lbox.appendChild(p);
+  }
+  for (const s of local) {
+    const addBtn = document.createElement("button");
+    addBtn.className = "btn";
+    addBtn.textContent = "＋ Playlist";
+    addBtn.onclick = () => addToPlaylist(s);
+    lbox.appendChild(resultRow({ song: s, onPlay: () => play(s.id), action: addBtn }));
+  }
+
+  const ybox = $("#search-yt");
+  ybox.replaceChildren();
+  const yt = state.searchYt || [];
+  $("#yt-count").textContent = yt.length ? `(${yt.length})` : "";
+  if (state.searchLoading) {
+    const p = document.createElement("p"); p.className = "hint";
+    p.textContent = "Searching…"; ybox.appendChild(p);
+  } else if (!yt.length) {
+    const p = document.createElement("p"); p.className = "hint";
+    p.textContent = "No results."; ybox.appendChild(p);
+  }
+  for (const e of yt) {
+    let action;
+    if (e.in_library) {
+      action = document.createElement("span");
+      action.className = "badge best";
+      action.textContent = "In library";
+    } else {
+      action = document.createElement("button");
+      action.className = "btn btn-primary add";
+      action.textContent = "Add & download";
+      if (state.quota && state.quota.remaining <= 0) action.disabled = true;
+      action.onclick = () => addFromYt(e, action);
     }
-    row.append(thumb, main, kind, score, add);
-    box.appendChild(row);
+    ybox.appendChild(resultRow({ yt: e, action }));
   }
 }
 
-async function addCandidate(c, btn) {
+async function addFromYt(e, btn) {
   if (btn) { btn.classList.add("busy"); btn.textContent = "Downloading…"; }
   try {
     const r = await api("/api/admin/add", {
       method: "POST",
       body: {
-        title: c.title, artist: c.artist, genre: "Unsorted",
-        youtube_url: c.url, youtube_kind: c.kind, youtube_title: c.title,
+        title: e.title, artist: e.artist, genre: "Unsorted",
+        youtube_url: e.url, youtube_kind: e.kind, youtube_title: e.title,
       },
     });
     toast(`Added “${r.song.title}” — ${r.download.downloaded ? "downloaded" : "download failed"}`);
     state.quota = r.quota;
     renderQuota();
+    e.in_library = true;
     await reloadLibrary();
+    apply();
     refreshStatus();
-    if (btn) { btn.textContent = r.download.downloaded ? "✓ Added" : "⚠ Retry"; btn.disabled = r.download.downloaded; }
-    if (btn) btn.classList.remove("busy");
   } catch (err) {
     toast(err.message, true);
     if (btn) { btn.classList.remove("busy"); btn.textContent = "Add & download"; }
@@ -992,7 +1124,6 @@ document.querySelectorAll(".js-fav").forEach((el) => { el.onclick = toggleFav; }
 $("#new-playlist").onclick = newPlaylist;
 $("#add-song").onclick = addSong;
 $("#commit").onclick = doCommit;
-$("#search-form").addEventListener("submit", doSearch);
 $("#refresh-assets").onclick = doRefresh;
 
 audio.addEventListener("play", syncPlayIcon);
@@ -1087,7 +1218,19 @@ document.querySelectorAll(".nav-item").forEach((b) =>
   b.onclick = () => { closeDrawer(); setView(b.dataset.view); });
 
 const search = $("#search");
-search.addEventListener("input", () => { state.query = search.value; apply(); });
+search.addEventListener("input", () => {
+  state.query = search.value;
+  if (state.viewType !== "search") apply();
+  renderSearchDropdown();
+});
+search.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") { e.preventDefault(); openSearch(search.value); }
+  else if (e.key === "Escape") closeSearchDropdown();
+});
+search.addEventListener("blur", () => setTimeout(closeSearchDropdown, 180));
+document.addEventListener("click", (e) => {
+  if (!e.target.closest(".search-wrap")) closeSearchDropdown();
+});
 $("#sort").addEventListener("change", (e) => { state.sort = e.target.value; apply(); });
 
 document.addEventListener("keydown", (e) => {
