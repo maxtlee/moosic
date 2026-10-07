@@ -22,7 +22,10 @@ const state = {
   filtered: [],
   searchQuery: "",
   searchYt: [],
+  searchAlbums: [],
   searchLoading: false,
+  albums: [],
+  album: null,
   currentId: null,
   shuffle: false,
   repeat: "off",
@@ -367,6 +370,7 @@ function apply() {
   if (state.viewType === "admin") {
     $("#library-view").hidden = true;
     $("#search-view").hidden = true;
+    $("#albums-view").hidden = true;
     $("#admin-panel").hidden = false;
     renderGenres();
     renderPlaylists();
@@ -378,6 +382,7 @@ function apply() {
   if (state.viewType === "search") {
     $("#library-view").hidden = true;
     $("#admin-panel").hidden = true;
+    $("#albums-view").hidden = true;
     $("#search-view").hidden = false;
     renderGenres();
     renderPlaylists();
@@ -385,9 +390,22 @@ function apply() {
     renderSearchPage();
     return;
   }
+  if (state.viewType === "albums") {
+    $("#library-view").hidden = true;
+    $("#admin-panel").hidden = true;
+    $("#search-view").hidden = true;
+    $("#albums-view").hidden = false;
+    renderGenres();
+    renderPlaylists();
+    document.querySelectorAll(".nav-item").forEach((b) =>
+      b.classList.toggle("is-active", b.dataset.view === "albums"));
+    reloadAlbums().then(renderAlbums);
+    return;
+  }
   $("#library-view").hidden = false;
   $("#admin-panel").hidden = true;
   $("#search-view").hidden = true;
+  $("#albums-view").hidden = true;
   const q = state.query.trim().toLowerCase();
   let rows;
   if (state.viewType === "playlist") {
@@ -396,6 +414,10 @@ function apply() {
     rows = state.master.slice();
     if (state.viewType === "favorites") rows = rows.filter((s) => state.favorites.has(s.id));
     else if (state.viewType === "genre") rows = rows.filter((s) => s.genre === state.viewValue);
+    else if (state.viewType === "album" && state.album) {
+      rows = rows.filter((s) => (s.album || "") === state.album.album
+        && (s.artist || "") === state.album.artist);
+    }
   }
   if (q) {
     rows = rows.filter((s) => `${s.title} ${s.artist} ${s.genre}`.toLowerCase().includes(q));
@@ -435,6 +457,15 @@ function renderHero() {
     ];
   } else if (state.viewType === "favorites") { title = "Favorites"; meta = `${state.filtered.length} tracks`; }
   else if (state.viewType === "genre") { title = state.viewValue; meta = `${state.filtered.length} tracks`; }
+  else if (state.viewType === "album" && state.album) {
+    title = state.album.album;
+    meta = `${state.album.artist} · ${state.filtered.length} tracks`;
+    actions = [
+      ["▶ Play all", () => { if (state.filtered[0]) play(state.filtered[0].id); }],
+      ["＋ Playlist", () => albumToPlaylist()],
+      ["⬇ Download missing", () => downloadAlbum()],
+    ];
+  }
   else { title = "All songs"; meta = `${state.master.length} tracks · ${Object.keys(state.genres).length} genres`; }
 
   $("#hero-title").textContent = title;
@@ -958,11 +989,16 @@ async function openSearch(q) {
   $("#search").value = q;
   setView("search", q);
   try {
-    const data = await api("/api/search?q=" + encodeURIComponent(q) + "&limit=12");
-    state.searchYt = data.results || [];
+    const [sd, ad] = await Promise.allSettled([
+      api("/api/search?q=" + encodeURIComponent(q) + "&limit=12"),
+      api("/api/album-search?q=" + encodeURIComponent(q) + "&limit=6"),
+    ]);
+    state.searchYt = sd.status === "fulfilled" ? (sd.value.results || []) : [];
+    state.searchAlbums = ad.status === "fulfilled" ? (ad.value.albums || []) : [];
   } catch (e) {
     toast(e.message, true);
     state.searchYt = [];
+    state.searchAlbums = [];
   }
   state.searchLoading = false;
   apply();
@@ -1036,6 +1072,30 @@ function renderSearchPage() {
     }
     ybox.appendChild(resultRow({ yt: e, action }));
   }
+
+  const abox = $("#search-albums");
+  abox.replaceChildren();
+  const albs = state.searchAlbums || [];
+  $("#albums-block").hidden = !albs.length;
+  $("#album-count").textContent = albs.length ? `(${albs.length})` : "";
+  for (const a of albs) {
+    let action;
+    if (a.in_library) {
+      action = document.createElement("span");
+      action.className = "badge best";
+      action.textContent = "In library";
+    } else {
+      action = document.createElement("button");
+      action.className = "btn";
+      action.textContent = "Add album";
+      if (state.quota && state.quota.remaining <= 0) action.disabled = true;
+      action.onclick = () => addAlbum(a, action);
+    }
+    abox.appendChild(resultRow({
+      yt: { title: a.title, artist: a.artist, album: a.year, thumbnail: a.thumbnail, kind: "album" },
+      action,
+    }));
+  }
 }
 
 async function replaceMatch(song) {
@@ -1068,6 +1128,7 @@ async function addFromYt(e, btn) {
       body: {
         title: e.title, artist: e.artist, genre: "Unsorted",
         youtube_url: e.url, youtube_kind: e.kind, youtube_title: e.title,
+        album: e.album || "",
       },
     });
     toast(`Added “${r.song.title}” — ${r.download.downloaded ? "downloaded" : "download failed"}`);
@@ -1109,7 +1170,104 @@ async function doRefresh() {
   }
 }
 
-/* ------------------------------- loaders ---------------------------- */
+/* ------------------------------- albums ----------------------------- */
+async function reloadAlbums() {
+  try {
+    const d = await api("/api/albums");
+    state.albums = d.albums || [];
+  } catch (_) {
+    state.albums = [];
+  }
+}
+
+function renderAlbums() {
+  const grid = $("#album-grid");
+  grid.replaceChildren();
+  $("#albums-sub").textContent = `${state.albums.length} albums`;
+  if (!state.albums.length) {
+    const p = document.createElement("p");
+    p.className = "hint";
+    p.textContent = "No albums detected yet. Add songs from search, then run album detection.";
+    grid.appendChild(p);
+    return;
+  }
+  for (const a of state.albums) {
+    const card = document.createElement("button");
+    card.className = "album-card";
+    const art = document.createElement("span");
+    art.className = "album-art";
+    paintArt(art, a.album + a.artist);
+    if (a.cover_id) {
+      const img = document.createElement("img");
+      img.src = BASE + "api/cover/" + encodeURIComponent(a.cover_id);
+      img.alt = ""; img.loading = "lazy";
+      img.onerror = () => img.remove();
+      art.appendChild(img);
+    }
+    const nm = document.createElement("strong");
+    nm.textContent = a.album;
+    const sub = document.createElement("span");
+    sub.className = "muted";
+    sub.textContent = `${a.artist} · ${a.count}`;
+    card.append(art, nm, sub);
+    card.onclick = () => openAlbum(a.key);
+    grid.appendChild(card);
+  }
+}
+
+function openAlbum(key) {
+  const a = state.albums.find((x) => x.key === key);
+  if (!a) return;
+  state.album = a;
+  setView("album", key);
+}
+
+async function albumToPlaylist() {
+  if (!state.album) return;
+  const ids = state.filtered.map((s) => s.id);
+  if (!ids.length) return;
+  const name = state.album.artist ? `${state.album.album} — ${state.album.artist}` : state.album.album;
+  try {
+    const r = await api("/api/playlists", { method: "POST", body: { name, description: "Album" } });
+    await api("/api/playlists/" + encodeURIComponent(r.slug), { method: "PATCH", body: { songs: ids } });
+    await reloadPlaylists();
+    toast(`Created playlist “${name}”`);
+    refreshStatus();
+  } catch (e) { toast(e.message, true); }
+}
+
+async function downloadAlbum() {
+  if (!state.album) return;
+  try {
+    const r = await api("/api/albums/download", {
+      method: "POST",
+      body: { album: state.album.album, artist: state.album.artist },
+    });
+    state.quota = r.quota; renderQuota();
+    toast(`Album download: ${r.summary.downloaded} new`);
+    await reloadLibrary();
+    apply();
+    refreshStatus();
+  } catch (e) { toast(e.message, true); }
+}
+
+async function addAlbum(a, btn) {
+  if (btn) { btn.classList.add("busy"); btn.textContent = "Adding…"; }
+  try {
+    const r = await api("/api/admin/add-album", { method: "POST", body: { browse_id: a.browse_id } });
+    state.quota = r.quota; renderQuota();
+    toast(`Added album “${r.album.title}” — ${r.added} tracks (${r.download.downloaded} downloaded)`);
+    a.in_library = true;
+    await reloadLibrary();
+    await reloadAlbums();
+    apply();
+    refreshStatus();
+  } catch (err) {
+    toast(err.message, true);
+    if (btn) { btn.classList.remove("busy"); btn.textContent = "Add album"; }
+    loadQuota();
+  }
+}
 async function reloadLibrary() {
   const data = await api("/api/library");
   state.master = data.songs;

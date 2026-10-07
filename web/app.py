@@ -155,6 +155,7 @@ download_limiter = SlidingWindow(WRITE_RPM, 60.0)
 search_limiter = SlidingWindow(SEARCH_RPM, 60.0)
 _download_lock = threading.Lock()
 _search_lock = threading.Lock()
+_album_lock = threading.Lock()
 
 
 def run_tool(args: list[str], timeout: int) -> subprocess.CompletedProcess:
@@ -232,6 +233,16 @@ class AddSongInput(BaseModel):
     youtube_url: str = Field(min_length=8, max_length=500)
     youtube_kind: str = Field(default="", max_length=40)
     youtube_title: str = Field(default="", max_length=300)
+    album: str = Field(default="", max_length=300)
+
+
+class AddAlbumInput(BaseModel):
+    browse_id: str = Field(min_length=4, max_length=80)
+
+
+class DownloadAlbumInput(BaseModel):
+    album: str = Field(min_length=1, max_length=300)
+    artist: str = Field(default="", max_length=300)
 
 
 class RatingInput(BaseModel):
@@ -296,6 +307,157 @@ def get_library() -> dict:
     ratings = ml.load_ratings()
     return {"count": len(songs), "genres": genres_of(songs),
             "songs": [slim(s, ratings) for s in songs]}
+
+
+@app.get("/api/albums")
+def get_albums() -> dict:
+    songs = ml.load_master().get("songs", [])
+    by_id = {s["id"]: s for s in songs}
+    groups: dict[str, dict] = {}
+    for s in songs:
+        album = (s.get("album") or "").strip()
+        if not album:
+            continue
+        key = ml.norm_key(album, s.get("artist", ""))
+        g = groups.setdefault(key, {"key": key, "album": album,
+                                    "artist": s.get("artist", ""), "song_ids": []})
+        g["song_ids"].append(s["id"])
+    out = []
+    for g in groups.values():
+        first = by_id.get(g["song_ids"][0], {})
+        cf = ml.cover_file(first)
+        out.append({
+            "key": g["key"], "album": g["album"], "artist": g["artist"],
+            "count": len(g["song_ids"]),
+            "cover_id": g["song_ids"][0] if (cf and cf.is_file()) else None,
+            "songs": g["song_ids"],
+        })
+    out.sort(key=lambda a: (a["album"].lower(), a["artist"].lower()))
+    return {"albums": out}
+
+
+@app.get("/api/album-search")
+def album_search(q: str, request: Request, limit: int = 8) -> dict:
+    wait = search_limiter.check(client_ip(request))
+    if wait > 0:
+        raise HTTPException(status_code=429, detail="search slow down",
+                            headers={"Retry-After": str(int(wait) + 1)})
+    q = (q or "").strip()[:200]
+    if not q:
+        raise HTTPException(status_code=400, detail="empty query")
+    if not _album_lock.acquire(blocking=False):
+        raise HTTPException(status_code=409, detail="an album search is already running")
+    try:
+        proc = run_tool([str(TOOL_DIR / "albums.py"), "--query", q,
+                         "--limit", str(max(1, min(limit, 15)))], timeout=60)
+    except subprocess.TimeoutExpired:
+        raise HTTPException(status_code=504, detail="album search timed out")
+    finally:
+        _album_lock.release()
+    if proc.returncode != 0:
+        raise HTTPException(status_code=502, detail=("album search failed: " + (proc.stderr or proc.stdout))[-200:])
+    data = json.loads(proc.stdout)
+    data["albums"] = (data.get("albums") or [])[: max(1, min(limit, 15))]
+    master = ml.load_master()
+    have_albums = {ml.norm_key(s.get("album", ""), s.get("artist", ""))
+                   for s in master.get("songs", []) if s.get("album")}
+    for a in data.get("albums", []):
+        a["in_library"] = ml.norm_key(a.get("title", ""), a.get("artist", "")) in have_albums
+    return data
+
+
+@app.get("/api/album-tracks")
+def album_tracks(browse_id: str, request: Request) -> dict:
+    wait = search_limiter.check(client_ip(request))
+    if wait > 0:
+        raise HTTPException(status_code=429, detail="search slow down")
+    if not _album_lock.acquire(blocking=False):
+        raise HTTPException(status_code=409, detail="an album search is already running")
+    try:
+        proc = run_tool([str(TOOL_DIR / "albums.py"), "--tracks", browse_id], timeout=60)
+    except subprocess.TimeoutExpired:
+        raise HTTPException(status_code=504, detail="album fetch timed out")
+    finally:
+        _album_lock.release()
+    if proc.returncode != 0:
+        raise HTTPException(status_code=502, detail=("album fetch failed: " + (proc.stderr or proc.stdout))[-200:])
+    return json.loads(proc.stdout)
+
+
+@app.post("/api/albums/download")
+def download_album(body: DownloadAlbumInput, request: Request) -> dict:
+    enforce_write(request)
+    if download_quota.remaining() < 1:
+        raise HTTPException(status_code=429, detail="download quota exhausted",
+                            headers={"Retry-After": str(int(download_quota.reset_in()) + 1)})
+    if not _download_lock.acquire(blocking=False):
+        raise HTTPException(status_code=409, detail="a download is already in progress")
+    try:
+        with ml.flock():
+            songs = ml.load_master().get("songs", [])
+            ids = [s["id"] for s in songs
+                   if (s.get("album") or "") == body.album
+                   and (not body.artist or (s.get("artist") or "") == body.artist)]
+        if not ids:
+            raise HTTPException(status_code=404, detail="album not found in library")
+        summary, log_tail = _download_and_summarize(
+            ["--only", ",".join(ids), "--max-downloads", str(download_quota.remaining())], timeout=900)
+        download_quota.record(max(0, summary.get("attempted", 0)))
+        return {"summary": summary, "quota": quota_state(), "log": log_tail}
+    finally:
+        _download_lock.release()
+
+
+@app.post("/api/admin/add-album")
+def add_album(body: AddAlbumInput, request: Request) -> dict:
+    enforce_write(request)
+    if not _download_lock.acquire(blocking=False):
+        raise HTTPException(status_code=409, detail="a download is already in progress")
+    try:
+        proc = run_tool([str(TOOL_DIR / "albums.py"), "--tracks", body.browse_id], timeout=60)
+        if proc.returncode != 0:
+            raise HTTPException(status_code=502, detail="album fetch failed")
+        data = json.loads(proc.stdout)
+        album, tracks = data.get("album") or {}, data.get("tracks") or []
+        if not tracks:
+            raise HTTPException(status_code=404, detail="album has no tracks")
+        with ml.flock():
+            master = ml.load_master()
+            songs = master.get("songs", [])
+            if len(songs) + len(tracks) > MAX_MASTER_SONGS:
+                raise HTTPException(status_code=429, detail="master list full")
+            vids = {ml.video_id_of(s) for s in songs}
+            keys = {ml.song_key_of(s) for s in songs}
+            added = []
+            for t in tracks:
+                artist = t.get("artist") or album.get("artist", "")
+                key = ml.norm_key(t["title"], artist)
+                if t["video_id"] in vids or key in keys:
+                    continue
+                song = {
+                    "id": "", "title": t["title"], "artist": artist,
+                    "genre": "Unsorted", "youtube_url": t["url"], "video_id": t["video_id"],
+                    "youtube_kind": "song", "youtube_title": t["title"],
+                    "duration": t.get("duration"), "album": album.get("title", ""),
+                }
+                song["id"] = ml.make_song_id(song)
+                song["asset"] = ml.expected_asset(song)
+                songs.append(song)
+                added.append(song)
+                vids.add(t["video_id"])
+                keys.add(key)
+            master["songs"] = songs
+            ml.save_master(master)
+        summary = {"downloaded": 0, "failed": 0, "attempted": 0}
+        if added and download_quota.remaining() > 0:
+            ids = ",".join(s["id"] for s in added)
+            summary, _log = _download_and_summarize(
+                ["--only", ids, "--max-downloads", str(download_quota.remaining())], timeout=900)
+            download_quota.record(max(0, summary.get("attempted", 0)))
+        return {"album": album, "added": len(added), "skipped": len(tracks) - len(added),
+                "download": summary, "quota": quota_state()}
+    finally:
+        _download_lock.release()
 
 
 @app.get("/api/playlists")
@@ -434,7 +596,8 @@ def create_song(body: SongInput, request: Request) -> dict:
                 "genre": body.genre.strip() or "Unsorted",
                 "youtube_url": body.youtube_url.strip(),
                 "youtube_kind": body.youtube_kind.strip(),
-                "youtube_title": "", "duration": None}
+                "youtube_title": "", "duration": None,
+                "album": body.album.strip()}
         sid = ml.make_song_id(song)
         key = ml.song_key_of(song)
         if ml.song_by_id(master, sid) or any(ml.song_key_of(s) == key for s in songs):
@@ -659,6 +822,7 @@ def admin_add(body: AddSongInput, request: Request) -> dict:
                 "genre": body.genre.strip() or "Unsorted", "youtube_url": url,
                 "youtube_kind": body.youtube_kind.strip(),
                 "youtube_title": body.youtube_title.strip(), "duration": None,
+                "album": body.album.strip(),
             }
             sid = ml.make_song_id(song)
             key = ml.song_key_of(song)

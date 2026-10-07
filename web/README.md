@@ -58,7 +58,18 @@ Writes (public, rate-limited)
   - changing a YouTube URL regenerates the id and rewrites playlist references
   - deleting a song also strips it from every playlist and drops its rating
 - `PUT /api/ratings/{song_id}` → set/clear a rating (`{"rating": 0.8}` or `{"rating": null}`)
+- `POST /api/songs/{song_id}/replace-match` → mark the current YouTube video as
+  wrong (adds it to `bad_links.json`), pick the next-best match and re-download;
+  works for already-downloaded songs and consumes the download quota.
+- `POST /api/admin/add-album` → add every track of an album (by `browse_id`) and
+  download as many as the quota allows.
+- `POST /api/albums/download` → download missing tracks for a library album.
 - `POST /api/commit` → `git add -A && git commit && git push` the data repo
+
+Albums
+- `GET /api/albums` → library albums grouped by (album, artist) with counts.
+- `GET /api/album-search?q=` · `GET /api/album-tracks?browse_id=` → YouTube Music
+  album search / track listing (`albums.py`).
 
 Search & add (public, rate-limited)
 - `GET /api/search?q=<query>` → **song-first** YouTube Music results
@@ -114,6 +125,15 @@ The **Admin** item in the sidebar is the "add music" workflow:
 Everything the admin panel does lands in the working tree; use the **Commit**
 button to version it. Searches are rate-limited separately (`MOOSIC_SEARCH_RPM`)
 so the YouTube Music API isn't hammered.
+
+## Albums
+
+Each song carries an auto-detected `album`. `detect_albums.py` fills them in
+from YouTube Music (`--execute [--limit N] [--force]`). The sidebar **Albums**
+view groups the library into album cards; opening one plays it like a playlist,
+creates a playlist from it, or downloads its missing tracks. Album search
+appears on the search page with an **Add album** button that adds every track
+and downloads up to the quota.
 
 ## Album covers
 
