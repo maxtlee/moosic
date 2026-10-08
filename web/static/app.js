@@ -103,12 +103,15 @@ function starWidget(song, small) {
     const val = Number(state.ratings[song.id]) || 0;
     for (let i = 1; i <= 5; i++) {
       const on = val >= i / 5 - 1e-9;
+      const exact = Math.abs(val - i / 5) < 1e-6; // this star is the current rating
       const b = document.createElement("button");
       b.type = "button";
       b.className = "star" + (on ? " on" : "");
       b.textContent = "★";
-      b.title = on ? `${Math.round(i * 20)}% — click to clear` : `Rate ${Math.round(i * 20)}%`;
-      b.onclick = (e) => { e.stopPropagation(); setRating(song.id, on ? 0 : i / 5); };
+      b.title = exact ? `${Math.round(i * 20)}% — click to clear` : `Rate ${Math.round(i * 20)}%`;
+      // Clicking the star that matches the current rating clears it; clicking any
+      // other star sets that value (including lowering a rating).
+      b.onclick = (e) => { e.stopPropagation(); setRating(song.id, exact ? 0 : i / 5); };
       el.appendChild(b);
     }
   };

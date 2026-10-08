@@ -162,7 +162,8 @@ model ("how much I like it" vs "how much a friend likes it") later.
 
 - The UI shows a 5-star control (0.2 steps) in **every track row** and in the
   **player bar**, so you can rate while listening or from any list. Clicking the
-  active star clears the rating.
+  star that matches the **current** rating clears it; clicking any other star
+  sets that value (including lowering an existing rating).
 - **All songs is sorted by rating by default** (highest first) and can be
   re-sorted by playlist/album order, title, artist, genre or duration. Unrated
   songs count as 0 for sorting and ties keep their existing order.
