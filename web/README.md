@@ -113,7 +113,7 @@ scripts/install-service.sh  # boot service + restart
 The **Admin** item in the sidebar is the "add music" workflow:
 
 1. Type a query (e.g. `NewJeans - Ditto` or just a title) and hit **Search**.
-   The server runs `search_youtube.py` (ytmusicapi + the batch linker's scoring)
+   The server runs `search_songs.py` (ytmusicapi + the batch linker's scoring)
    and returns ranked candidates, marking the recommended one **★ best**.
 2. Click **Add & download** on a result. The server:
    - writes the song into `master.json` with a stable id and its asset path,

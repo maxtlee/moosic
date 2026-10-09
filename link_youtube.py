@@ -18,9 +18,7 @@ import musiclib as ml
 
 _TO_SIMP = OpenCC("t2s")
 
-ROOT = Path(__file__).resolve().parent
 DEFAULT_JSON = ml.MASTER
-DEFAULT_HTML = None
 
 LYRIC_RE = re.compile(
     r"lyric|lyrics|가사|歌詞|歌词|動態歌詞|动态歌词|pinyin\s*lyrics|colour coded|color coded",
@@ -423,106 +421,9 @@ def save_songs(path: Path, songs: list[dict], wrapper: dict | None) -> None:
         atomic_write_json(path, songs)
 
 
-def write_html(songs: list[dict], path: Path) -> None:
-    rows = []
-    for i, song in enumerate(songs):
-        url = song.get("youtube_url") or ""
-        vid = ""
-        if "v=" in url:
-            vid = url.split("v=", 1)[1].split("&", 1)[0]
-        conf = song.get("youtube_confidence") or ""
-        kind = song.get("youtube_kind") or ""
-        missing = " missing" if not url else ""
-        low = " low" if conf == "low" else ""
-        yt_title = (song.get("youtube_title") or "").replace("<", "&lt;")
-        title = song["title"].replace("<", "&lt;")
-        artist = song["artist"].replace("<", "&lt;")
-        rows.append(
-            f'<tr class="song{missing}{low}" data-id="{vid}" data-i="{i}">'
-            f"<td>{i + 1}</td>"
-            f"<td>{title}</td>"
-            f"<td>{artist}</td>"
-            f"<td>{song.get('genre', '')}</td>"
-            f"<td>{kind}</td>"
-            f'<td><a href="{url}" target="_blank" rel="noopener">{yt_title or url or "—"}</a></td>'
-            f"</tr>"
-        )
-    linked = sum(1 for s in songs if s.get("youtube_url"))
-    html = f"""<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Moosic playlist</title>
-  <style>
-    :root {{ color-scheme: dark; }}
-    body {{ font: 15px/1.4 system-ui, sans-serif; margin: 0; background: #111; color: #eee; }}
-    header {{ padding: 16px 20px; background: #1b1b1b; border-bottom: 1px solid #333; }}
-    h1 {{ margin: 0 0 8px; font-size: 1.3rem; }}
-    #player {{ width: min(960px, 100%); aspect-ratio: 16/9; border: 0; background: #000; }}
-    .wrap {{ display: grid; grid-template-columns: minmax(280px, 960px) 1fr; gap: 16px; padding: 16px; }}
-    @media (max-width: 900px) {{ .wrap {{ grid-template-columns: 1fr; }} }}
-    input {{ width: 100%; max-width: 420px; padding: 8px 10px; border-radius: 8px; border: 1px solid #444; background: #222; color: inherit; }}
-    table {{ width: 100%; border-collapse: collapse; }}
-    th, td {{ text-align: left; padding: 6px 8px; border-bottom: 1px solid #2a2a2a; vertical-align: top; }}
-    tr.song {{ cursor: pointer; }}
-    tr.song:hover {{ background: #1c1c1c; }}
-    tr.active {{ background: #143322; }}
-    tr.missing {{ opacity: 0.45; }}
-    tr.low td:nth-child(5) {{ color: #e6b84d; }}
-    a {{ color: #8ec8ff; }}
-    .meta {{ color: #aaa; font-size: 0.9rem; }}
-  </style>
-</head>
-<body>
-  <header>
-    <h1>Moosic</h1>
-    <p class="meta">{linked} / {len(songs)} songs linked · lyric video or official audio</p>
-    <iframe id="player" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-  </header>
-  <div class="wrap">
-    <div>
-      <p><input id="q" type="search" placeholder="Filter title or artist"></p>
-      <table>
-        <thead><tr><th>#</th><th>Title</th><th>Artist</th><th>Genre</th><th>Kind</th><th>YouTube</th></tr></thead>
-        <tbody>
-          {"".join(rows)}
-        </tbody>
-      </table>
-    </div>
-  </div>
-  <script>
-    const player = document.getElementById("player");
-    const rows = [...document.querySelectorAll("tr.song")];
-    function play(row) {{
-      const id = row.dataset.id;
-      if (!id) return;
-      rows.forEach(r => r.classList.remove("active"));
-      row.classList.add("active");
-      player.src = "https://www.youtube-nocookie.com/embed/" + id + "?autoplay=1&rel=0";
-      row.scrollIntoView({{ block: "nearest" }});
-    }}
-    rows.forEach(row => row.addEventListener("click", e => {{
-      if (e.target.closest("a")) return;
-      play(row);
-    }}));
-    document.getElementById("q").addEventListener("input", e => {{
-      const q = e.target.value.toLowerCase();
-      rows.forEach(row => {{
-        row.style.display = row.textContent.toLowerCase().includes(q) ? "" : "none";
-      }});
-    }});
-  </script>
-</body>
-</html>
-"""
-    path.write_text(html, encoding="utf-8")
-
-
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--json", type=Path, default=DEFAULT_JSON)
-    parser.add_argument("--html", type=Path, default=DEFAULT_HTML)
     parser.add_argument("--limit", type=int, default=0, help="Only process the first N unlinked songs")
     parser.add_argument("--force", action="store_true", help="Re-search songs that already have a URL")
     parser.add_argument("--save-every", type=int, default=1)
@@ -564,20 +465,14 @@ def main() -> int:
         )
         if n % args.save_every == 0:
             save_songs(args.json, songs, wrapper)
-            if args.html:
-                write_html(songs, args.html)
 
     save_songs(args.json, songs, wrapper)
-    if args.html:
-        write_html(songs, args.html)
     kinds = {}
     for song in songs:
         k = song.get("youtube_kind") or "unlinked"
         kinds[k] = kinds.get(k, 0) + 1
     print(f"\nDone. linked={linked} missed={failed} kinds={kinds}")
     print(f"Wrote {args.json}")
-    if args.html:
-        print(f"Wrote {args.html}")
     return 0 if failed == 0 else 1
 
 

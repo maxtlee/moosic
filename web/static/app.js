@@ -8,7 +8,6 @@ const BASE = new URL(".", location.href).pathname; // directory of the current U
 const $ = (sel) => document.querySelector(sel);
 
 const audio = $("#audio");
-const adminState = { candidates: [] };
 const state = {
   master: [],              // slim songs from /api/library
   index: new Map(),        // id -> song

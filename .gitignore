@@ -1,13 +1,19 @@
-*.png
-.prompts
-clementine-player
-.venv/
-assets
+# Local media / data (kept out of the repo)
 assets/
-
-# Runtime log
-.download_assets_server.log
+assets
 
 # Python
 __pycache__/
-*.pyc
+*.py[cod]
+*.part
+.venv/
+venv/
+
+# Runtime logs
+*.log
+.download_assets_server.log
+
+# Agent / local artifacts & secrets
+.prompts
+context/
+.env

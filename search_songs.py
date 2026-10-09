@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 """Song-first YouTube Music search.
 
-Unlike ``search_youtube.py`` (which ranks raw videos), this returns
-**deduplicated songs** — one entry per (artist, title) with exactly one
-canonical YouTube video id, so the UI can never recommend the same song twice.
-YouTube Music's own "songs" results also carry the **album**, which the app
-uses for auto-detection.
+Unlike a raw video search, this returns **deduplicated songs** — one entry per
+(artist, title) with exactly one canonical YouTube video id, so the UI can never
+recommend the same song twice. YouTube Music's own "songs" results also carry
+the **album**, which the app uses for auto-detection.
 
 Output:
     {"query": ..., "results": [
@@ -18,27 +17,28 @@ from __future__ import annotations
 
 import argparse
 import json
-import re
 import sys
-import unicodedata
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import link_youtube as ly  # noqa: E402
 import musiclib as ml  # noqa: E402
-from search_youtube import parse_query  # noqa: E402
 from ytmusicapi import YTMusic  # noqa: E402
 
 
+def parse_query(query: str) -> tuple[str, str]:
+    """Split 'artist - title' into (title, artist); otherwise all is the title."""
+    q = query.strip()
+    for sep in (" - ", " – ", " — ", " by "):
+        if sep in q:
+            left, right = q.split(sep, 1)
+            return right.strip(), left.strip()
+    return q, ""
+
+
 def norm_key(title: str, artist: str) -> str:
-    def n(s: str) -> str:
-        s = unicodedata.normalize("NFKC", s or "").casefold()
-        return re.sub(r"[\W_]+", " ", s, flags=re.UNICODE).strip()
-    t = n(title)
-    a = n(artist)
-    a = re.split(r" feat ", a)[0].strip() or a
-    return f"{a}|{t}"
+    return ml.norm_key(title, artist)
 
 
 def artist_of(result: dict) -> str:

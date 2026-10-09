@@ -32,7 +32,6 @@ BAD_LINKS = DATA_DIR / "bad_links.json"
 PLAYLISTS_DIR = DATA_DIR / "playlists"
 ASSETS_DIR = DATA_DIR / "assets"
 COVERS_DIR = ASSETS_DIR / "_covers"
-TRASH_DIR = ASSETS_DIR / "_trash"
 LOCK_PATH = DATA_DIR / ".locks" / "music.lock"
 
 SAFE_SLUG = re.compile(r"^[a-z0-9][a-z0-9-]{0,63}$")

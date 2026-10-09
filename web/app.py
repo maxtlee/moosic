@@ -531,6 +531,23 @@ def index() -> FileResponse:
                         headers={"Cache-Control": "no-cache"})
 
 
+# Icons live in static/ (mounted at /static); also serve them at the site root
+# so browsers' default /favicon.ico probe never 404s under /music.
+@app.get("/favicon.ico", include_in_schema=False)
+def favicon_ico() -> FileResponse:
+    return FileResponse(STATIC / "favicon.ico", media_type="image/x-icon")
+
+
+@app.get("/favicon.svg", include_in_schema=False)
+def favicon_svg() -> FileResponse:
+    return FileResponse(STATIC / "favicon.svg", media_type="image/svg+xml")
+
+
+@app.get("/apple-touch-icon.png", include_in_schema=False)
+def apple_touch_icon() -> FileResponse:
+    return FileResponse(STATIC / "apple-touch-icon.png", media_type="image/png")
+
+
 # --------------------------------------------------------------------------- #
 # writes
 # --------------------------------------------------------------------------- #
