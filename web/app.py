@@ -47,6 +47,7 @@ from fastapi.responses import FileResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
+FROZEN = bool(getattr(sys, "frozen", False))
 ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT.parent))
 import musiclib as ml  # noqa: E402
@@ -58,7 +59,9 @@ DOWNLOAD_LIMIT = int(os.environ.get("MOOSIC_DOWNLOAD_LIMIT", "20"))
 DOWNLOAD_WINDOW = float(os.environ.get("MOOSIC_DOWNLOAD_WINDOW", "1800"))
 SEARCH_RPM = int(os.environ.get("MOOSIC_SEARCH_RPM", "20"))
 STATIC = ROOT / "static"
-TOOL_DIR = ROOT.parent
+# In a frozen (PyInstaller) build the tool scripts + venv are not present, so
+# tool-backed endpoints return a clear 503 instead of crashing (see run_tool).
+TOOL_DIR = Path(sys.executable).resolve().parent if FROZEN else ROOT.parent
 TOOL_PYTHON = Path(os.environ.get("MOOSIC_TOOL_PYTHON", str(TOOL_DIR / ".venv" / "bin" / "python")))
 
 MAX_PLAYLISTS = 500
@@ -159,8 +162,14 @@ _album_lock = threading.Lock()
 
 
 def run_tool(args: list[str], timeout: int) -> subprocess.CompletedProcess:
+    if not TOOL_PYTHON.exists():
+        raise HTTPException(
+            status_code=503,
+            detail="This build is player-only. Search, add, download and refresh "
+                   "need the full source install (Python + yt-audio-api).",
+        )
     env = {**os.environ, "MOOSIC_DATA": str(ml.DATA_DIR)}
-    env.setdefault("HOME", "/home/max")
+    env.setdefault("HOME", str(Path.home()))
     return subprocess.run(
         [str(TOOL_PYTHON), *args], capture_output=True, text=True,
         env=env, timeout=timeout, cwd=str(TOOL_DIR),

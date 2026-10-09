@@ -1,0 +1,75 @@
+name: release
+
+# Builds standalone Moosic servers for Linux, macOS and Windows and attaches
+# them to a GitHub Release. PyInstaller cannot cross-compile, so each OS is
+# built on its own runner.
+#
+#   git tag v0.1.0 && git push origin v0.1.0     # -> creates the release
+#   (or run this workflow manually to build artifacts without a release)
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: ${{ matrix.asset }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            asset: moosic-linux
+          - os: macos-latest
+            asset: moosic-macos
+          - os: windows-latest
+            asset: moosic-windows.exe
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install build deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r web/requirements.txt pyinstaller
+
+      - name: Build
+        working-directory: web/packaging
+        run: pyinstaller --noconfirm --clean moosic.spec
+
+      - name: Rename artifact
+        run: >
+          python -c "import os, shutil;
+          src = os.path.join('web','packaging','dist','moosic' + ('.exe' if os.name == 'nt' else ''));
+          shutil.move(src, os.path.join('web','packaging','dist','${{ matrix.asset }}'))"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.asset }}
+          path: web/packaging/dist/${{ matrix.asset }}
+          if-no-files-found: error
+
+  publish:
+    name: publish release
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*
+          generate_release_notes: true

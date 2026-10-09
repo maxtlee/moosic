@@ -96,6 +96,11 @@ shuffle, right-click song menus, and a rate-limited **Commit** button that
 version-controls the data repo. See [`web/README.md`](web/README.md) for the API
 and deployment details.
 
+Single-file **standalone servers** for Linux, macOS and Windows are built by the
+`release` GitHub Actions workflow on a version tag; they are player-only builds
+(search/add/download need the full source install). See
+[`web/README.md`](web/README.md#standalone-builds).
+
 ## Notes
 
 - Audio is downloaded with `yt-dlp`; respect YouTube's Terms of Service and only

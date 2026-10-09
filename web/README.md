@@ -220,6 +220,27 @@ grows.
   otherwise steps back one. Repeat *one* loops the current track but manual
   next/back still move.
 
+## Standalone builds
+
+`web/packaging/` builds a single-file server with PyInstaller:
+
+```bash
+cd web
+python3 -m venv .venv && .venv/bin/pip install -r requirements.txt pyinstaller
+cd packaging
+../.venv/bin/pyinstaller --noconfirm --clean moosic.spec   # -> dist/moosic
+MOOSIC_DATA=~/Music ./dist/moosic                          # http://127.0.0.1:8740
+```
+
+It starts the server and opens a browser; point it at an existing library with
+`MOOSIC_DATA` (default `~/Moosic`). The bundled build is **player-only** —
+search, add, download and refresh need the full source install (Python +
+yt-audio-api + ffmpeg) and return `503` otherwise.
+
+Cross-platform binaries (Linux / macOS / Windows) are built natively on GitHub
+Actions by [`.github/workflows/release.yml`](../.github/workflows/release.yml)
+when a `v*` tag is pushed, and attached to the GitHub Release.
+
 ## Safety model (public writes)
 
 The site is **unauthenticated by design** — anyone can create/edit/delete

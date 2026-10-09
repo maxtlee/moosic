@@ -17,3 +17,7 @@ venv/
 .prompts
 context/
 .env
+
+# PyInstaller build output
+web/packaging/build/
+web/packaging/dist/
