@@ -6,7 +6,7 @@
  *   requests are served as 206 slices from that cache. Opportunistic caching
  *   only happens for full (non-Range) audio fetches. Capped at MAX_AUDIO.
  */
-const VERSION = "v4-meme-icons-squircle";
+const VERSION = "v5-nav-history-audio";
 const SHELL = `moosic-shell-${VERSION}`;
 const STATIC_CACHE = `moosic-static-${VERSION}`;
 const AUDIO = `moosic-audio-${VERSION}`;
