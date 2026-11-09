@@ -137,6 +137,42 @@ def probe_duration(path: Path) -> float | None:
         return None
 
 
+def apply_master_updates(master_path: Path, updates: dict[str, dict]) -> int:
+    """Merge per-song asset/duration/cover patches into a fresh master.
+
+    Only the fields in ``updates`` are touched, under the shared lock, so a
+    long download can never revert unrelated concurrent edits (and a song
+    deleted mid-download is not resurrected). Returns the number of songs whose
+    duration actually changed.
+    """
+    changed = 0
+    if not updates:
+        return changed
+    is_default_master = master_path.resolve() == ml.MASTER.resolve()
+    with ml.flock():
+        if is_default_master:
+            master = ml.load_master()
+        else:
+            master = json.loads(master_path.read_text(encoding="utf-8"))
+        by_id = {s.get("id"): s for s in master.get("songs", [])}
+        for sid, patch in updates.items():
+            song = by_id.get(sid)
+            if song is None:
+                # Deleted while we were downloading: never resurrect it.
+                continue
+            if "duration" in patch and song.get("duration") != patch["duration"]:
+                changed += 1
+            song.update(patch)
+        if is_default_master:
+            ml.save_master(master)
+        else:
+            master["updated"] = ml.now_iso()
+            master_path.write_text(
+                json.dumps(master, ensure_ascii=False, indent=2) + "\n",
+                encoding="utf-8")
+    return changed
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--master", type=Path, default=ml.MASTER)
@@ -183,15 +219,21 @@ def main() -> int:
         referenced.add(expected_abs)
         current = song.get("asset")
         current_abs = (args.assets / current).resolve() if current else None
-        if current_abs and current_abs != expected_abs and current_abs.is_file():
+        expected_ok = expected_abs.is_file() and expected_abs.stat().st_size > 0
+        current_ok = bool(current_abs and current_abs != expected_abs
+                          and current_abs.is_file())
+        if current_ok and not expected_ok:
+            # A retag moved the target path. Move the existing file instead of
+            # downloading it again; the move satisfies the expected location.
             to_move.append((current_abs, expected_abs, song))
-        if not expected_abs.is_file() or expected_abs.stat().st_size == 0:
-            if song.get("youtube_url"):
-                to_download.append(song)
-            else:
-                no_url += 1
-        else:
+            referenced.add(current_abs)
             need_duration.append(song)
+        elif expected_ok:
+            need_duration.append(song)
+        elif song.get("youtube_url"):
+            to_download.append(song)
+        else:
+            no_url += 1
 
     # referenced must also include destinations of moves
     for _src, dst, _s in to_move:
@@ -268,29 +310,50 @@ def main() -> int:
         stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
         trash = args.assets / "_trash" / stamp
         for p in orphans:
-            dest = trash / p.relative_to(args.assets)
-            dest.parent.mkdir(parents=True, exist_ok=True)
-            shutil.move(str(p), str(dest))
-            trashed += 1
+            try:
+                if not p.is_file():
+                    continue
+                dest = trash / p.relative_to(args.assets)
+                dest.parent.mkdir(parents=True, exist_ok=True)
+                shutil.move(str(p), str(dest))
+                trashed += 1
+            except OSError as exc:
+                # A rename can retire an orphan between planning and pruning;
+                # never abort the whole refresh for one stale entry.
+                log.warning("could not trash %s: %s", p, exc)
 
     # --- covers -------------------------------------------------------------
     cover_res = {"ok": 0, "failed": 0, "skipped": 0}
     if not args.no_covers:
-        cover_res = fetch_covers.ensure_covers(songs)
-        log.info("covers: %s", cover_res)
+        try:
+            cover_res = fetch_covers.ensure_covers(songs)
+            log.info("covers: %s", cover_res)
+        except Exception as exc:  # covers are best-effort; never block master IO
+            log.warning("cover refresh failed: %s", exc)
 
     # --- write asset + duration back to master ------------------------------
-    changed = 0
+    # Compute only the fields this run owns, then merge them into a *freshly
+    # loaded* master under the lock. Writing back the snapshot read at startup
+    # would silently revert anything edited while downloads were in flight --
+    # e.g. a replacement's new youtube_url/duration would be restored to the
+    # pre-replacement values even though the MP3 on disk is the new one.
+    updates: dict[str, dict] = {}
     for song in songs:
+        sid = song.get("id")
+        if not sid:
+            continue
         rel = ml.expected_asset(song)
         abs_path = args.assets / rel
-        song["asset"] = rel
+        patch: dict = {"asset": rel}
         if abs_path.is_file():
             dur = probe_duration(abs_path)
-            if dur is not None and song.get("duration") != dur:
-                song["duration"] = dur
-                changed += 1
-    args.master.write_text(json.dumps(master, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+            if dur is not None:
+                patch["duration"] = dur
+        if song.get("cover"):
+            patch["cover"] = song["cover"]
+        updates[sid] = patch
+
+    changed = apply_master_updates(args.master, updates)
 
     log.info("done: moved=%d downloaded=%d trashed=%d failed=%d (duration updates=%d)",
              moved, downloaded, trashed, failed, changed)

@@ -20,15 +20,19 @@ import fcntl
 import json
 import os
 import re
+import shutil
 import subprocess
 import unicodedata
+import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 
 DATA_DIR = Path(os.environ.get("MOOSIC_DATA", Path.home() / "Projects" / "Music")).expanduser()
 MASTER = DATA_DIR / "master.json"
 RATINGS = DATA_DIR / "ratings.json"
+GAINS = DATA_DIR / "gains.json"
 BAD_LINKS = DATA_DIR / "bad_links.json"
+SUGGESTIONS = DATA_DIR / "suggestions.json"
 PLAYLISTS_DIR = DATA_DIR / "playlists"
 ASSETS_DIR = DATA_DIR / "assets"
 COVERS_DIR = ASSETS_DIR / "_covers"
@@ -116,8 +120,8 @@ def cover_file(song: dict) -> Path | None:
     return (ASSETS_DIR / rel) if rel else None
 
 
-def now_iso() -> str:
-    return datetime.now(timezone.utc).isoformat(timespec="seconds")
+def now_iso(timespec: str = "seconds") -> str:
+    return datetime.now(timezone.utc).isoformat(timespec=timespec)
 
 
 # --------------------------------------------------------------------------- #
@@ -182,6 +186,63 @@ def save_ratings(ratings: dict[str, float]) -> None:
 
 
 # --------------------------------------------------------------------------- #
+# per-song playback gain (dB; loudness normalisation + manual overrides)
+# --------------------------------------------------------------------------- #
+def load_gains() -> dict[str, float]:
+    if not GAINS.is_file():
+        return {}
+    try:
+        data = json.loads(GAINS.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}
+    raw = data.get("gains") if isinstance(data, dict) and "gains" in data else data
+    if not isinstance(raw, dict):
+        return {}
+    out: dict[str, float] = {}
+    for sid, value in raw.items():
+        if isinstance(value, (int, float)):
+            out[sid] = float(value)
+    return out
+
+
+def save_gains(gains: dict[str, float]) -> None:
+    _write_json(GAINS, {
+        "version": 1,
+        "updated": now_iso(),
+        "gains": {sid: round(float(v), 2) for sid, v in sorted(gains.items())},
+    })
+
+
+# --------------------------------------------------------------------------- #
+# public bugs & suggestions
+# --------------------------------------------------------------------------- #
+def load_suggestions() -> list[dict]:
+    if not SUGGESTIONS.is_file():
+        return []
+    try:
+        data = json.loads(SUGGESTIONS.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return []
+    raw = data.get("suggestions") if isinstance(data, dict) else data
+    if not isinstance(raw, list):
+        return []
+    return [s for s in raw
+            if isinstance(s, dict) and s.get("id") and isinstance(s.get("text"), str)]
+
+
+def save_suggestions(items: list[dict]) -> None:
+    _write_json(SUGGESTIONS, {
+        "version": 1,
+        "updated": now_iso(),
+        "suggestions": items,
+    })
+
+
+def new_suggestion_id() -> str:
+    return "sg_" + uuid.uuid4().hex[:12]
+
+
+# --------------------------------------------------------------------------- #
 # bad youtube links (rejected song<->video matches)
 # --------------------------------------------------------------------------- #
 def load_bad_links() -> dict:
@@ -218,6 +279,32 @@ def video_id_of(song: dict) -> str | None:
 
 def asset_file(song: dict) -> Path:
     return ASSETS_DIR / song.get("asset", expected_asset(song))
+
+
+def retag_asset(song: dict) -> str:
+    """Move a song's file to the path implied by its current metadata.
+
+    Genre/artist/title changes alter ``expected_asset``; callers that edit those
+    fields in the master (e.g. the genre audit) must move the file too, or the
+    entry points at a non-existent path. Returns the relative asset path.
+
+    If the target already belongs to another track, keep the current path rather
+    than pointing this song at someone else's file.
+    """
+    old_rel = song.get("asset", expected_asset(song))
+    old = ASSETS_DIR / old_rel
+    new_rel = expected_asset(song)
+    new = ASSETS_DIR / new_rel
+    if not old.is_file() and new.is_file():
+        song["asset"] = new_rel
+        return new_rel
+    if old.is_file() and old.resolve() != new.resolve():
+        if new.exists():
+            return old_rel  # collision: don't clobber another song's audio
+        new.parent.mkdir(parents=True, exist_ok=True)
+        shutil.move(str(old), str(new))
+    song["asset"] = new_rel
+    return new_rel
 
 
 # --------------------------------------------------------------------------- #

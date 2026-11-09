@@ -4,6 +4,11 @@ A self-hosted music library and web player. Moosic resolves songs on YouTube
 Music, downloads and organises the audio, and serves a Spotify-like UI with
 playlists, albums, ratings, a queue and smart shuffle.
 
+> **Visibility:** this repository is **private** on GitHub for now (as are the
+> `yt-audio-api` submodule and the `Music` data repo), and it is intended to be
+> open-sourced. Clone over SSH until then. Keep code, docs, and git history
+> publication-ready.
+
 ## Features
 
 - **Song-first search** — results are deduplicated songs (one canonical video
@@ -12,14 +17,33 @@ playlists, albums, ratings, a queue and smart shuffle.
   [yt-audio-api](https://github.com/alperensumeroglu/yt-audio-api) (yt-dlp) service.
 - **Albums** — auto-detected per song, searchable and downloadable as a whole,
   and playable as an ordered list.
-- **Ratings & custom sort** — rate songs 0–1; "All songs" sorts by rating by
-  default and can be re-sorted by title, artist, genre or duration.
+- **Ratings & custom sort** — rate songs 0–1 (including from the right-click
+  menu); "All songs" sorts by rating by default and can be re-sorted by title,
+  artist, genre or duration.
 - **Smart shuffle** — rating-weighted randomness: higher-rated songs come up
   more often, with a generous random spread so it never feels deterministic.
-- **Queue** — *Play next* / *Add to queue* and a manage-as-you-browse sidebar.
-- **Playlists** — create, edit and delete from the UI; they reference stable
-  song ids, so reordering or retagging the library is safe.
-- **Album covers** — fetched from YouTube thumbnails.
+- **Queue + autoplay** — an explicit up-next queue (*Play next* prepends,
+  *Add to queue* appends) that runs before shuffle-weighted autoplay resumes
+  from the view you started. Manage it in a live sidebar.
+- **Playlists** — create, edit, search-to-add and queue entire playlists from the
+  UI, in order or shuffled; they reference stable song ids, so reordering or
+  retagging is safe.
+- **History & transport** — recently played list, *stop after this song*, repeat
+  off/all/one, and a perceptual (squared) volume curve.
+- **Even volume** — every track is loudness-measured (EBU R128, -14 LUFS target)
+  and played through a per-song gain, with a manual dB override in the song
+  menu; gains live in the data repo.
+- **Bugs & Suggestions forum** — a public page where anyone can report bugs or
+  post ideas, reply in nested threads, and like/dislike posts. Finishing a
+  thread closes the whole chain; a new reply reopens it. Posts are rate-limited
+  and versioned with the data repo.
+- **Filters** — multi-select genres (all selected by default, with invert) and an
+  inclusive min–max rating slider, applied to the song list and playlists; play,
+  shuffle, queue or shuffle-queue the filtered list.
+- **Auto-genre** — new songs are categorized from soundtrack cues, language,
+  the existing library, then iTunes, instead of always landing in *Unsorted*.
+- **Album covers** — real album art scraped from iTunes, falling back to the
+  YouTube thumbnail when no match is found.
 - **Wrong-match replacement** — reject a bad video and deterministically pick
   the next-best match, then re-download.
 - **Versioned data** — the master list, playlists, ratings and rejection list
@@ -36,7 +60,9 @@ Moosic/                     # this repo: pipeline + web app
 $MOOSIC_DATA/               # your data (kept out of version control except json)
   master.json               # canonical song list (id, metadata, asset path, album)
   ratings.json              # custom ordering: song id -> 0..1
+  gains.json                # per-song loudness gain in dB (auto + overrides)
   bad_links.json            # rejected song<->video matches
+  suggestions.json          # public bugs / suggestions
   playlists/<slug>.json      # playlists referencing master ids
   assets/                   # downloaded mp3s + covers (gitignore this)
 ```
@@ -46,8 +72,10 @@ $MOOSIC_DATA/               # your data (kept out of version control except json
 | Path | Role |
 |---|---|
 | `musiclib.py` | shared data layer: master/playlist/rating IO, ids, locking, git commit/push |
+| `genre_lookup.py` | genre inference for new songs + master-list audit/fill CLI |
+| `normalize_volume.py` | per-song loudness measurement → playback gain in `gains.json` |
 | `download_assets.py` | reconciles `assets/` with `master.json` (download, rename, prune, covers) |
-| `fetch_covers.py` | album covers from YouTube thumbnails |
+| `fetch_covers.py` | album covers from iTunes art (+ YouTube thumbnail fallback) |
 | `search_songs.py` | song-first, deduplicated YouTube Music search |
 | `match_song.py` | deterministic best video for a song, skipping rejected links |
 | `albums.py` | album search + track listing |
@@ -60,7 +88,7 @@ $MOOSIC_DATA/               # your data (kept out of version control except json
 ## Quick start
 
 ```bash
-git clone --recurse-submodules https://github.com/maxtlee/moosic Moosic
+git clone --recurse-submodules git@github.com:maxtlee/moosic Moosic
 cd Moosic
 
 # pipeline deps (ytmusicapi, opencc, yt-dlp)
@@ -100,6 +128,11 @@ Single-file **standalone servers** for Linux, macOS and Windows are built by the
 `release` GitHub Actions workflow on a version tag; they are player-only builds
 (search/add/download need the full source install). See
 [`web/README.md`](web/README.md#standalone-builds).
+
+**On iPhone:** the web app is a PWA (Add to Home Screen, offline track caching,
+lock-screen controls). For the Apple Music app, export an album/playlist as a
+tagged ZIP and import it via a Mac + iCloud Music Library — see
+[`web/README.md`](web/README.md#listen-on-iphone--apple-music).
 
 ## Notes
 

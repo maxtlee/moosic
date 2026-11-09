@@ -2,13 +2,18 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#0b0b0d">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Moosic">
   <title>Moosic</title>
-  <link rel="icon" type="image/svg+xml" href="favicon.svg">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <link rel="apple-touch-icon" href="apple-touch-icon.png">
-  <link rel="stylesheet" href="static/style.css?v=20261009a">
+  <link rel="icon" type="image/gif" href="favicon.gif?v=20261106b">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png?v=20261106b">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="static/style.css?v=20261029a">
 </head>
 <body>
   <div class="layout">
@@ -17,7 +22,9 @@
 
       <nav class="nav">
         <button class="nav-item is-active" data-view="all"><span>🏠</span> All songs</button>
+        <button class="nav-item" data-view="history"><span>🕘</span> History</button>
         <button class="nav-item" data-view="albums"><span>💿</span> Albums</button>
+        <button class="nav-item" data-view="suggestions"><span>🐞</span> Bugs &amp; Suggestions</button>
         <button class="nav-item" data-view="queue"><span>☰</span> Queue</button>
         <button class="nav-item" data-view="admin"><span>⚙</span> Admin</button>
       </nav>
@@ -35,7 +42,10 @@
         <ul id="genre-list" class="genre-list"></ul>
       </div>
 
-      <div class="side-foot" id="side-foot">—</div>
+      <div class="side-foot">
+        <div id="side-foot">—</div>
+        <button id="ios-help" class="side-link">📱 Listen on iPhone</button>
+      </div>
     </aside>
 
     <main class="main" id="main">
@@ -72,7 +82,45 @@
           <h1 id="hero-title">All songs</h1>
           <p class="hero-meta" id="hero-meta">—</p>
         </div>
-        <div class="hero-actions" id="hero-actions"></div>
+        <div class="hero-side">
+          <div class="hero-actions" id="hero-actions"></div>
+          <div class="filter-menu">
+            <button id="filter-toggle" class="btn filter-toggle" type="button"
+                    aria-expanded="false" aria-controls="filter-panel">Filters ▾</button>
+            <div class="filter-panel" id="filter-panel" hidden>
+              <div class="filter-row">
+                <div class="filter-label">
+                  <span>Genres</span>
+                  <span class="filter-label-actions">
+                    <button id="filter-invert" class="mini-btn filter-invert" type="button"
+                            aria-pressed="false"
+                            title="Invert: show genres NOT in the selection">Invert</button>
+                    <button id="filter-genres-all" class="mini-btn" type="button">All</button>
+                    <button id="filter-genres-none" class="mini-btn" type="button">None</button>
+                  </span>
+                </div>
+                <div id="filter-genre-list" class="filter-genre-list"></div>
+              </div>
+              <div class="filter-row">
+                <div class="filter-label">
+                  <span>Rating</span>
+                  <span id="filter-rating-label" class="filter-value">0★ – 5★</span>
+                </div>
+                <div class="dual-range" id="filter-rating">
+                  <div class="dual-range-track"><div class="dual-range-fill" id="rating-fill"></div></div>
+                  <input type="range" id="filter-rating-min" min="0" max="5" step="1"
+                         value="0" aria-label="Minimum rating in stars">
+                  <input type="range" id="filter-rating-max" min="0" max="5" step="1"
+                         value="5" aria-label="Maximum rating in stars">
+                </div>
+              </div>
+              <div class="filter-panel-foot">
+                <span id="filter-summary" class="muted"></span>
+                <button id="filter-clear" class="btn" type="button">Reset</button>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
 
       <section class="content">
@@ -93,9 +141,22 @@
           </div>
           <div id="track-rows"></div>
         </div>
-        <p class="empty" id="empty" hidden>No songs match your search.</p>
+        <p class="empty" id="empty" hidden>No songs match your filters.</p>
       </section>
       </div>
+
+      <section class="history-page" id="history-view" hidden>
+        <div class="admin-head">
+          <p class="eyebrow">Your listening</p>
+          <h1>Recently played</h1>
+          <p class="muted" id="history-sub">—</p>
+        </div>
+        <div class="history-actions">
+          <button id="history-clear" class="btn">Clear history</button>
+        </div>
+        <div id="history-list" class="search-results"></div>
+        <p class="empty" id="history-empty" hidden>No listening history yet.</p>
+      </section>
 
       <section class="albums-page" id="albums-view" hidden>
         <div class="admin-head">
@@ -104,6 +165,48 @@
           <p class="muted" id="albums-sub">—</p>
         </div>
         <div id="album-grid" class="album-grid"></div>
+      </section>
+
+      <section class="suggestions-page" id="suggestions-view" hidden>
+        <div class="admin-head">
+          <p class="eyebrow">Community</p>
+          <h1>Bugs &amp; Suggestions</h1>
+          <p class="muted">Found a bug or got an idea for Moosic? Post it here —
+            everything on this page is public.</p>
+        </div>
+
+        <form id="suggestion-form" class="suggestion-form">
+          <label class="s-kind">
+            <span>Type</span>
+            <select id="suggestion-kind">
+              <option value="suggestion">💡 Suggestion</option>
+              <option value="bug">🐞 Bug</option>
+            </select>
+          </label>
+          <label class="s-text-field">
+            <span>What's the bug or idea?</span>
+            <textarea id="suggestion-text" rows="3" maxlength="600" required
+                      placeholder="Add an equalizer, seeking is broken on the Vercel domain, …"></textarea>
+          </label>
+          <div class="s-form-row">
+            <label class="s-author">
+              <span>Your name <em>(optional)</em></span>
+              <input id="suggestion-author" type="text" maxlength="60"
+                     placeholder="anonymous" autocomplete="nickname">
+            </label>
+            <button id="suggestion-submit" type="submit" class="btn btn-primary">Post</button>
+          </div>
+          <p class="hint">Anyone can post, reply, and like/dislike. Mark a thread finished
+            to close the whole chain — a new reply automatically reopens it. Please be
+            kind; posts are rate-limited and versioned in the data repo.</p>
+        </form>
+
+        <div class="suggestions-head">
+          <h2>Recent posts</h2>
+          <span id="suggestions-count" class="muted">—</span>
+        </div>
+        <div id="suggestion-list" class="suggestion-list"></div>
+        <p class="empty" id="suggestions-empty" hidden>No bugs or suggestions yet — be the first.</p>
       </section>
 
       <section class="search-page" id="search-view" hidden>
@@ -152,6 +255,13 @@
           <button id="refresh-assets" class="btn">Refresh assets now</button>
           <pre id="admin-log" class="admin-log" hidden></pre>
         </div>
+
+        <div class="admin-block">
+          <h2>Export for Apple Music</h2>
+          <p class="hint">Download the whole library as one tagged ZIP (large).
+            On a Mac, unzip and use <code>Music → File → Add to Library</code>.</p>
+          <button id="export-library" class="btn">⬇ Export library</button>
+        </div>
       </section>
     </main>
 
@@ -184,7 +294,9 @@
           <button id="prev" class="icon-btn js-prev" title="Previous">⏮</button>
           <button id="play" class="icon-btn play js-play" title="Play / pause">▶</button>
           <button id="next" class="icon-btn js-next" title="Next">⏭</button>
-          <button id="repeat" class="icon-btn js-repeat" title="Repeat">↻</button>
+          <button id="repeat" class="icon-btn js-repeat" title="Repeat: off">↻</button>
+          <button id="stop-after" class="icon-btn js-stop-after" title="Stop after this song"
+                  aria-pressed="false">⏹</button>
         </div>
         <div class="progress">
           <span id="cur-time" class="time js-cur">0:00</span>
@@ -224,7 +336,9 @@
       <button class="icon-btn js-prev" title="Previous">⏮</button>
       <button class="icon-btn play js-play" title="Play / pause">▶</button>
       <button class="icon-btn js-next" title="Next">⏭</button>
-      <button class="icon-btn js-repeat" title="Repeat">↻</button>
+      <button class="icon-btn js-repeat" title="Repeat: off">↻</button>
+      <button class="icon-btn js-stop-after" title="Stop after this song"
+              aria-pressed="false">⏹</button>
     </div>
     <div class="ns-bottom">
       <button id="ns-fix" class="icon-btn" title="Wrong match — find a better video">⇄</button>
@@ -244,8 +358,16 @@
   <div id="context-menu" class="context-menu" hidden></div>
 
   <div id="modal-root" class="modal-root" hidden></div>
+  <div id="install-banner" class="install-banner" hidden>
+    <div>
+      <strong>Install Moosic</strong>
+      <span class="muted">Tap Share → “Add to Home Screen” for a full-screen app.</span>
+    </div>
+    <button id="install-dismiss" class="btn">Got it</button>
+  </div>
+
   <div id="toasts" class="toasts"></div>
   <audio id="audio" preload="metadata"></audio>
-  <script src="static/app.js?v=20261009a"></script>
+  <script src="static/app.js?v=20261029a"></script>
 </body>
 </html>
