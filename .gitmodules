@@ -1,4 +1,4 @@
 [submodule "yt-audio-api"]
 	path = yt-audio-api
-	url = git@github.com:maxtlee/yt-audio-api.git
+	url = https://github.com/maxtlee/yt-audio-api.git
 	branch = main

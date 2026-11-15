@@ -4,11 +4,6 @@ A self-hosted music library and web player. Moosic resolves songs on YouTube
 Music, downloads and organises the audio, and serves a Spotify-like UI with
 playlists, albums, ratings, a queue and smart shuffle.
 
-> **Visibility:** this repository is **private** on GitHub for now (as are the
-> `yt-audio-api` submodule and the `Music` data repo), and it is intended to be
-> open-sourced. Clone over SSH until then. Keep code, docs, and git history
-> publication-ready.
-
 ## Features
 
 - **Song-first search** — results are deduplicated songs (one canonical video
@@ -88,7 +83,7 @@ $MOOSIC_DATA/               # your data (kept out of version control except json
 ## Quick start
 
 ```bash
-git clone --recurse-submodules git@github.com:maxtlee/moosic Moosic
+git clone --recurse-submodules https://github.com/maxtlee/moosic.git Moosic
 cd Moosic
 
 # pipeline deps (ytmusicapi, opencc, yt-dlp)
